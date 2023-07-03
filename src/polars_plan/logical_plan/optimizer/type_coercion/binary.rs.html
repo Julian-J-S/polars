@@ -308,6 +308,8 @@
 <a href="#308" id="308">308</a>
 <a href="#309" id="309">309</a>
 <a href="#310" id="310">310</a>
+<a href="#311" id="311">311</a>
+<a href="#312" id="312">312</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>polars_utils::matches_any_order;
 
 <span class="kw">use super</span>::<span class="kw-2">*</span>;
@@ -539,9 +541,11 @@
             <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
         }
         <span class="attr">#[cfg(feature = <span class="string">&quot;dtype-date&quot;</span>)]
-        </span>(Date, Utf8, op) <span class="kw">if </span>op.is_comparison() =&gt; err_date_str_compare()<span class="question-mark">?</span>,
+        </span>(Date, Utf8, op) | (Utf8, Date, op) <span class="kw">if </span>op.is_comparison() =&gt; err_date_str_compare()<span class="question-mark">?</span>,
         <span class="attr">#[cfg(feature = <span class="string">&quot;dtype-datetime&quot;</span>)]
-        </span>(Datetime(<span class="kw">_</span>, <span class="kw">_</span>), Utf8, op) <span class="kw">if </span>op.is_comparison() =&gt; err_date_str_compare()<span class="question-mark">?</span>,
+        </span>(Datetime(<span class="kw">_</span>, <span class="kw">_</span>), Utf8, op) | (Utf8, Datetime(<span class="kw">_</span>, <span class="kw">_</span>), op) <span class="kw">if </span>op.is_comparison() =&gt; {
+            err_date_str_compare()<span class="question-mark">?
+        </span>}
         <span class="attr">#[cfg(feature = <span class="string">&quot;dtype-time&quot;</span>)]
         </span>(Time, Utf8, op) <span class="kw">if </span>op.is_comparison() =&gt; err_date_str_compare()<span class="question-mark">?</span>,
         <span class="comment">// structs can be arbitrarily nested, leave the complexity to the caller for now.
