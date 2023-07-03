@@ -1088,6 +1088,9 @@
 <a href="#1088" id="1088">1088</a>
 <a href="#1089" id="1089">1089</a>
 <a href="#1090" id="1090">1090</a>
+<a href="#1091" id="1091">1091</a>
+<a href="#1092" id="1092">1092</a>
+<a href="#1093" id="1093">1093</a>
 </pre></div><pre class="rust"><code><span class="attr">#[cfg(any(feature = <span class="string">&quot;fmt&quot;</span>, feature = <span class="string">&quot;fmt_no_tty&quot;</span>))]
 </span><span class="kw">use </span>std::borrow::Cow;
 <span class="kw">use </span>std::fmt::{Debug, Display, Formatter};
@@ -1551,7 +1554,10 @@
                 };
                 (s, lower_bounds)
             };
-            <span class="kw">let </span>tbl_lower_bounds =
+
+            <span class="kw">let </span>col_width_exact =
+                |l: usize| ColumnConstraint::Absolute(comfy_table::Width::Fixed(l <span class="kw">as </span>u16));
+            <span class="kw">let </span>col_width_lower_bound =
                 |l: usize| ColumnConstraint::LowerBoundary(comfy_table::Width::Fixed(l <span class="kw">as </span>u16));
 
             <span class="kw">let </span><span class="kw-2">mut </span>constraints = Vec::with_capacity(n_first + n_last + reduce_columns <span class="kw">as </span>usize);
@@ -1559,16 +1565,16 @@
             <span class="kw">for </span>field <span class="kw">in </span>fields[<span class="number">0</span>..n_first].iter() {
                 <span class="kw">let </span>(s, l) = field_to_str(field);
                 names.push(s);
-                constraints.push(tbl_lower_bounds(l));
+                constraints.push(col_width_lower_bound(l));
             }
             <span class="kw">if </span>reduce_columns {
                 names.push(<span class="string">&quot;…&quot;</span>.into());
-                constraints.push(tbl_lower_bounds(<span class="number">3</span>));
+                constraints.push(col_width_exact(<span class="number">3</span>));
             }
             <span class="kw">for </span>field <span class="kw">in </span>fields[<span class="self">self</span>.width() - n_last..].iter() {
                 <span class="kw">let </span>(s, l) = field_to_str(field);
                 names.push(s);
-                constraints.push(tbl_lower_bounds(l));
+                constraints.push(col_width_lower_bound(l));
             }
             <span class="kw">let </span>(preset, is_utf8) = <span class="kw">match </span>std::env::var(FMT_TABLE_FORMATTING)
                 .as_deref()
