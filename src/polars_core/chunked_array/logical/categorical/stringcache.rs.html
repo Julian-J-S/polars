@@ -219,6 +219,15 @@
 <a href="#219" id="219">219</a>
 <a href="#220" id="220">220</a>
 <a href="#221" id="221">221</a>
+<a href="#222" id="222">222</a>
+<a href="#223" id="223">223</a>
+<a href="#224" id="224">224</a>
+<a href="#225" id="225">225</a>
+<a href="#226" id="226">226</a>
+<a href="#227" id="227">227</a>
+<a href="#228" id="228">228</a>
+<a href="#229" id="229">229</a>
+<a href="#230" id="230">230</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::hash::{Hash, Hasher};
 <span class="kw">use </span>std::sync::atomic::{AtomicU32, Ordering};
 <span class="kw">use </span>std::sync::{RwLock, RwLockReadGuard, RwLockWriteGuard};
@@ -239,6 +248,15 @@
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">static </span>USE_STRING_CACHE: AtomicU32 = AtomicU32::new(<span class="number">0</span>);
 
 <span class="doccomment">/// RAII for the string cache
+/// If an operation creates categoricals and uses them in a join
+/// or comparison that operation must hold this cache via
+/// `let handle = IUseStringCache::hold()`
+/// The cache is valid until `handle` is dropped.
+///
+/// # De-allocation
+/// Multiple threads can hold the string cache at the same time.
+/// The contents of the cache will only get dropped when no
+/// thread holds it.
 </span><span class="kw">pub struct </span>IUseStringCache {
     <span class="comment">// only added so that it will never be constructed directly
     </span><span class="attr">#[allow(dead_code)]
@@ -247,13 +265,13 @@
 
 <span class="kw">impl </span>Default <span class="kw">for </span>IUseStringCache {
     <span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-        <span class="self">Self</span>::new()
+        <span class="self">Self</span>::hold()
     }
 }
 
 <span class="kw">impl </span>IUseStringCache {
     <span class="doccomment">/// Hold the StringCache
-    </span><span class="kw">pub fn </span>new() -&gt; IUseStringCache {
+    </span><span class="kw">pub fn </span>hold() -&gt; IUseStringCache {
         enable_string_cache(<span class="bool-val">true</span>);
         IUseStringCache { private_zst: () }
     }

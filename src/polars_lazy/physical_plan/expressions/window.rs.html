@@ -825,6 +825,12 @@
 <a href="#825" id="825">825</a>
 <a href="#826" id="826">826</a>
 <a href="#827" id="827">827</a>
+<a href="#828" id="828">828</a>
+<a href="#829" id="829">829</a>
+<a href="#830" id="830">830</a>
+<a href="#831" id="831">831</a>
+<a href="#832" id="832">832</a>
+<a href="#833" id="833">833</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::fmt::Write;
 <span class="kw">use </span>std::sync::Arc;
 
@@ -1317,6 +1323,12 @@
         }
         <span class="kw">let </span>gb = GroupBy::new(df, groupby_columns.clone(), groups, <span class="prelude-val">Some</span>(apply_columns));
 
+        <span class="comment">// If the aggregation creates categoricals and `MapStrategy` is `Join`,
+        // the string cache was needed. So we hold it for that case.
+        // Worst case is that a categorical is created with indexes from the string
+        // cache which is fine, as the physical representation is undefined.
+        </span><span class="attr">#[cfg(feature = <span class="string">&quot;dtype-categorical&quot;</span>)]
+        </span><span class="kw">let </span>_sc = polars_core::IUseStringCache::hold();
         <span class="kw">let </span><span class="kw-2">mut </span>ac = <span class="self">self</span>.run_aggregation(df, state, <span class="kw-2">&amp;</span>gb)<span class="question-mark">?</span>;
 
         <span class="kw">use </span>MapStrategy::<span class="kw-2">*</span>;

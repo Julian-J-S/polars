@@ -786,7 +786,7 @@
     </span><span class="kw">let </span>_string_cache = <span class="kw">if </span>n_row_groups &gt; <span class="number">1 </span>{
         <span class="attr">#[cfg(feature = <span class="string">&quot;dtype-categorical&quot;</span>)]
         </span>{
-            <span class="prelude-val">Some</span>(polars_core::IUseStringCache::new())
+            <span class="prelude-val">Some</span>(polars_core::IUseStringCache::hold())
         }
         <span class="attr">#[cfg(not(feature = <span class="string">&quot;dtype-categorical&quot;</span>))]
         </span>{

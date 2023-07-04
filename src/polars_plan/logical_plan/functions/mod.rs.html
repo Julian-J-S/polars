@@ -678,7 +678,7 @@
                 <span class="comment">// we use a global string cache here as streaming chunks all have different rev maps
                 </span><span class="attr">#[cfg(feature = <span class="string">&quot;dtype-categorical&quot;</span>)]
                 </span>{
-                    <span class="kw">let </span>_hold = IUseStringCache::new();
+                    <span class="kw">let </span>_hold = IUseStringCache::hold();
                     Arc::get_mut(function).unwrap().call_udf(df)
                 }
 

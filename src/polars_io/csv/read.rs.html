@@ -1214,7 +1214,7 @@
 
             <span class="attr">#[cfg(feature = <span class="string">&quot;dtype-categorical&quot;</span>)]
             </span><span class="kw">if </span>_has_cat {
-                _cat_lock = <span class="prelude-val">Some</span>(polars_core::IUseStringCache::new())
+                _cat_lock = <span class="prelude-val">Some</span>(polars_core::IUseStringCache::hold())
             }
 
             <span class="kw">let </span><span class="kw-2">mut </span>csv_reader = <span class="self">self</span>.core_reader(<span class="prelude-val">Some</span>(Arc::new(schema)), to_cast)<span class="question-mark">?</span>;
@@ -1232,7 +1232,7 @@
                     })
                     .unwrap_or(<span class="bool-val">false</span>);
                 <span class="kw">if </span>has_cat {
-                    _cat_lock = <span class="prelude-val">Some</span>(polars_core::IUseStringCache::new())
+                    _cat_lock = <span class="prelude-val">Some</span>(polars_core::IUseStringCache::hold())
                 }
             }
             <span class="kw">let </span><span class="kw-2">mut </span>csv_reader = <span class="self">self</span>.core_reader(<span class="self">self</span>.schema.clone(), <span class="macro">vec!</span>[])<span class="question-mark">?</span>;
