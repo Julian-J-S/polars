@@ -313,7 +313,7 @@
 
     <span class="comment">// make sure its before slice pushdown.
     </span><span class="kw">if </span>projection_pushdown {
-        rules.push(Box::new(FastProjectionAndCollapse {}));
+        rules.push(Box::new(FastProjectionAndCollapse::new()));
     }
     rules.push(Box::new(DelayRechunk::new()));
 
