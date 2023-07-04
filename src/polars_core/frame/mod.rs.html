@@ -3718,6 +3718,10 @@
 <a href="#3718" id="3718">3718</a>
 <a href="#3719" id="3719">3719</a>
 <a href="#3720" id="3720">3720</a>
+<a href="#3721" id="3721">3721</a>
+<a href="#3722" id="3722">3722</a>
+<a href="#3723" id="3723">3723</a>
+<a href="#3724" id="3724">3724</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! DataFrame module.
 </span><span class="kw">use </span>std::borrow::Cow;
 <span class="kw">use </span>std::iter::{FromIterator, Iterator};
@@ -4456,10 +4460,14 @@
         <span class="self">self</span>.columns.is_empty()
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>hstack_mut_no_checks(<span class="kw-2">&amp;mut </span><span class="self">self</span>, columns: <span class="kw-2">&amp;</span>[Series]) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self </span>{
-        <span class="kw">for </span>col <span class="kw">in </span>columns {
-            <span class="self">self</span>.columns.push(col.clone());
-        }
+    <span class="doccomment">/// Add columns horizontally.
+    ///
+    /// # Safety
+    /// The caller must ensure:
+    /// - the length of all [`Series`] is equal to the height of this [`DataFrame`]
+    /// - the columns names are unique
+    </span><span class="kw">pub unsafe fn </span>hstack_mut_unchecked(<span class="kw-2">&amp;mut </span><span class="self">self</span>, columns: <span class="kw-2">&amp;</span>[Series]) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self </span>{
+        <span class="self">self</span>.columns.extend_from_slice(columns);
         <span class="self">self
     </span>}
 
@@ -4494,7 +4502,7 @@
             );
         }
         drop(names);
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.hstack_mut_no_checks(columns))
+        <span class="prelude-val">Ok</span>(<span class="kw">unsafe </span>{ <span class="self">self</span>.hstack_mut_unchecked(columns) })
     }
 
     <span class="doccomment">/// Add multiple `Series` to a `DataFrame`.
