@@ -779,21 +779,21 @@
             }
             BinaryExpr { left, op, right } =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;[({left:?}) {op:?} ({right:?})]&quot;</span>),
             Sort { expr, options } =&gt; <span class="kw">match </span>options.descending {
-                <span class="bool-val">true </span>=&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{expr:?} DESC&quot;</span>),
-                <span class="bool-val">false </span>=&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{expr:?} ASC&quot;</span>),
+                <span class="bool-val">true </span>=&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{expr:?}.sort(desc)&quot;</span>),
+                <span class="bool-val">false </span>=&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{expr:?}.sort(asc)&quot;</span>),
             },
             SortBy {
                 expr,
                 by,
                 descending,
             } =&gt; {
-                <span class="macro">write!</span>(f, <span class="string">&quot;SORT {expr:?} BY {by:?} REVERSE ORDERING {descending:?}&quot;</span>,)
+                <span class="macro">write!</span>(f, <span class="string">&quot;{expr:?}.sort_by(by={by:?}, descending={descending:?})&quot;</span>,)
             }
             Filter { input, by } =&gt; {
-                <span class="macro">write!</span>(f, <span class="string">&quot;{input:?}\nFILTER WHERE {by:?}&quot;</span>)
+                <span class="macro">write!</span>(f, <span class="string">&quot;{input:?}.filter({by:?})&quot;</span>)
             }
             Take { expr, idx } =&gt; {
-                <span class="macro">write!</span>(f, <span class="string">&quot;TAKE {expr:?} AT {idx:?}&quot;</span>)
+                <span class="macro">write!</span>(f, <span class="string">&quot;{expr:?}.take({idx:?})&quot;</span>)
             }
             Agg(agg) =&gt; {
                 <span class="kw">use </span>AggExpr::<span class="kw-2">*</span>;
@@ -849,7 +849,7 @@
                 falsy,
             } =&gt; <span class="macro">write!</span>(
                 f,
-                <span class="string">&quot;\nWHEN {predicate:?}\nTHEN\n\t{truthy:?}\nOTHERWISE\n\t{falsy:?}&quot;</span>,
+                <span class="string">&quot;.when({predicate:?}).then({truthy:?}).otherwise({falsy:?})&quot;</span>,
             ),
             Function {
                 input, function, ..
@@ -873,12 +873,12 @@
                 length,
             } =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{input:?}.slice(offset={offset:?}, length={length:?})&quot;</span>,),
             Wildcard =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;*&quot;</span>),
-            Exclude(column, names) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{column:?}, EXCEPT {names:?}&quot;</span>),
-            KeepName(e) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;KEEP NAME {e:?}&quot;</span>),
-            RenameAlias { expr, .. } =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;RENAME_ALIAS {expr:?}&quot;</span>),
-            Columns(names) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;COLUMNS({names:?})&quot;</span>),
-            DtypeColumn(dt) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;COLUMN OF DTYPE: {dt:?}&quot;</span>),
-            Cache { input, .. } =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;CACHE {input:?}&quot;</span>),
+            Exclude(column, names) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{column:?}.exclude({names:?})&quot;</span>),
+            KeepName(e) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{e:?}.keep_name()&quot;</span>),
+            RenameAlias { expr, .. } =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;.rename_alias({expr:?})&quot;</span>),
+            Columns(names) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;cols({names:?})&quot;</span>),
+            DtypeColumn(dt) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;dtype_columns({dt:?})&quot;</span>),
+            Cache { input, .. } =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{input:?}.cache()&quot;</span>),
             Selector(<span class="kw">_</span>) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;SELECTOR&quot;</span>),
         }
     }
