@@ -400,6 +400,8 @@
 <a href="#400" id="400">400</a>
 <a href="#401" id="401">401</a>
 <a href="#402" id="402">402</a>
+<a href="#403" id="403">403</a>
+<a href="#404" id="404">404</a>
 </pre></div><pre class="rust"><code><span class="kw">use super</span>::<span class="kw-2">*</span>;
 
 <span class="kw">impl </span>FunctionExpr {
@@ -636,6 +638,8 @@
             ConcatExpr(<span class="kw">_</span>) =&gt; mapper.map_to_supertype(),
             Correlation { .. } =&gt; mapper.map_to_float_dtype(),
             ToPhysical =&gt; mapper.to_physical_type(),
+            <span class="attr">#[cfg(feature = <span class="string">&quot;random&quot;</span>)]
+            </span>Random { .. } =&gt; mapper.with_same_dtype(),
         }
     }
 }
