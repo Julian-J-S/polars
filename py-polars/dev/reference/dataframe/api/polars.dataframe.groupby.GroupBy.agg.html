@@ -1602,7 +1602,7 @@ document.write(`
 <h1>polars.dataframe.groupby.GroupBy.agg<a class="headerlink" href="#polars-dataframe-groupby-groupby-agg" title="Permalink to this heading">#</a></h1>
 <dl class="py method">
 <dt class="sig sig-object py" id="polars.dataframe.groupby.GroupBy.agg">
-<span class="sig-prename descclassname"><span class="pre">GroupBy.</span></span><span class="sig-name descname"><span class="pre">agg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">aggs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">IntoExpr</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">IntoExpr</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">named_aggs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">IntoExpr</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference external" href="https://github.com/pola-rs/polars/blob/main/py-polars/polars/dataframe/groupby.py#L138-L233"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polars.dataframe.groupby.GroupBy.agg" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GroupBy.</span></span><span class="sig-name descname"><span class="pre">agg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">aggs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">IntoExpr</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">IntoExpr</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">named_aggs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">IntoExpr</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference external" href="https://github.com/pola-rs/polars/blob/main/py-polars/polars/dataframe/groupby.py#L138-L249"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polars.dataframe.groupby.GroupBy.agg" title="Permalink to this definition">#</a></dt>
 <dd><p>Compute aggregations for each group of a groupby operation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1618,7 +1618,7 @@ The resulting columns will be renamed to the keyword used.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p>Compute the sum of a column for each group.</p>
+<p>Compute the aggregation of the columns for each group.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="p">{</span>
 <span class="gp">... </span>        <span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">],</span>
@@ -1626,7 +1626,23 @@ The resulting columns will be renamed to the keyword used.</p>
 <span class="gp">... </span>        <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
 <span class="gp">... </span>    <span class="p">}</span>
 <span class="gp">... </span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">),</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">)])</span>  
+<span class="go">shape: (3, 3)</span>
+<span class="go">┌─────┬───────────┬───────────┐</span>
+<span class="go">│ a   ┆ b         ┆ c         │</span>
+<span class="go">│ --- ┆ ---       ┆ ---       │</span>
+<span class="go">│ str ┆ list[i64] ┆ list[i64] │</span>
+<span class="go">╞═════╪═══════════╪═══════════╡</span>
+<span class="go">│ a   ┆ [1, 1]    ┆ [5, 3]    │</span>
+<span class="go">├╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌┤</span>
+<span class="go">│ b   ┆ [2, 3]    ┆ [4, 2]    │</span>
+<span class="go">├╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌┤</span>
+<span class="go">│ c   ┆ [3]       ┆ [1]       │</span>
+<span class="go">└─────┴───────────┴───────────┘</span>
+</pre></div>
+</div>
+<p>Compute the sum of a column for each group.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>  
 <span class="go">shape: (3, 2)</span>
 <span class="go">┌─────┬─────┐</span>
 <span class="go">│ a   ┆ b   │</span>
