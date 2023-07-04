@@ -402,6 +402,43 @@
 <a href="#402" id="402">402</a>
 <a href="#403" id="403">403</a>
 <a href="#404" id="404">404</a>
+<a href="#405" id="405">405</a>
+<a href="#406" id="406">406</a>
+<a href="#407" id="407">407</a>
+<a href="#408" id="408">408</a>
+<a href="#409" id="409">409</a>
+<a href="#410" id="410">410</a>
+<a href="#411" id="411">411</a>
+<a href="#412" id="412">412</a>
+<a href="#413" id="413">413</a>
+<a href="#414" id="414">414</a>
+<a href="#415" id="415">415</a>
+<a href="#416" id="416">416</a>
+<a href="#417" id="417">417</a>
+<a href="#418" id="418">418</a>
+<a href="#419" id="419">419</a>
+<a href="#420" id="420">420</a>
+<a href="#421" id="421">421</a>
+<a href="#422" id="422">422</a>
+<a href="#423" id="423">423</a>
+<a href="#424" id="424">424</a>
+<a href="#425" id="425">425</a>
+<a href="#426" id="426">426</a>
+<a href="#427" id="427">427</a>
+<a href="#428" id="428">428</a>
+<a href="#429" id="429">429</a>
+<a href="#430" id="430">430</a>
+<a href="#431" id="431">431</a>
+<a href="#432" id="432">432</a>
+<a href="#433" id="433">433</a>
+<a href="#434" id="434">434</a>
+<a href="#435" id="435">435</a>
+<a href="#436" id="436">436</a>
+<a href="#437" id="437">437</a>
+<a href="#438" id="438">438</a>
+<a href="#439" id="439">439</a>
+<a href="#440" id="440">440</a>
+<a href="#441" id="441">441</a>
 </pre></div><pre class="rust"><code><span class="kw">use super</span>::<span class="kw-2">*</span>;
 
 <span class="kw">impl </span>FunctionExpr {
@@ -468,12 +505,13 @@
                     <span class="attr">#[cfg(feature = <span class="string">&quot;timezones&quot;</span>)]
                     </span>TzLocalize(tz) =&gt; <span class="kw">return </span>mapper.map_datetime_dtype_timezone(<span class="prelude-val">Some</span>(tz)),
                     DateRange {
-                        every: <span class="kw">_</span>,
+                        every,
                         closed: <span class="kw">_</span>,
+                        time_unit,
                         tz,
                     } =&gt; {
-                        <span class="comment">// output dtype may change based on `tz`
-                        </span><span class="kw">return </span>mapper.map_to_date_range_dtype(tz);
+                        <span class="comment">// output dtype may change based on `every`, `tz`, and `time_unit`
+                        </span><span class="kw">return </span>mapper.map_to_date_range_dtype(every, time_unit, tz);
                     }
                     TimeRange { .. } =&gt; {
                         <span class="kw">return </span><span class="prelude-val">Ok</span>(Field::new(<span class="string">&quot;time&quot;</span>, DataType::List(Box::new(DataType::Time))));
@@ -727,23 +765,59 @@
         <span class="prelude-val">Ok</span>(first)
     }
 
-    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>map_to_date_range_dtype(<span class="kw-2">&amp;</span><span class="self">self</span>, tz: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span>&lt;String&gt;) -&gt; PolarsResult&lt;Field&gt; {
-        <span class="kw">let </span>inner_dtype = <span class="kw">match </span>(<span class="kw-2">&amp;</span><span class="self">self</span>.map_to_supertype()<span class="question-mark">?</span>.dtype, tz) {
+    <span class="attr">#[cfg(feature = <span class="string">&quot;temporal&quot;</span>)]
+    </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>map_to_date_range_dtype(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        every: <span class="kw-2">&amp;</span>Duration,
+        time_unit: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span>&lt;TimeUnit&gt;,
+        tz: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span>&lt;String&gt;,
+    ) -&gt; PolarsResult&lt;Field&gt; {
+        <span class="kw">let </span>inner_dtype = <span class="kw">match </span>(<span class="kw-2">&amp;</span><span class="self">self</span>.map_to_supertype()<span class="question-mark">?</span>.dtype, time_unit, tz, every) {
             <span class="attr">#[cfg(feature = <span class="string">&quot;timezones&quot;</span>)]
-            </span>(DataType::Datetime(tu, <span class="prelude-val">Some</span>(field_tz)), <span class="prelude-val">Some</span>(tz)) =&gt; {
+            </span>(DataType::Datetime(tu, <span class="prelude-val">Some</span>(field_tz)), time_unit, <span class="prelude-val">Some</span>(tz), <span class="kw">_</span>) =&gt; {
                 <span class="kw">if </span>field_tz != tz {
                     <span class="macro">polars_bail!</span>(ComputeError: <span class="macro">format!</span>(<span class="string">&quot;Given time_zone is different from that of timezone aware datetimes. \
                     Given: &#39;{}&#39;, got: &#39;{}&#39;.&quot;</span>, tz, field_tz))
                 }
+                <span class="kw">if let </span><span class="prelude-val">Some</span>(time_unit) = time_unit {
+                    DataType::Datetime(<span class="kw-2">*</span>time_unit, <span class="prelude-val">Some</span>(tz.to_string()))
+                } <span class="kw">else </span>{
+                    DataType::Datetime(<span class="kw-2">*</span>tu, <span class="prelude-val">Some</span>(tz.to_string()))
+                }
+            }
+            <span class="attr">#[cfg(feature = <span class="string">&quot;timezones&quot;</span>)]
+            </span>(DataType::Datetime(<span class="kw">_</span>, <span class="prelude-val">Some</span>(tz)), <span class="prelude-val">Some</span>(time_unit), <span class="kw">_</span>, <span class="kw">_</span>) =&gt; {
+                DataType::Datetime(<span class="kw-2">*</span>time_unit, <span class="prelude-val">Some</span>(tz.to_string()))
+            }
+            <span class="attr">#[cfg(feature = <span class="string">&quot;timezones&quot;</span>)]
+            </span>(DataType::Datetime(tu, <span class="prelude-val">Some</span>(tz)), <span class="prelude-val">None</span>, <span class="kw">_</span>, <span class="kw">_</span>) =&gt; {
                 DataType::Datetime(<span class="kw-2">*</span>tu, <span class="prelude-val">Some</span>(tz.to_string()))
             }
             <span class="attr">#[cfg(feature = <span class="string">&quot;timezones&quot;</span>)]
-            </span>(DataType::Datetime(tu, <span class="prelude-val">Some</span>(tz)), <span class="kw">_</span>) =&gt; DataType::Datetime(<span class="kw-2">*</span>tu, <span class="prelude-val">Some</span>(tz.to_string())),
+            </span>(DataType::Datetime(<span class="kw">_</span>, <span class="kw">_</span>), <span class="prelude-val">Some</span>(time_unit), <span class="prelude-val">Some</span>(tz), <span class="kw">_</span>) =&gt; {
+                DataType::Datetime(<span class="kw-2">*</span>time_unit, <span class="prelude-val">Some</span>(tz.to_string()))
+            }
             <span class="attr">#[cfg(feature = <span class="string">&quot;timezones&quot;</span>)]
-            </span>(DataType::Datetime(tu, <span class="kw">_</span>), <span class="prelude-val">Some</span>(tz)) =&gt; DataType::Datetime(<span class="kw-2">*</span>tu, <span class="prelude-val">Some</span>(tz.to_string())),
-            (DataType::Datetime(tu, <span class="kw">_</span>), <span class="kw">_</span>) =&gt; DataType::Datetime(<span class="kw-2">*</span>tu, <span class="prelude-val">None</span>),
-            (DataType::Date, <span class="kw">_</span>) =&gt; DataType::Date,
-            (dtype, <span class="kw">_</span>) =&gt; {
+            </span>(DataType::Datetime(tu, <span class="kw">_</span>), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(tz), <span class="kw">_</span>) =&gt; {
+                DataType::Datetime(<span class="kw-2">*</span>tu, <span class="prelude-val">Some</span>(tz.to_string()))
+            }
+            (DataType::Datetime(<span class="kw">_</span>, <span class="kw">_</span>), <span class="prelude-val">Some</span>(time_unit), <span class="kw">_</span>, <span class="kw">_</span>) =&gt; {
+                DataType::Datetime(<span class="kw-2">*</span>time_unit, <span class="prelude-val">None</span>)
+            }
+            (DataType::Datetime(tu, <span class="kw">_</span>), <span class="prelude-val">None</span>, <span class="kw">_</span>, <span class="kw">_</span>) =&gt; DataType::Datetime(<span class="kw-2">*</span>tu, <span class="prelude-val">None</span>),
+            (DataType::Date, time_unit, time_zone, every) =&gt; {
+                <span class="kw">let </span>nsecs = every.nanoseconds();
+                <span class="kw">if </span>nsecs == <span class="number">0 </span>{
+                    DataType::Date
+                } <span class="kw">else if let </span><span class="prelude-val">Some</span>(tu) = time_unit {
+                    DataType::Datetime(<span class="kw-2">*</span>tu, time_zone.clone())
+                } <span class="kw">else if </span>nsecs % <span class="number">1000 </span>!= <span class="number">0 </span>{
+                    DataType::Datetime(TimeUnit::Nanoseconds, time_zone.clone())
+                } <span class="kw">else </span>{
+                    DataType::Datetime(TimeUnit::Microseconds, time_zone.clone())
+                }
+            }
+            (dtype, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>) =&gt; {
                 <span class="macro">polars_bail!</span>(ComputeError: <span class="string">&quot;expected Date or Datetime, got {}&quot;</span>, dtype)
             }
         };

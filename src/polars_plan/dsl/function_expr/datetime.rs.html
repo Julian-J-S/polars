@@ -344,6 +344,7 @@
 <a href="#344" id="344">344</a>
 <a href="#345" id="345">345</a>
 <a href="#346" id="346">346</a>
+<a href="#347" id="347">347</a>
 </pre></div><pre class="rust"><code><span class="attr">#[cfg(feature = <span class="string">&quot;timezones&quot;</span>)]
 </span><span class="kw">use </span>chrono_tz::Tz;
 <span class="attr">#[cfg(feature = <span class="string">&quot;timezones&quot;</span>)]
@@ -394,6 +395,7 @@
     DateRange {
         every: Duration,
         closed: ClosedWindow,
+        time_unit: <span class="prelude-ty">Option</span>&lt;TimeUnit&gt;,
         tz: <span class="prelude-ty">Option</span>&lt;TimeZone&gt;,
     },
     TimeRange {

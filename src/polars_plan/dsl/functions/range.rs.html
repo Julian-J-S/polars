@@ -131,6 +131,12 @@
 <a href="#131" id="131">131</a>
 <a href="#132" id="132">132</a>
 <a href="#133" id="133">133</a>
+<a href="#134" id="134">134</a>
+<a href="#135" id="135">135</a>
+<a href="#136" id="136">136</a>
+<a href="#137" id="137">137</a>
+<a href="#138" id="138">138</a>
+<a href="#139" id="139">139</a>
 </pre></div><pre class="rust"><code><span class="kw">use super</span>::<span class="kw-2">*</span>;
 
 <span class="doccomment">/// Create list entries that are range arrays
@@ -214,13 +220,19 @@
     end: Expr,
     every: Duration,
     closed: ClosedWindow,
+    time_unit: <span class="prelude-ty">Option</span>&lt;TimeUnit&gt;,
     tz: <span class="prelude-ty">Option</span>&lt;TimeZone&gt;,
 ) -&gt; Expr {
     <span class="kw">let </span>input = <span class="macro">vec!</span>[start, end];
 
     Expr::Function {
         input,
-        function: FunctionExpr::TemporalExpr(TemporalFunction::DateRange { every, closed, tz }),
+        function: FunctionExpr::TemporalExpr(TemporalFunction::DateRange {
+            every,
+            closed,
+            time_unit,
+            tz,
+        }),
         options: FunctionOptions {
             collect_groups: ApplyOptions::ApplyGroups,
             cast_to_supertypes: <span class="bool-val">true</span>,
