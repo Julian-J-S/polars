@@ -533,6 +533,13 @@
 <a href="#533" id="533">533</a>
 <a href="#534" id="534">534</a>
 <a href="#535" id="535">535</a>
+<a href="#536" id="536">536</a>
+<a href="#537" id="537">537</a>
+<a href="#538" id="538">538</a>
+<a href="#539" id="539">539</a>
+<a href="#540" id="540">540</a>
+<a href="#541" id="541">541</a>
+<a href="#542" id="542">542</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::borrow::Cow;
 <span class="kw">use </span>std::sync::Arc;
 
@@ -561,6 +568,7 @@
     <span class="kw">pub </span>input_schema: <span class="prelude-ty">Option</span>&lt;SchemaRef&gt;,
     <span class="kw">pub </span>allow_threading: bool,
     <span class="kw">pub </span>check_lengths: bool,
+    <span class="kw">pub </span>allow_group_aware: bool,
 }
 
 <span class="kw">impl </span>ApplyExpr {
@@ -581,6 +589,7 @@
             input_schema: <span class="prelude-val">None</span>,
             allow_threading: <span class="bool-val">true</span>,
             check_lengths: <span class="bool-val">true</span>,
+            allow_group_aware: <span class="bool-val">true</span>,
         }
     }
 
@@ -815,6 +824,11 @@
         groups: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>GroupsProxy,
         state: <span class="kw-2">&amp;</span>ExecutionState,
     ) -&gt; PolarsResult&lt;AggregationContext&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+        <span class="macro">polars_ensure!</span>(
+            <span class="self">self</span>.allow_group_aware,
+            expr = <span class="self">self</span>.expr,
+            ComputeError: <span class="string">&quot;this expression cannot run in the groupby context&quot;</span>,
+        );
         <span class="kw">if </span><span class="self">self</span>.inputs.len() == <span class="number">1 </span>{
             <span class="kw">let </span><span class="kw-2">mut </span>ac = <span class="self">self</span>.inputs[<span class="number">0</span>].evaluate_on_groups(df, groups, state)<span class="question-mark">?</span>;
 

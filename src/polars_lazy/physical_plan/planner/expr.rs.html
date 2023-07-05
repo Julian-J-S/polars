@@ -592,6 +592,8 @@
 <a href="#592" id="592">592</a>
 <a href="#593" id="593">593</a>
 <a href="#594" id="594">594</a>
+<a href="#595" id="595">595</a>
+<a href="#596" id="596">596</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>polars_core::frame::groupby::GroupByMethod;
 <span class="kw">use </span>polars_core::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span>polars_core::series::IsSorted;
@@ -1058,6 +1060,7 @@
                 input_schema: schema.cloned(),
                 allow_threading: !state.has_cache,
                 check_lengths: options.check_lengths(),
+                allow_group_aware: options.allow_group_aware,
             }))
         }
         Function {
@@ -1093,6 +1096,7 @@
                 input_schema: schema.cloned(),
                 allow_threading: !state.has_cache,
                 check_lengths: options.check_lengths(),
+                allow_group_aware: options.allow_group_aware,
             }))
         }
         Slice {

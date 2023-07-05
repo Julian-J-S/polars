@@ -52,10 +52,16 @@
 <a href="#52" id="52">52</a>
 <a href="#53" id="53">53</a>
 <a href="#54" id="54">54</a>
+<a href="#55" id="55">55</a>
+<a href="#56" id="56">56</a>
+<a href="#57" id="57">57</a>
+<a href="#58" id="58">58</a>
 </pre></div><pre class="rust"><code><span class="kw">mod </span>approx_algo;
 <span class="attr">#[cfg(feature = <span class="string">&quot;approx_unique&quot;</span>)]
 </span><span class="kw">mod </span>approx_unique;
 <span class="kw">mod </span>arg_min_max;
+<span class="attr">#[cfg(feature = <span class="string">&quot;cutqcut&quot;</span>)]
+</span><span class="kw">mod </span>cut;
 <span class="attr">#[cfg(feature = <span class="string">&quot;round_series&quot;</span>)]
 </span><span class="kw">mod </span>floor_divide;
 <span class="attr">#[cfg(feature = <span class="string">&quot;fused&quot;</span>)]
@@ -78,6 +84,8 @@
 <span class="attr">#[cfg(feature = <span class="string">&quot;approx_unique&quot;</span>)]
 </span><span class="kw">pub use </span>approx_unique::<span class="kw-2">*</span>;
 <span class="kw">pub use </span>arg_min_max::ArgAgg;
+<span class="attr">#[cfg(feature = <span class="string">&quot;cutqcut&quot;</span>)]
+</span><span class="kw">pub use </span>cut::<span class="kw-2">*</span>;
 <span class="attr">#[cfg(feature = <span class="string">&quot;round_series&quot;</span>)]
 </span><span class="kw">pub use </span>floor_divide::<span class="kw-2">*</span>;
 <span class="attr">#[cfg(feature = <span class="string">&quot;fused&quot;</span>)]

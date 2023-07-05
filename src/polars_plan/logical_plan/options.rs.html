@@ -523,6 +523,9 @@
     <span class="doccomment">/// Collect groups to a list and apply the function over the groups.
     /// This can be important in aggregation context.
     </span><span class="kw">pub </span>collect_groups: ApplyOptions,
+    <span class="comment">// used for formatting, (only for anonymous functions)
+    </span><span class="attr">#[cfg_attr(feature = <span class="string">&quot;serde&quot;</span>, serde(skip_deserializing))]
+    </span><span class="kw">pub </span>fmt_str: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str,
     <span class="doccomment">/// There can be two ways of expanding wildcards:
     ///
     /// Say the schema is &#39;a&#39;, &#39;b&#39; and there is a function f
@@ -538,7 +541,6 @@
     ///
     /// this also accounts for regex expansion
     </span><span class="kw">pub </span>input_wildcard_expansion: bool,
-
     <span class="doccomment">/// automatically explode on unit length it ran as final aggregation.
     ///
     /// this is the case for aggregations like sum, min, covariance etc.
@@ -550,10 +552,6 @@
     /// head_1(x) -&gt; {1}
     /// sum(x) -&gt; {4}
     </span><span class="kw">pub </span>auto_explode: bool,
-    <span class="comment">// used for formatting, (only for anonymous functions)
-    </span><span class="attr">#[cfg_attr(feature = <span class="string">&quot;serde&quot;</span>, serde(skip_deserializing))]
-    </span><span class="kw">pub </span>fmt_str: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static </span>str,
-
     <span class="comment">// if the expression and its inputs should be cast to supertypes
     </span><span class="kw">pub </span>cast_to_supertypes: bool,
     <span class="comment">// apply physical expression may rename the output of this function
@@ -566,6 +564,7 @@
     <span class="comment">// Validate the output of a `map`.
     // this should always be true or we could OOB
     </span><span class="kw">pub </span>check_lengths: UnsafeBool,
+    <span class="kw">pub </span>allow_group_aware: bool,
 }
 
 <span class="kw">impl </span>FunctionOptions {
@@ -598,6 +597,7 @@
             pass_name_to_apply: <span class="bool-val">false</span>,
             changes_length: <span class="bool-val">false</span>,
             check_lengths: UnsafeBool(<span class="bool-val">true</span>),
+            allow_group_aware: <span class="bool-val">true</span>,
         }
     }
 }

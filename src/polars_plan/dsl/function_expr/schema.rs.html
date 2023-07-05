@@ -439,6 +439,10 @@
 <a href="#439" id="439">439</a>
 <a href="#440" id="440">440</a>
 <a href="#441" id="441">441</a>
+<a href="#442" id="442">442</a>
+<a href="#443" id="443">443</a>
+<a href="#444" id="444">444</a>
+<a href="#445" id="445">445</a>
 </pre></div><pre class="rust"><code><span class="kw">use super</span>::<span class="kw-2">*</span>;
 
 <span class="kw">impl </span>FunctionExpr {
@@ -675,6 +679,10 @@
             </span>Fused(<span class="kw">_</span>) =&gt; mapper.map_to_supertype(),
             ConcatExpr(<span class="kw">_</span>) =&gt; mapper.map_to_supertype(),
             Correlation { .. } =&gt; mapper.map_to_float_dtype(),
+            <span class="attr">#[cfg(feature = <span class="string">&quot;cutqcut&quot;</span>)]
+            </span>Cut { .. } =&gt; mapper.with_dtype(DataType::Categorical(<span class="prelude-val">None</span>)),
+            <span class="attr">#[cfg(feature = <span class="string">&quot;cutqcut&quot;</span>)]
+            </span>QCut { .. } =&gt; mapper.with_dtype(DataType::Categorical(<span class="prelude-val">None</span>)),
             ToPhysical =&gt; mapper.to_physical_type(),
             <span class="attr">#[cfg(feature = <span class="string">&quot;random&quot;</span>)]
             </span>Random { .. } =&gt; mapper.with_same_dtype(),
