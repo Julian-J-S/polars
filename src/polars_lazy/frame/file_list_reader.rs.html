@@ -243,7 +243,7 @@
     /// Returns [None] if path is not a glob pattern.
     </span><span class="kw">fn </span>glob(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; PolarsResult&lt;<span class="prelude-ty">Option</span>&lt;GlobIterator&gt;&gt; {
         <span class="kw">let </span>path_str = <span class="self">self</span>.path().to_string_lossy();
-        <span class="kw">if </span>path_str.contains(<span class="string">&#39;*&#39;</span>) {
+        <span class="kw">if </span>path_str.contains(<span class="string">&#39;*&#39;</span>) || path_str.contains(<span class="string">&#39;?&#39;</span>) || path_str.contains(<span class="string">&#39;[&#39;</span>) {
             polars_glob(<span class="kw-2">&amp;</span>path_str, <span class="self">self</span>.cloud_options()).map(<span class="prelude-val">Some</span>)
         } <span class="kw">else </span>{
             <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
