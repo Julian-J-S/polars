@@ -27,14 +27,14 @@
 <a href="#27" id="27">27</a>
 <a href="#28" id="28">28</a>
 <a href="#29" id="29">29</a>
-</pre></div><pre class="rust"><code><span class="attr">#[cfg(any(feature = <span class="string">&quot;arange&quot;</span>, feature = <span class="string">&quot;arg_where&quot;</span>))]
+</pre></div><pre class="rust"><code><span class="attr">#[cfg(any(feature = <span class="string">&quot;range&quot;</span>, feature = <span class="string">&quot;arg_where&quot;</span>))]
 </span><span class="kw">use super</span>::<span class="kw-2">*</span>;
 
 <span class="doccomment">/// Find the indexes that would sort these series in order of appearance.
 /// That means that the first `Series` will be used to determine the ordering
 /// until duplicates are found. Once duplicates are found, the next `Series` will
 /// be used and so on.
-</span><span class="attr">#[cfg(feature = <span class="string">&quot;arange&quot;</span>)]
+</span><span class="attr">#[cfg(feature = <span class="string">&quot;range&quot;</span>)]
 </span><span class="kw">pub fn </span>arg_sort_by&lt;E: AsRef&lt;[Expr]&gt;&gt;(by: E, descending: <span class="kw-2">&amp;</span>[bool]) -&gt; Expr {
     <span class="kw">let </span>e = <span class="kw-2">&amp;</span>by.as_ref()[<span class="number">0</span>];
     <span class="kw">let </span>name = expr_output_name(e).unwrap();

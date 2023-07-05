@@ -744,7 +744,7 @@
 <span class="kw">mod </span>pow;
 <span class="attr">#[cfg(feature = <span class="string">&quot;random&quot;</span>)]
 </span><span class="kw">mod </span>random;
-<span class="attr">#[cfg(feature = <span class="string">&quot;arange&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">&quot;range&quot;</span>)]
 </span><span class="kw">mod </span>range;
 <span class="attr">#[cfg(all(feature = <span class="string">&quot;rolling_window&quot;</span>, feature = <span class="string">&quot;moment&quot;</span>))]
 </span><span class="kw">mod </span>rolling;
@@ -792,7 +792,7 @@
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use </span><span class="self">self</span>::cat::CategoricalFunction;
 <span class="attr">#[cfg(feature = <span class="string">&quot;temporal&quot;</span>)]
 </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">use </span><span class="self">self</span>::datetime::TemporalFunction;
-<span class="attr">#[cfg(feature = <span class="string">&quot;arange&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">&quot;range&quot;</span>)]
 </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">use </span><span class="self">self</span>::range::RangeFunction;
 <span class="attr">#[cfg(feature = <span class="string">&quot;strings&quot;</span>)]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use </span><span class="self">self</span>::strings::StringFunction;
@@ -820,7 +820,7 @@
     BinaryExpr(BinaryFunction),
     <span class="attr">#[cfg(feature = <span class="string">&quot;temporal&quot;</span>)]
     </span>TemporalExpr(TemporalFunction),
-    <span class="attr">#[cfg(feature = <span class="string">&quot;arange&quot;</span>)]
+    <span class="attr">#[cfg(feature = <span class="string">&quot;range&quot;</span>)]
     </span>Range(RangeFunction),
     <span class="attr">#[cfg(feature = <span class="string">&quot;date_offset&quot;</span>)]
     </span>DateOffset(polars_time::Duration),
@@ -946,7 +946,7 @@
             BinaryExpr(b) =&gt; <span class="kw">return </span><span class="macro">write!</span>(f, <span class="string">&quot;{b}&quot;</span>),
             <span class="attr">#[cfg(feature = <span class="string">&quot;temporal&quot;</span>)]
             </span>TemporalExpr(fun) =&gt; <span class="kw">return </span><span class="macro">write!</span>(f, <span class="string">&quot;{fun}&quot;</span>),
-            <span class="attr">#[cfg(feature = <span class="string">&quot;arange&quot;</span>)]
+            <span class="attr">#[cfg(feature = <span class="string">&quot;range&quot;</span>)]
             </span>Range(func) =&gt; <span class="kw">return </span><span class="macro">write!</span>(f, <span class="string">&quot;{func}&quot;</span>),
             <span class="attr">#[cfg(feature = <span class="string">&quot;date_offset&quot;</span>)]
             </span>DateOffset(<span class="kw">_</span>) =&gt; <span class="string">&quot;dt.offset_by&quot;</span>,
@@ -1132,7 +1132,7 @@
             BinaryExpr(s) =&gt; s.into(),
             <span class="attr">#[cfg(feature = <span class="string">&quot;temporal&quot;</span>)]
             </span>TemporalExpr(func) =&gt; func.into(),
-            <span class="attr">#[cfg(feature = <span class="string">&quot;arange&quot;</span>)]
+            <span class="attr">#[cfg(feature = <span class="string">&quot;range&quot;</span>)]
             </span>Range(func) =&gt; func.into(),
 
             <span class="attr">#[cfg(feature = <span class="string">&quot;date_offset&quot;</span>)]
@@ -1415,7 +1415,7 @@
     }
 }
 
-<span class="attr">#[cfg(feature = <span class="string">&quot;arange&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">&quot;range&quot;</span>)]
 </span><span class="kw">impl </span>From&lt;RangeFunction&gt; <span class="kw">for </span>SpecialEq&lt;Arc&lt;<span class="kw">dyn </span>SeriesUdf&gt;&gt; {
     <span class="kw">fn </span>from(func: RangeFunction) -&gt; <span class="self">Self </span>{
         <span class="kw">use </span>RangeFunction::<span class="kw-2">*</span>;

@@ -142,7 +142,7 @@
 <span class="doccomment">/// Create list entries that are range arrays
 /// - if `start` and `end` are a column, every element will expand into an array in a list column.
 /// - if `start` and `end` are literals the output will be of `Int64`.
-</span><span class="attr">#[cfg(feature = <span class="string">&quot;arange&quot;</span>)]
+</span><span class="attr">#[cfg(feature = <span class="string">&quot;range&quot;</span>)]
 </span><span class="kw">pub fn </span>arange(start: Expr, end: Expr, step: i64) -&gt; Expr {
     <span class="kw">let </span>input = <span class="macro">vec!</span>[start, end];
 
@@ -156,7 +156,7 @@
     }
 }
 
-<span class="attr">#[cfg(feature = <span class="string">&quot;arange&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">&quot;range&quot;</span>)]
 </span><span class="doccomment">/// Generate a range of integers.
 </span><span class="kw">pub fn </span>int_range(start: Expr, end: Expr, step: i64) -&gt; Expr {
     <span class="kw">let </span>input = <span class="macro">vec!</span>[start, end];
@@ -171,7 +171,7 @@
     }
 }
 
-<span class="attr">#[cfg(feature = <span class="string">&quot;arange&quot;</span>)]
+<span class="attr">#[cfg(feature = <span class="string">&quot;range&quot;</span>)]
 </span><span class="doccomment">/// Generate a range of integers for each row of the input columns.
 </span><span class="kw">pub fn </span>int_ranges(start: Expr, end: Expr, step: i64) -&gt; Expr {
     <span class="kw">let </span>input = <span class="macro">vec!</span>[start, end];
