@@ -402,10 +402,6 @@
 <a href="#402" id="402">402</a>
 <a href="#403" id="403">403</a>
 <a href="#404" id="404">404</a>
-<a href="#405" id="405">405</a>
-<a href="#406" id="406">406</a>
-<a href="#407" id="407">407</a>
-<a href="#408" id="408">408</a>
 </pre></div><pre class="rust"><code><span class="kw">mod </span>args;
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>multiple_keys;
 <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">mod </span>single_keys;
@@ -501,11 +497,7 @@
 </span><span class="attr">#[cfg(feature = <span class="string">&quot;dtype-categorical&quot;</span>)]
 </span><span class="kw">pub fn </span>_check_categorical_src(l: <span class="kw-2">&amp;</span>DataType, r: <span class="kw-2">&amp;</span>DataType) -&gt; PolarsResult&lt;()&gt; {
     <span class="kw">if let </span>(DataType::Categorical(<span class="prelude-val">Some</span>(l)), DataType::Categorical(<span class="prelude-val">Some</span>(r))) = (l, r) {
-        <span class="macro">polars_ensure!</span>(
-            l.same_src(r),
-            ComputeError: <span class="string">&quot;joins/or comparisons on categoricals can only happen if they were \
-            created under the same global string cache&quot;
-        </span>);
+        <span class="macro">polars_ensure!</span>(l.same_src(r), string_cache_mismatch);
     }
     <span class="prelude-val">Ok</span>(())
 }
