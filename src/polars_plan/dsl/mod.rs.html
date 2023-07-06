@@ -1909,14 +1909,6 @@
 <a href="#1909" id="1909">1909</a>
 <a href="#1910" id="1910">1910</a>
 <a href="#1911" id="1911">1911</a>
-<a href="#1912" id="1912">1912</a>
-<a href="#1913" id="1913">1913</a>
-<a href="#1914" id="1914">1914</a>
-<a href="#1915" id="1915">1915</a>
-<a href="#1916" id="1916">1916</a>
-<a href="#1917" id="1917">1917</a>
-<a href="#1918" id="1918">1918</a>
-<a href="#1919" id="1919">1919</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(ambiguous_glob_reexports)]
 </span><span class="doccomment">//! Domain specific language for the Lazy API.
 </span><span class="attr">#[cfg(feature = <span class="string">&quot;dtype-categorical&quot;</span>)]
@@ -3400,19 +3392,11 @@
         left_closed: bool,
         allow_duplicates: bool,
     ) -&gt; Expr {
-        <span class="comment">// For now, we can&#39;t qcut over groups without creating consistent labels. The generated
-        // labels would be based on per-group quantiles, and per-group label differences caused
-        // problems when combining into a single categorical Series
-        </span><span class="kw">let </span>group_ok = labels.is_some();
         <span class="self">self</span>.apply_private(FunctionExpr::QCut {
             probs,
             labels,
             left_closed,
             allow_duplicates,
-        })
-        .with_function_options(|<span class="kw-2">mut </span>opt| {
-            opt.allow_group_aware = group_ok;
-            opt
         })
     }
 
