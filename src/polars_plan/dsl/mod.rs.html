@@ -3390,10 +3390,6 @@
             labels,
             left_closed,
         })
-        .with_function_options(|<span class="kw-2">mut </span>opt| {
-            opt.allow_group_aware = <span class="bool-val">false</span>;
-            opt
-        })
     }
 
     <span class="attr">#[cfg(feature = <span class="string">&quot;cutqcut&quot;</span>)]
@@ -3404,6 +3400,10 @@
         left_closed: bool,
         allow_duplicates: bool,
     ) -&gt; Expr {
+        <span class="comment">// For now, we can&#39;t qcut over groups without creating consistent labels. The generated
+        // labels would be based on per-group quantiles, and per-group label differences caused
+        // problems when combining into a single categorical Series
+        </span><span class="kw">let </span>group_ok = labels.is_some();
         <span class="self">self</span>.apply_private(FunctionExpr::QCut {
             probs,
             labels,
@@ -3411,7 +3411,7 @@
             allow_duplicates,
         })
         .with_function_options(|<span class="kw-2">mut </span>opt| {
-            opt.allow_group_aware = <span class="bool-val">false</span>;
+            opt.allow_group_aware = group_ok;
             opt
         })
     }
