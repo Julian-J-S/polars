@@ -999,7 +999,7 @@
                     }
                     s
                 });
-                builder.append_opt_series(opt_s.as_ref())
+                builder.append_opt_series(opt_s.as_ref()).unwrap();
             });
             builder.finish()
         } <span class="kw">else </span>{
@@ -1061,7 +1061,7 @@
                     <span class="comment">// nothing
                     </span><span class="kw">_ </span>=&gt; {}
                 }
-                builder.append_series(<span class="kw-2">&amp;</span>acc);
+                builder.append_series(<span class="kw-2">&amp;</span>acc).unwrap();
             }
             builder.finish()
         };

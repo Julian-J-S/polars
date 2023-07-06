@@ -985,7 +985,7 @@
                 );
                 <span class="kw">for </span>idx <span class="kw">in </span>groups.all().iter() {
                     <span class="kw">let </span>taken = s.take_iter_unchecked(<span class="kw-2">&amp;mut </span>idx.iter().map(|i| <span class="kw-2">*</span>i <span class="kw">as </span>usize));
-                    builder.append_series(<span class="kw-2">&amp;</span>taken)
+                    builder.append_series(<span class="kw-2">&amp;</span>taken).unwrap();
                 }
                 builder.finish().into_series()
             }
@@ -997,7 +997,7 @@
                 );
                 <span class="kw">for </span>[first, len] <span class="kw">in </span>groups {
                     <span class="kw">let </span>taken = s.slice(<span class="kw-2">*</span>first <span class="kw">as </span>i64, <span class="kw-2">*</span>len <span class="kw">as </span>usize);
-                    builder.append_series(<span class="kw-2">&amp;</span>taken)
+                    builder.append_series(<span class="kw-2">&amp;</span>taken).unwrap();
                 }
                 builder.finish().into_series()
             }

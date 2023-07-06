@@ -441,7 +441,7 @@
                 <span class="attr">#[cfg(feature = <span class="string">&quot;object&quot;</span>)]
                 </span>(Object(lhs), Object(rhs)) =&gt; lhs == rhs,
                 <span class="attr">#[cfg(feature = <span class="string">&quot;dtype-struct&quot;</span>)]
-                </span>(Struct(lhs), Struct(rhs)) =&gt; lhs == rhs,
+                </span>(Struct(lhs), Struct(rhs)) =&gt; Vec::as_ptr(lhs) == Vec::as_ptr(rhs) || lhs == rhs,
                 <span class="attr">#[cfg(feature = <span class="string">&quot;dtype-array&quot;</span>)]
                 </span>(Array(left_inner, left_width), Array(right_inner, right_width)) =&gt; {
                     left_width == right_width &amp;&amp; left_inner == right_inner
@@ -707,7 +707,7 @@
     <span class="prelude-val">Ok</span>(<span class="kw">match </span>(left, right) {
         <span class="attr">#[cfg(feature = <span class="string">&quot;dtype-categorical&quot;</span>)]
         </span>(Categorical(<span class="prelude-val">Some</span>(rev_map_l)), Categorical(<span class="prelude-val">Some</span>(rev_map_r))) =&gt; {
-            <span class="kw">let </span>rev_map = merge_categorical_map(rev_map_l, rev_map_r)<span class="question-mark">?</span>;
+            <span class="kw">let </span>rev_map = merge_rev_map(rev_map_l, rev_map_r)<span class="question-mark">?</span>;
             Categorical(<span class="prelude-val">Some</span>(rev_map))
         }
         (List(inner_l), List(inner_r)) =&gt; {

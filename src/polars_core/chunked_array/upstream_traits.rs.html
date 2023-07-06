@@ -943,9 +943,9 @@
         </span><span class="kw">let </span><span class="kw-2">mut </span>builder =
             get_list_builder(v.borrow().dtype(), capacity * <span class="number">5</span>, capacity, <span class="string">&quot;collected&quot;</span>).unwrap();
 
-        builder.append_series(v.borrow());
+        builder.append_series(v.borrow()).unwrap();
         <span class="kw">for </span>s <span class="kw">in </span>it {
-            builder.append_series(s.borrow());
+            builder.append_series(s.borrow()).unwrap();
         }
         builder.finish()
     }
@@ -991,7 +991,7 @@
                     builder.append_empty();
 
                     <span class="kw">for </span>opt_s <span class="kw">in </span>it {
-                        builder.append_opt_series(opt_s.as_ref());
+                        builder.append_opt_series(opt_s.as_ref()).unwrap();
                     }
                     builder.finish()
                 } <span class="kw">else </span>{
@@ -1003,10 +1003,10 @@
                             <span class="kw">for _ in </span><span class="number">0</span>..init_null_count {
                                 builder.append_null();
                             }
-                            builder.append_series(first_s);
+                            builder.append_series(first_s).unwrap();
 
                             <span class="kw">for </span>opt_s <span class="kw">in </span>it {
-                                builder.append_opt_series(opt_s.as_ref());
+                                builder.append_opt_series(opt_s.as_ref()).unwrap();
                             }
                             builder.finish()
                         }
@@ -1023,10 +1023,10 @@
                             <span class="kw">for _ in </span><span class="number">0</span>..init_null_count {
                                 builder.append_null();
                             }
-                            builder.append_series(first_s);
+                            builder.append_series(first_s).unwrap();
 
                             <span class="kw">for </span>opt_s <span class="kw">in </span>it {
-                                builder.append_opt_series(opt_s.as_ref());
+                                builder.append_opt_series(opt_s.as_ref()).unwrap();
                             }
                             builder.finish()
                         }
@@ -1481,7 +1481,7 @@
 
                 <span class="kw">for </span>v <span class="kw">in </span>vectors {
                     <span class="kw">for </span>val <span class="kw">in </span>v {
-                        builder.append_opt_series(val.as_ref());
+                        builder.append_opt_series(val.as_ref()).unwrap();
                     }
                 }
                 builder.finish()
@@ -1491,7 +1491,7 @@
                     get_list_builder(dtype, value_capacity, list_capacity, <span class="string">&quot;collected&quot;</span>).unwrap();
                 <span class="kw">for </span>v <span class="kw">in </span><span class="kw-2">&amp;</span>vectors {
                     <span class="kw">for </span>val <span class="kw">in </span>v {
-                        builder.append_opt_series(val.as_ref());
+                        builder.append_opt_series(val.as_ref()).unwrap();
                     }
                 }
                 builder.finish()

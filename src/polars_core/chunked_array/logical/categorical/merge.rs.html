@@ -118,6 +118,63 @@
 <a href="#118" id="118">118</a>
 <a href="#119" id="119">119</a>
 <a href="#120" id="120">120</a>
+<a href="#121" id="121">121</a>
+<a href="#122" id="122">122</a>
+<a href="#123" id="123">123</a>
+<a href="#124" id="124">124</a>
+<a href="#125" id="125">125</a>
+<a href="#126" id="126">126</a>
+<a href="#127" id="127">127</a>
+<a href="#128" id="128">128</a>
+<a href="#129" id="129">129</a>
+<a href="#130" id="130">130</a>
+<a href="#131" id="131">131</a>
+<a href="#132" id="132">132</a>
+<a href="#133" id="133">133</a>
+<a href="#134" id="134">134</a>
+<a href="#135" id="135">135</a>
+<a href="#136" id="136">136</a>
+<a href="#137" id="137">137</a>
+<a href="#138" id="138">138</a>
+<a href="#139" id="139">139</a>
+<a href="#140" id="140">140</a>
+<a href="#141" id="141">141</a>
+<a href="#142" id="142">142</a>
+<a href="#143" id="143">143</a>
+<a href="#144" id="144">144</a>
+<a href="#145" id="145">145</a>
+<a href="#146" id="146">146</a>
+<a href="#147" id="147">147</a>
+<a href="#148" id="148">148</a>
+<a href="#149" id="149">149</a>
+<a href="#150" id="150">150</a>
+<a href="#151" id="151">151</a>
+<a href="#152" id="152">152</a>
+<a href="#153" id="153">153</a>
+<a href="#154" id="154">154</a>
+<a href="#155" id="155">155</a>
+<a href="#156" id="156">156</a>
+<a href="#157" id="157">157</a>
+<a href="#158" id="158">158</a>
+<a href="#159" id="159">159</a>
+<a href="#160" id="160">160</a>
+<a href="#161" id="161">161</a>
+<a href="#162" id="162">162</a>
+<a href="#163" id="163">163</a>
+<a href="#164" id="164">164</a>
+<a href="#165" id="165">165</a>
+<a href="#166" id="166">166</a>
+<a href="#167" id="167">167</a>
+<a href="#168" id="168">168</a>
+<a href="#169" id="169">169</a>
+<a href="#170" id="170">170</a>
+<a href="#171" id="171">171</a>
+<a href="#172" id="172">172</a>
+<a href="#173" id="173">173</a>
+<a href="#174" id="174">174</a>
+<a href="#175" id="175">175</a>
+<a href="#176" id="176">176</a>
+<a href="#177" id="177">177</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::sync::Arc;
 
 <span class="kw">use </span>arrow::bitmap::MutableBitmap;
@@ -125,57 +182,114 @@
 
 <span class="kw">use super</span>::<span class="kw-2">*</span>;
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>merge_categorical_map(
+<span class="kw">fn </span>slots_to_mut(slots: <span class="kw-2">&amp;</span>Utf8Array&lt;i64&gt;) -&gt; MutableUtf8Array&lt;i64&gt; {
+    <span class="comment">// safety: invariants don&#39;t change, just the type
+    </span><span class="kw">let </span>offset_buf = <span class="kw">unsafe </span>{ Offsets::new_unchecked(slots.offsets().as_slice().to_vec()) };
+    <span class="kw">let </span>values_buf = slots.values().as_slice().to_vec();
+
+    <span class="kw">let </span>validity_buf = <span class="kw">if let </span><span class="prelude-val">Some</span>(validity) = slots.validity() {
+        <span class="kw">let </span><span class="kw-2">mut </span>validity_buf = MutableBitmap::new();
+        <span class="kw">let </span>(b, offset, len) = validity.as_slice();
+        validity_buf.extend_from_slice(b, offset, len);
+        <span class="prelude-val">Some</span>(validity_buf)
+    } <span class="kw">else </span>{
+        <span class="prelude-val">None
+    </span>};
+
+    <span class="comment">// Safety
+    // all offsets are valid and the u8 data is valid utf8
+    </span><span class="kw">unsafe </span>{
+        MutableUtf8Array::new_unchecked(
+            DataType::Utf8.to_arrow(),
+            offset_buf,
+            values_buf,
+            validity_buf,
+        )
+    }
+}
+
+<span class="kw">struct </span>State {
+    map: PlHashMap&lt;u32, u32&gt;,
+    slots: MutableUtf8Array&lt;i64&gt;,
+}
+
+<span class="attr">#[derive(Default)]
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>RevMapMerger {
+    id: u128,
+    original: Arc&lt;RevMapping&gt;,
+    <span class="comment">// only initiate state when
+    // we encounter a rev-map from a different source,
+    // but from the same string cache
+    </span>state: <span class="prelude-ty">Option</span>&lt;State&gt;,
+}
+
+<span class="kw">impl </span>RevMapMerger {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new(rev_map: Arc&lt;RevMapping&gt;) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span>RevMapping::Global(<span class="kw">_</span>, <span class="kw">_</span>, id) = rev_map.as_ref() <span class="kw">else </span>{ <span class="macro">panic!</span>(<span class="string">&quot;impl error&quot;</span>) };
+        RevMapMerger {
+            state: <span class="prelude-val">None</span>,
+            id: <span class="kw-2">*</span>id,
+            original: rev_map,
+        }
+    }
+
+    <span class="kw">fn </span>init_state(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
+        <span class="kw">let </span>RevMapping::Global(map, slots, <span class="kw">_</span>) = <span class="self">self</span>.original.as_ref() <span class="kw">else </span>{ <span class="macro">unreachable!</span>() };
+        <span class="self">self</span>.state = <span class="prelude-val">Some</span>(State {
+            map: (<span class="kw-2">*</span>map).clone(),
+            slots: slots_to_mut(slots),
+        })
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>merge_map(<span class="kw-2">&amp;mut </span><span class="self">self</span>, rev_map: <span class="kw-2">&amp;</span>Arc&lt;RevMapping&gt;) -&gt; PolarsResult&lt;()&gt; {
+        <span class="comment">// happy path
+        // they come from the same source
+        </span><span class="kw">if </span>Arc::ptr_eq(<span class="kw-2">&amp;</span><span class="self">self</span>.original, rev_map) {
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(());
+        }
+        <span class="kw">let </span>RevMapping::Global(map, slots, id) = rev_map.as_ref() <span class="kw">else </span>{ <span class="macro">polars_bail!</span>(ComputeError: <span class="string">&quot;expected global rev-map&quot;</span>) };
+        <span class="macro">polars_ensure!</span>(<span class="kw-2">*</span>id == <span class="self">self</span>.id, ComputeError: <span class="string">&quot;categoricals don&#39;t originate from the same string cache\n\
+    try setting a global string cache or increase the scope of the local string cache&quot;</span>);
+
+        <span class="kw">if </span><span class="self">self</span>.state.is_none() {
+            <span class="self">self</span>.init_state()
+        }
+        <span class="kw">let </span>state = <span class="self">self</span>.state.as_mut().unwrap();
+
+        <span class="kw">for </span>(cat, idx) <span class="kw">in </span>map.iter() {
+            state.map.entry(<span class="kw-2">*</span>cat).or_insert_with(|| {
+                <span class="comment">// Safety
+                // within bounds
+                </span><span class="kw">let </span>str_val = <span class="kw">unsafe </span>{ slots.value_unchecked(<span class="kw-2">*</span>idx <span class="kw">as </span>usize) };
+                <span class="kw">let </span>new_idx = state.slots.len() <span class="kw">as </span>u32;
+                state.slots.push(<span class="prelude-val">Some</span>(str_val));
+
+                new_idx
+            });
+        }
+        <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>finish(<span class="self">self</span>) -&gt; Arc&lt;RevMapping&gt; {
+        <span class="kw">match </span><span class="self">self</span>.state {
+            <span class="prelude-val">None </span>=&gt; <span class="self">self</span>.original,
+            <span class="prelude-val">Some</span>(state) =&gt; {
+                <span class="kw">let </span>new_rev = RevMapping::Global(state.map, state.slots.into(), <span class="self">self</span>.id);
+                Arc::new(new_rev)
+            }
+        }
+    }
+}
+
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>merge_rev_map(
     left: <span class="kw-2">&amp;</span>Arc&lt;RevMapping&gt;,
     right: <span class="kw-2">&amp;</span>Arc&lt;RevMapping&gt;,
 ) -&gt; PolarsResult&lt;Arc&lt;RevMapping&gt;&gt; {
     <span class="kw">match </span>(<span class="kw-2">&amp;**</span>left, <span class="kw-2">&amp;**</span>right) {
-        (RevMapping::Global(l_map, l_slots, l_id), RevMapping::Global(r_map, r_slots, r_id)) =&gt; {
-            <span class="macro">polars_ensure!</span>(
-                l_id == r_id,
-                ComputeError: <span class="string">&quot;unable to merge categorical arrays created under different global \
-                string caches (try setting a global string cache)&quot;
-            </span>);
-            <span class="kw">let </span><span class="kw-2">mut </span>new_map = (<span class="kw-2">*</span>l_map).clone();
-
-            <span class="comment">// safety: invariants don&#39;t change, just the type
-            </span><span class="kw">let </span>offset_buf =
-                <span class="kw">unsafe </span>{ Offsets::new_unchecked(l_slots.offsets().as_slice().to_vec()) };
-            <span class="kw">let </span>values_buf = l_slots.values().as_slice().to_vec();
-
-            <span class="kw">let </span>validity_buf = <span class="kw">if let </span><span class="prelude-val">Some</span>(validity) = l_slots.validity() {
-                <span class="kw">let </span><span class="kw-2">mut </span>validity_buf = MutableBitmap::new();
-                <span class="kw">let </span>(b, offset, len) = validity.as_slice();
-                validity_buf.extend_from_slice(b, offset, len);
-                <span class="prelude-val">Some</span>(validity_buf)
-            } <span class="kw">else </span>{
-                <span class="prelude-val">None
-            </span>};
-
-            <span class="comment">// Safety
-            // all offsets are valid and the u8 data is valid utf8
-            </span><span class="kw">let </span><span class="kw-2">mut </span>new_slots = <span class="kw">unsafe </span>{
-                MutableUtf8Array::new_unchecked(
-                    DataType::Utf8.to_arrow(),
-                    offset_buf,
-                    values_buf,
-                    validity_buf,
-                )
-            };
-
-            <span class="kw">for </span>(cat, idx) <span class="kw">in </span>r_map.iter() {
-                new_map.entry(<span class="kw-2">*</span>cat).or_insert_with(|| {
-                    <span class="comment">// Safety
-                    // within bounds
-                    </span><span class="kw">let </span>str_val = <span class="kw">unsafe </span>{ r_slots.value_unchecked(<span class="kw-2">*</span>idx <span class="kw">as </span>usize) };
-                    <span class="kw">let </span>new_idx = new_slots.len() <span class="kw">as </span>u32;
-                    new_slots.push(<span class="prelude-val">Some</span>(str_val));
-
-                    new_idx
-                });
-            }
-            <span class="kw">let </span>new_rev = RevMapping::Global(new_map, new_slots.into(), <span class="kw-2">*</span>l_id);
-            <span class="prelude-val">Ok</span>(Arc::new(new_rev))
+        (RevMapping::Global(<span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>), RevMapping::Global(<span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>)) =&gt; {
+            <span class="kw">let </span><span class="kw-2">mut </span>merger = RevMapMerger::new(left.clone());
+            merger.merge_map(right)<span class="question-mark">?</span>;
+            <span class="prelude-val">Ok</span>(merger.finish())
         }
         (RevMapping::Local(arr_l), RevMapping::Local(arr_r)) =&gt; {
             <span class="comment">// they are from the same source, just clone
@@ -201,7 +315,7 @@
 
 <span class="kw">impl </span>CategoricalChunked {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>merge_categorical_map(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; PolarsResult&lt;Arc&lt;RevMapping&gt;&gt; {
-        merge_categorical_map(<span class="self">self</span>.get_rev_map(), other.get_rev_map())
+        merge_rev_map(<span class="self">self</span>.get_rev_map(), other.get_rev_map())
     }
 }
 
@@ -210,13 +324,13 @@
 </span><span class="kw">mod </span>test {
     <span class="kw">use super</span>::<span class="kw-2">*</span>;
     <span class="kw">use </span><span class="kw">crate</span>::chunked_array::categorical::CategoricalChunkedBuilder;
-    <span class="kw">use crate</span>::{enable_string_cache, reset_string_cache};
+    <span class="kw">use crate</span>::{enable_string_cache, reset_string_cache, IUseStringCache};
 
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_merge_rev_map() {
         <span class="kw">let </span>_lock = SINGLE_LOCK.lock();
         reset_string_cache();
-        enable_string_cache(<span class="bool-val">true</span>);
+        <span class="kw">let </span>_sc = IUseStringCache::hold();
 
         <span class="kw">let </span><span class="kw-2">mut </span>builder1 = CategoricalChunkedBuilder::new(<span class="string">&quot;foo&quot;</span>, <span class="number">10</span>);
         <span class="kw">let </span><span class="kw-2">mut </span>builder2 = CategoricalChunkedBuilder::new(<span class="string">&quot;foo&quot;</span>, <span class="number">10</span>);

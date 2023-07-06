@@ -1088,7 +1088,7 @@
         <span class="self">self</span>.field.data_type()
     }
 
-    <span class="attr">#[cfg(feature = <span class="string">&quot;dtype-struct&quot;</span>)]
+    <span class="attr">#[cfg(any(feature = <span class="string">&quot;dtype-struct&quot;</span>, feature = <span class="string">&quot;dtype-categorical&quot;</span>))]
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>set_dtype(<span class="kw-2">&amp;mut </span><span class="self">self</span>, dtype: DataType) {
         <span class="self">self</span>.field = Arc::new(Field::new(<span class="self">self</span>.name(), dtype))
     }
