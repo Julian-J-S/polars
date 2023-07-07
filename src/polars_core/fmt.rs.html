@@ -1091,6 +1091,73 @@
 <a href="#1091" id="1091">1091</a>
 <a href="#1092" id="1092">1092</a>
 <a href="#1093" id="1093">1093</a>
+<a href="#1094" id="1094">1094</a>
+<a href="#1095" id="1095">1095</a>
+<a href="#1096" id="1096">1096</a>
+<a href="#1097" id="1097">1097</a>
+<a href="#1098" id="1098">1098</a>
+<a href="#1099" id="1099">1099</a>
+<a href="#1100" id="1100">1100</a>
+<a href="#1101" id="1101">1101</a>
+<a href="#1102" id="1102">1102</a>
+<a href="#1103" id="1103">1103</a>
+<a href="#1104" id="1104">1104</a>
+<a href="#1105" id="1105">1105</a>
+<a href="#1106" id="1106">1106</a>
+<a href="#1107" id="1107">1107</a>
+<a href="#1108" id="1108">1108</a>
+<a href="#1109" id="1109">1109</a>
+<a href="#1110" id="1110">1110</a>
+<a href="#1111" id="1111">1111</a>
+<a href="#1112" id="1112">1112</a>
+<a href="#1113" id="1113">1113</a>
+<a href="#1114" id="1114">1114</a>
+<a href="#1115" id="1115">1115</a>
+<a href="#1116" id="1116">1116</a>
+<a href="#1117" id="1117">1117</a>
+<a href="#1118" id="1118">1118</a>
+<a href="#1119" id="1119">1119</a>
+<a href="#1120" id="1120">1120</a>
+<a href="#1121" id="1121">1121</a>
+<a href="#1122" id="1122">1122</a>
+<a href="#1123" id="1123">1123</a>
+<a href="#1124" id="1124">1124</a>
+<a href="#1125" id="1125">1125</a>
+<a href="#1126" id="1126">1126</a>
+<a href="#1127" id="1127">1127</a>
+<a href="#1128" id="1128">1128</a>
+<a href="#1129" id="1129">1129</a>
+<a href="#1130" id="1130">1130</a>
+<a href="#1131" id="1131">1131</a>
+<a href="#1132" id="1132">1132</a>
+<a href="#1133" id="1133">1133</a>
+<a href="#1134" id="1134">1134</a>
+<a href="#1135" id="1135">1135</a>
+<a href="#1136" id="1136">1136</a>
+<a href="#1137" id="1137">1137</a>
+<a href="#1138" id="1138">1138</a>
+<a href="#1139" id="1139">1139</a>
+<a href="#1140" id="1140">1140</a>
+<a href="#1141" id="1141">1141</a>
+<a href="#1142" id="1142">1142</a>
+<a href="#1143" id="1143">1143</a>
+<a href="#1144" id="1144">1144</a>
+<a href="#1145" id="1145">1145</a>
+<a href="#1146" id="1146">1146</a>
+<a href="#1147" id="1147">1147</a>
+<a href="#1148" id="1148">1148</a>
+<a href="#1149" id="1149">1149</a>
+<a href="#1150" id="1150">1150</a>
+<a href="#1151" id="1151">1151</a>
+<a href="#1152" id="1152">1152</a>
+<a href="#1153" id="1153">1153</a>
+<a href="#1154" id="1154">1154</a>
+<a href="#1155" id="1155">1155</a>
+<a href="#1156" id="1156">1156</a>
+<a href="#1157" id="1157">1157</a>
+<a href="#1158" id="1158">1158</a>
+<a href="#1159" id="1159">1159</a>
+<a href="#1160" id="1160">1160</a>
 </pre></div><pre class="rust"><code><span class="attr">#[cfg(any(feature = <span class="string">&quot;fmt&quot;</span>, feature = <span class="string">&quot;fmt_no_tty&quot;</span>))]
 </span><span class="kw">use </span>std::borrow::Cow;
 <span class="kw">use </span>std::fmt::{Debug, Display, Formatter};
@@ -1117,7 +1184,6 @@
 
 <span class="kw">use </span><span class="kw">crate</span>::config::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-
 <span class="kw">const </span>LIMIT: usize = <span class="number">25</span>;
 
 <span class="attr">#[derive(Copy, Clone)]
@@ -1445,24 +1511,82 @@
 }
 
 <span class="attr">#[cfg(any(feature = <span class="string">&quot;fmt&quot;</span>, feature = <span class="string">&quot;fmt_no_tty&quot;</span>))]
+</span><span class="kw">fn </span>field_to_str(f: <span class="kw-2">&amp;</span>Field, str_truncate: usize) -&gt; (String, usize) {
+    <span class="kw">let </span>name = make_str_val(f.name(), str_truncate);
+    <span class="kw">let </span>name_length = name.len();
+    <span class="kw">let </span><span class="kw-2">mut </span>column_name = name;
+    <span class="kw">if </span>env_is_true(FMT_TABLE_HIDE_COLUMN_NAMES) {
+        column_name = <span class="string">&quot;&quot;</span>.to_string();
+    }
+    <span class="kw">let </span>column_data_type = <span class="kw">if </span>env_is_true(FMT_TABLE_HIDE_COLUMN_DATA_TYPES) {
+        <span class="string">&quot;&quot;</span>.to_string()
+    } <span class="kw">else if </span>env_is_true(FMT_TABLE_INLINE_COLUMN_DATA_TYPE)
+        | env_is_true(FMT_TABLE_HIDE_COLUMN_NAMES)
+    {
+        <span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, f.data_type())
+    } <span class="kw">else </span>{
+        <span class="macro">format!</span>(<span class="string">&quot;\n{}&quot;</span>, f.data_type())
+    };
+    <span class="kw">let </span><span class="kw-2">mut </span>dtype_length = column_data_type.trim_start().len();
+    <span class="kw">let </span><span class="kw-2">mut </span>separator = <span class="string">&quot;\n---&quot;</span>;
+    <span class="kw">if </span>env_is_true(FMT_TABLE_HIDE_COLUMN_SEPARATOR)
+        | env_is_true(FMT_TABLE_HIDE_COLUMN_NAMES)
+        | env_is_true(FMT_TABLE_HIDE_COLUMN_DATA_TYPES)
+    {
+        separator = <span class="string">&quot;&quot;
+    </span>}
+    <span class="kw">let </span>s = <span class="kw">if </span>env_is_true(FMT_TABLE_INLINE_COLUMN_DATA_TYPE)
+        &amp; !env_is_true(FMT_TABLE_HIDE_COLUMN_DATA_TYPES)
+    {
+        <span class="kw">let </span>inline_name_dtype = <span class="macro">format!</span>(<span class="string">&quot;{column_name} ({column_data_type})&quot;</span>);
+        dtype_length = inline_name_dtype.len();
+        inline_name_dtype
+    } <span class="kw">else </span>{
+        <span class="macro">format!</span>(<span class="string">&quot;{column_name}{separator}{column_data_type}&quot;</span>)
+    };
+    <span class="kw">let </span><span class="kw-2">mut </span>s_len = std::cmp::max(name_length, dtype_length);
+    <span class="kw">let </span>separator_length = separator.trim().len();
+    <span class="kw">if </span>s_len &lt; separator_length {
+        s_len = separator_length;
+    }
+    (s, s_len + <span class="number">2</span>)
+}
+
+<span class="attr">#[cfg(any(feature = <span class="string">&quot;fmt&quot;</span>, feature = <span class="string">&quot;fmt_no_tty&quot;</span>))]
 </span><span class="kw">fn </span>prepare_row(
     row: Vec&lt;Cow&lt;<span class="lifetime">&#39;_</span>, str&gt;&gt;,
     n_first: usize,
     n_last: usize,
     str_truncate: usize,
+    max_elem_lengths: <span class="kw-2">&amp;mut </span>[usize],
 ) -&gt; Vec&lt;String&gt; {
     <span class="kw">let </span>reduce_columns = n_first + n_last &lt; row.len();
-    <span class="kw">let </span><span class="kw-2">mut </span>row_str = Vec::with_capacity(n_first + n_last + reduce_columns <span class="kw">as </span>usize);
-    <span class="kw">for </span>v <span class="kw">in </span>row[<span class="number">0</span>..n_first].iter() {
-        row_str.push(make_str_val(v, str_truncate));
+    <span class="kw">let </span>n_elems = n_first + n_last + reduce_columns <span class="kw">as </span>usize;
+    <span class="kw">let </span><span class="kw-2">mut </span>row_strings = Vec::with_capacity(n_elems);
+
+    <span class="kw">for </span>(idx, v) <span class="kw">in </span>row[<span class="number">0</span>..n_first].iter().enumerate() {
+        <span class="kw">let </span>elem_str = make_str_val(v, str_truncate);
+        <span class="kw">let </span>elem_len = elem_str.len() + <span class="number">2</span>;
+        <span class="kw">if </span>max_elem_lengths[idx] &lt; elem_len {
+            max_elem_lengths[idx] = elem_len;
+        };
+        row_strings.push(elem_str);
     }
     <span class="kw">if </span>reduce_columns {
-        row_str.push(<span class="string">&quot;…&quot;</span>.to_string());
+        row_strings.push(<span class="string">&quot;…&quot;</span>.to_string());
+        max_elem_lengths[n_first] = <span class="number">3</span>;
     }
-    <span class="kw">for </span>v <span class="kw">in </span>row[row.len() - n_last..].iter() {
-        row_str.push(make_str_val(v, str_truncate));
+    <span class="kw">let </span>elem_offset = n_first + reduce_columns <span class="kw">as </span>usize;
+    <span class="kw">for </span>(idx, v) <span class="kw">in </span>row[row.len() - n_last..].iter().enumerate() {
+        <span class="kw">let </span>elem_str = make_str_val(v, str_truncate);
+        <span class="kw">let </span>elem_len = elem_str.len() + <span class="number">2</span>;
+        <span class="kw">let </span>elem_idx = elem_offset + idx;
+        <span class="kw">if </span>max_elem_lengths[elem_idx] &lt; elem_len {
+            max_elem_lengths[elem_idx] = elem_len;
+        };
+        row_strings.push(elem_str);
     }
-    row_str
+    row_strings
 }
 
 <span class="kw">fn </span>env_is_true(varname: <span class="kw-2">&amp;</span>str) -&gt; bool {
@@ -1519,62 +1643,26 @@
             } <span class="kw">else </span>{
                 (<span class="self">self</span>.width(), <span class="number">0</span>)
             };
+
             <span class="kw">let </span>reduce_columns = n_first + n_last &lt; <span class="self">self</span>.width();
-            <span class="kw">let </span><span class="kw-2">mut </span>names = Vec::with_capacity(n_first + n_last + reduce_columns <span class="kw">as </span>usize);
+            <span class="kw">let </span>n_tbl_cols = n_first + n_last + reduce_columns <span class="kw">as </span>usize;
+            <span class="kw">let </span><span class="kw-2">mut </span>names = Vec::with_capacity(n_tbl_cols);
+            <span class="kw">let </span><span class="kw-2">mut </span>name_lengths = Vec::with_capacity(n_tbl_cols);
 
-            <span class="kw">let </span>field_to_str = |f: <span class="kw-2">&amp;</span>Field| {
-                <span class="kw">let </span>name = make_str_val(f.name(), str_truncate);
-                <span class="kw">let </span>lower_bounds = name.len().clamp(<span class="number">5</span>, <span class="number">12</span>);
-                <span class="kw">let </span><span class="kw-2">mut </span>column_name = name;
-                <span class="kw">if </span>env_is_true(FMT_TABLE_HIDE_COLUMN_NAMES) {
-                    column_name = <span class="string">&quot;&quot;</span>.to_string();
-                }
-                <span class="kw">let </span>column_data_type = <span class="kw">if </span>env_is_true(FMT_TABLE_HIDE_COLUMN_DATA_TYPES) {
-                    <span class="string">&quot;&quot;</span>.to_string()
-                } <span class="kw">else if </span>env_is_true(FMT_TABLE_INLINE_COLUMN_DATA_TYPE)
-                    | env_is_true(FMT_TABLE_HIDE_COLUMN_NAMES)
-                {
-                    <span class="macro">format!</span>(<span class="string">&quot;{}&quot;</span>, f.data_type())
-                } <span class="kw">else </span>{
-                    <span class="macro">format!</span>(<span class="string">&quot;\n{}&quot;</span>, f.data_type())
-                };
-                <span class="kw">let </span><span class="kw-2">mut </span>column_separator = <span class="string">&quot;\n---&quot;</span>;
-                <span class="kw">if </span>env_is_true(FMT_TABLE_HIDE_COLUMN_SEPARATOR)
-                    | env_is_true(FMT_TABLE_HIDE_COLUMN_NAMES)
-                    | env_is_true(FMT_TABLE_HIDE_COLUMN_DATA_TYPES)
-                {
-                    column_separator = <span class="string">&quot;&quot;
-                </span>}
-                <span class="kw">let </span>s = <span class="kw">if </span>env_is_true(FMT_TABLE_INLINE_COLUMN_DATA_TYPE)
-                    &amp; !env_is_true(FMT_TABLE_HIDE_COLUMN_DATA_TYPES)
-                {
-                    <span class="macro">format!</span>(<span class="string">&quot;{column_name} ({column_data_type})&quot;</span>)
-                } <span class="kw">else </span>{
-                    <span class="macro">format!</span>(<span class="string">&quot;{column_name}{column_separator}{column_data_type}&quot;</span>)
-                };
-                (s, lower_bounds)
-            };
-
-            <span class="kw">let </span>col_width_exact =
-                |l: usize| ColumnConstraint::Absolute(comfy_table::Width::Fixed(l <span class="kw">as </span>u16));
-            <span class="kw">let </span>col_width_lower_bound =
-                |l: usize| ColumnConstraint::LowerBoundary(comfy_table::Width::Fixed(l <span class="kw">as </span>u16));
-
-            <span class="kw">let </span><span class="kw-2">mut </span>constraints = Vec::with_capacity(n_first + n_last + reduce_columns <span class="kw">as </span>usize);
             <span class="kw">let </span>fields = <span class="self">self</span>.fields();
             <span class="kw">for </span>field <span class="kw">in </span>fields[<span class="number">0</span>..n_first].iter() {
-                <span class="kw">let </span>(s, l) = field_to_str(field);
+                <span class="kw">let </span>(s, l) = field_to_str(field, str_truncate);
                 names.push(s);
-                constraints.push(col_width_lower_bound(l));
+                name_lengths.push(l);
             }
             <span class="kw">if </span>reduce_columns {
                 names.push(<span class="string">&quot;…&quot;</span>.into());
-                constraints.push(col_width_exact(<span class="number">3</span>));
+                name_lengths.push(<span class="number">3</span>);
             }
             <span class="kw">for </span>field <span class="kw">in </span>fields[<span class="self">self</span>.width() - n_last..].iter() {
-                <span class="kw">let </span>(s, l) = field_to_str(field);
+                <span class="kw">let </span>(s, l) = field_to_str(field, str_truncate);
                 names.push(s);
-                constraints.push(col_width_lower_bound(l));
+                name_lengths.push(l);
             }
             <span class="kw">let </span>(preset, is_utf8) = <span class="kw">match </span>std::env::var(FMT_TABLE_FORMATTING)
                 .as_deref()
@@ -1605,10 +1693,14 @@
             <span class="kw">if </span>is_utf8 &amp;&amp; env_is_true(FMT_TABLE_ROUNDED_CORNERS) {
                 table.apply_modifier(UTF8_ROUND_CORNERS);
             }
+
+            <span class="kw">let </span><span class="kw-2">mut </span>constraints = Vec::with_capacity(n_tbl_cols);
+            <span class="kw">let </span><span class="kw-2">mut </span>max_elem_lengths: Vec&lt;usize&gt; = <span class="macro">vec!</span>[<span class="number">0</span>; n_tbl_cols];
+
             <span class="kw">if </span>max_n_rows &gt; <span class="number">0 </span>{
                 <span class="kw">if </span>height &gt; max_n_rows + <span class="number">1 </span>{
-                    <span class="comment">// Truncate the table if we have more rows than the configured maximum number
-                    // of rows plus the single row which would contain &quot;…&quot;.
+                    <span class="comment">// Truncate the table if we have more rows than the configured maximum
+                    // number of rows plus the single row which would contain &quot;…&quot;.
                     </span><span class="kw">let </span><span class="kw-2">mut </span>rows = Vec::with_capacity(std::cmp::max(max_n_rows, <span class="number">2</span>));
                     <span class="kw">for </span>i <span class="kw">in </span><span class="number">0</span>..std::cmp::max(max_n_rows / <span class="number">2</span>, <span class="number">1</span>) {
                         <span class="kw">let </span>row = <span class="self">self
@@ -1616,7 +1708,11 @@
                             .iter()
                             .map(|s| s.str_value(i).unwrap())
                             .collect();
-                        rows.push(prepare_row(row, n_first, n_last, str_truncate));
+
+                        <span class="kw">let </span>row_strings =
+                            prepare_row(row, n_first, n_last, str_truncate, <span class="kw-2">&amp;mut </span>max_elem_lengths);
+
+                        rows.push(row_strings);
                     }
                     <span class="kw">let </span>dots = rows[<span class="number">0</span>].iter().map(|<span class="kw">_</span>| <span class="string">&quot;…&quot;</span>.to_string()).collect();
                     rows.push(dots);
@@ -1627,7 +1723,15 @@
                                 .iter()
                                 .map(|s| s.str_value(i).unwrap())
                                 .collect();
-                            rows.push(prepare_row(row, n_first, n_last, str_truncate));
+
+                            <span class="kw">let </span>row_strings = prepare_row(
+                                row,
+                                n_first,
+                                n_last,
+                                str_truncate,
+                                <span class="kw-2">&amp;mut </span>max_elem_lengths,
+                            );
+                            rows.push(row_strings);
                         }
                     }
                     table.add_rows(rows);
@@ -1639,7 +1743,15 @@
                                 .iter()
                                 .map(|s| s.str_value(i).unwrap())
                                 .collect();
-                            table.add_row(prepare_row(row, n_first, n_last, str_truncate));
+
+                            <span class="kw">let </span>row_strings = prepare_row(
+                                row,
+                                n_first,
+                                n_last,
+                                str_truncate,
+                                <span class="kw-2">&amp;mut </span>max_elem_lengths,
+                            );
+                            table.add_row(row_strings);
                         } <span class="kw">else </span>{
                             <span class="kw">break</span>;
                         }
@@ -1650,12 +1762,7 @@
                 table.add_row(dots);
             }
 
-            <span class="comment">// insert a header row, unless both column names and column data types are already hidden
-            </span><span class="kw">if </span>!(env_is_true(FMT_TABLE_HIDE_COLUMN_NAMES)
-                &amp;&amp; env_is_true(FMT_TABLE_HIDE_COLUMN_DATA_TYPES))
-            {
-                table.set_header(names).set_constraints(constraints);
-            }
+            <span class="kw">let </span>tbl_fallback_width = <span class="number">100</span>;
             <span class="kw">let </span>tbl_width = std::env::var(<span class="string">&quot;POLARS_TABLE_WIDTH&quot;</span>)
                 .map(|s| {
                     <span class="prelude-val">Some</span>(
@@ -1665,20 +1772,47 @@
                 })
                 .unwrap_or(<span class="prelude-val">None</span>);
 
+            <span class="comment">// column width constraints
+            </span><span class="kw">let </span>col_width_exact =
+                |w: usize| ColumnConstraint::Absolute(comfy_table::Width::Fixed(w <span class="kw">as </span>u16));
+            <span class="kw">let </span>col_width_bounds = |l: usize, u: usize| ColumnConstraint::Boundaries {
+                lower: Width::Fixed(l <span class="kw">as </span>u16),
+                upper: Width::Fixed(u <span class="kw">as </span>u16),
+            };
+            <span class="kw">let </span>min_col_width = <span class="number">5</span>;
+            <span class="kw">for </span>(idx, elem_len) <span class="kw">in </span>max_elem_lengths.iter().enumerate() {
+                <span class="kw">let </span>mx = std::cmp::min(
+                    str_truncate + <span class="number">3</span>, <span class="comment">// (3 = 2 space chars of padding + ellipsis char)
+                    </span>std::cmp::max(name_lengths[idx], <span class="kw-2">*</span>elem_len),
+                );
+                <span class="kw">if </span>mx &lt;= min_col_width {
+                    constraints.push(col_width_exact(mx));
+                } <span class="kw">else </span>{
+                    constraints.push(col_width_bounds(min_col_width, mx));
+                }
+            }
+
+            <span class="comment">// insert a header row, unless both column names and dtypes are hidden
+            </span><span class="kw">if </span>!(env_is_true(FMT_TABLE_HIDE_COLUMN_NAMES)
+                &amp;&amp; env_is_true(FMT_TABLE_HIDE_COLUMN_DATA_TYPES))
+            {
+                table.set_header(names).set_constraints(constraints);
+            }
+
             <span class="comment">// if tbl_width is explicitly set, use it
             </span><span class="kw">if let </span><span class="prelude-val">Some</span>(w) = tbl_width {
                 table.set_width(w);
-            }
-
-            <span class="comment">// if no tbl_width (its not-tty &amp;&amp; it is not explicitly set), then set default.
-            // this is needed to support non-tty applications
-            </span><span class="attr">#[cfg(feature = <span class="string">&quot;fmt&quot;</span>)]
-            </span><span class="kw">if </span>table.width().is_none() &amp;&amp; !table.is_tty() {
-                table.set_width(<span class="number">100</span>);
-            }
-            <span class="attr">#[cfg(feature = <span class="string">&quot;fmt_no_tty&quot;</span>)]
-            </span><span class="kw">if </span>table.width().is_none() {
-                table.set_width(<span class="number">100</span>);
+            } <span class="kw">else </span>{
+                <span class="comment">// if no tbl_width (it&#39;s not tty &amp;&amp; width not explicitly set), apply
+                // a default value; this is needed to support non-tty applications
+                </span><span class="attr">#[cfg(feature = <span class="string">&quot;fmt&quot;</span>)]
+                </span><span class="kw">if </span>table.width().is_none() &amp;&amp; !table.is_tty() {
+                    table.set_width(tbl_fallback_width);
+                }
+                <span class="attr">#[cfg(feature = <span class="string">&quot;fmt_no_tty&quot;</span>)]
+                </span><span class="kw">if </span>table.width().is_none() {
+                    table.set_width(tbl_fallback_width);
+                }
             }
 
             <span class="comment">// set alignment of cells, if defined
@@ -1700,14 +1834,15 @@
             }
 
             <span class="comment">// establish &#39;shape&#39; information (above/below/hidden)
-            </span><span class="kw">let </span>shape_str = fmt_df_shape(<span class="kw-2">&amp;</span><span class="self">self</span>.shape());
-
-            <span class="kw">if </span>env_is_true(FMT_TABLE_HIDE_DATAFRAME_SHAPE_INFORMATION) {
+            </span><span class="kw">if </span>env_is_true(FMT_TABLE_HIDE_DATAFRAME_SHAPE_INFORMATION) {
                 <span class="macro">write!</span>(f, <span class="string">&quot;{table}&quot;</span>)<span class="question-mark">?</span>;
-            } <span class="kw">else if </span>env_is_true(FMT_TABLE_DATAFRAME_SHAPE_BELOW) {
-                <span class="macro">write!</span>(f, <span class="string">&quot;{table}\nshape: {}&quot;</span>, shape_str)<span class="question-mark">?</span>;
             } <span class="kw">else </span>{
-                <span class="macro">write!</span>(f, <span class="string">&quot;shape: {}\n{}&quot;</span>, shape_str, table)<span class="question-mark">?</span>;
+                <span class="kw">let </span>shape_str = fmt_df_shape(<span class="kw-2">&amp;</span><span class="self">self</span>.shape());
+                <span class="kw">if </span>env_is_true(FMT_TABLE_DATAFRAME_SHAPE_BELOW) {
+                    <span class="macro">write!</span>(f, <span class="string">&quot;{table}\nshape: {}&quot;</span>, shape_str)<span class="question-mark">?</span>;
+                } <span class="kw">else </span>{
+                    <span class="macro">write!</span>(f, <span class="string">&quot;shape: {}\n{}&quot;</span>, shape_str, table)<span class="question-mark">?</span>;
+                }
             }
         }
 
@@ -1719,7 +1854,6 @@
                 <span class="self">self</span>.shape()
             )<span class="question-mark">?</span>;
         }
-
         <span class="prelude-val">Ok</span>(())
     }
 }
