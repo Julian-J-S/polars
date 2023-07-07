@@ -844,6 +844,7 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="api/polars.DataFrame.reverse.html">polars.DataFrame.reverse</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.DataFrame.row.html">polars.DataFrame.row</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.DataFrame.rows.html">polars.DataFrame.rows</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/polars.DataFrame.rows_by_key.html">polars.DataFrame.rows_by_key</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.DataFrame.sample.html">polars.DataFrame.sample</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.DataFrame.select.html">polars.DataFrame.select</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.DataFrame.set_sorted.html">polars.DataFrame.set_sorted</a></li>
@@ -1926,7 +1927,7 @@ parameter with a dictionary of (name,dtype) pairs…</p>
 <tr class="row-even"><td><p><a class="reference internal" href="api/polars.DataFrame.rows.html#polars.DataFrame.rows" title="polars.DataFrame.rows"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rows</span></code></a></p></td>
 <td><p>Returns all data in the DataFrame as a list of rows of python-native values.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rows_by_key</span></code></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.DataFrame.rows_by_key.html#polars.DataFrame.rows_by_key" title="polars.DataFrame.rows_by_key"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rows_by_key</span></code></a></p></td>
 <td><p>Returns DataFrame data as a keyed dictionary of python-native values.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="api/polars.DataFrame.sample.html#polars.DataFrame.sample" title="polars.DataFrame.sample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sample</span></code></a></p></td>
@@ -4245,7 +4246,7 @@ that deals with columnar data.</p>
 <dl class="simple">
 <dt><a class="reference internal" href="api/polars.DataFrame.rows.html#polars.DataFrame.rows" title="polars.DataFrame.rows"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rows</span></code></a></dt><dd><p>Materialises all frame data as a list of rows (potentially expensive).</p>
 </dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">rows_by_key</span></code></dt><dd><p>Materialises frame data as a key-indexed dictionary.</p>
+<dt><a class="reference internal" href="api/polars.DataFrame.rows_by_key.html#polars.DataFrame.rows_by_key" title="polars.DataFrame.rows_by_key"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rows_by_key</span></code></a></dt><dd><p>Materialises frame data as a key-indexed dictionary.</p>
 </dd>
 </dl>
 </div>
@@ -5617,7 +5618,7 @@ materialising all the data at once.</p>
 <dl class="simple">
 <dt><a class="reference internal" href="api/polars.DataFrame.iter_rows.html#polars.DataFrame.iter_rows" title="polars.DataFrame.iter_rows"><code class="xref py py-obj docutils literal notranslate"><span class="pre">iter_rows</span></code></a></dt><dd><p>Row iterator over frame data (does not materialise all rows).</p>
 </dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">rows_by_key</span></code></dt><dd><p>Materialises frame data as a key-indexed dictionary.</p>
+<dt><a class="reference internal" href="api/polars.DataFrame.rows_by_key.html#polars.DataFrame.rows_by_key" title="polars.DataFrame.rows_by_key"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rows_by_key</span></code></a></dt><dd><p>Materialises frame data as a key-indexed dictionary.</p>
 </dd>
 </dl>
 </div>

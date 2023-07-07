@@ -844,6 +844,7 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="api/polars.DataFrame.reverse.html">polars.DataFrame.reverse</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.DataFrame.row.html">polars.DataFrame.row</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.DataFrame.rows.html">polars.DataFrame.rows</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/polars.DataFrame.rows_by_key.html">polars.DataFrame.rows_by_key</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.DataFrame.sample.html">polars.DataFrame.sample</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.DataFrame.select.html">polars.DataFrame.select</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.DataFrame.set_sorted.html">polars.DataFrame.set_sorted</a></li>
@@ -1710,70 +1711,73 @@ document.write(`
 <tr class="row-odd"><td><p><a class="reference internal" href="api/polars.DataFrame.rows.html#polars.DataFrame.rows" title="polars.DataFrame.rows"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.rows</span></code></a>()</p></td>
 <td><p>Returns all data in the DataFrame as a list of rows of python-native values.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.DataFrame.sample.html#polars.DataFrame.sample" title="polars.DataFrame.sample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.sample</span></code></a>([n, fraction, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.DataFrame.rows_by_key.html#polars.DataFrame.rows_by_key" title="polars.DataFrame.rows_by_key"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.rows_by_key</span></code></a>(key, *[, named, ...])</p></td>
+<td><p>Returns DataFrame data as a keyed dictionary of python-native values.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.DataFrame.sample.html#polars.DataFrame.sample" title="polars.DataFrame.sample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.sample</span></code></a>([n, fraction, ...])</p></td>
 <td><p>Sample from this DataFrame.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.DataFrame.select.html#polars.DataFrame.select" title="polars.DataFrame.select"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.select</span></code></a>(*exprs, **named_exprs)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.DataFrame.select.html#polars.DataFrame.select" title="polars.DataFrame.select"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.select</span></code></a>(*exprs, **named_exprs)</p></td>
 <td><p>Select columns from this DataFrame.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.DataFrame.set_sorted.html#polars.DataFrame.set_sorted" title="polars.DataFrame.set_sorted"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.set_sorted</span></code></a>(column, *more_columns)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.DataFrame.set_sorted.html#polars.DataFrame.set_sorted" title="polars.DataFrame.set_sorted"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.set_sorted</span></code></a>(column, *more_columns)</p></td>
 <td><p>Indicate that one or multiple columns are sorted.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.DataFrame.shift.html#polars.DataFrame.shift" title="polars.DataFrame.shift"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.shift</span></code></a>(periods)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.DataFrame.shift.html#polars.DataFrame.shift" title="polars.DataFrame.shift"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.shift</span></code></a>(periods)</p></td>
 <td><p>Shift values by the given period.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.DataFrame.shift_and_fill.html#polars.DataFrame.shift_and_fill" title="polars.DataFrame.shift_and_fill"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.shift_and_fill</span></code></a>(fill_value, *[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.DataFrame.shift_and_fill.html#polars.DataFrame.shift_and_fill" title="polars.DataFrame.shift_and_fill"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.shift_and_fill</span></code></a>(fill_value, *[, ...])</p></td>
 <td><p>Shift the values by a given period and fill the resulting null values.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.DataFrame.shrink_to_fit.html#polars.DataFrame.shrink_to_fit" title="polars.DataFrame.shrink_to_fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.shrink_to_fit</span></code></a>(*[, in_place])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.DataFrame.shrink_to_fit.html#polars.DataFrame.shrink_to_fit" title="polars.DataFrame.shrink_to_fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.shrink_to_fit</span></code></a>(*[, in_place])</p></td>
 <td><p>Shrink DataFrame memory usage.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.DataFrame.slice.html#polars.DataFrame.slice" title="polars.DataFrame.slice"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.slice</span></code></a>(offset[, length])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.DataFrame.slice.html#polars.DataFrame.slice" title="polars.DataFrame.slice"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.slice</span></code></a>(offset[, length])</p></td>
 <td><p>Get a slice of this DataFrame.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.DataFrame.sort.html#polars.DataFrame.sort" title="polars.DataFrame.sort"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.sort</span></code></a>(by, *more_by[, descending, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.DataFrame.sort.html#polars.DataFrame.sort" title="polars.DataFrame.sort"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.sort</span></code></a>(by, *more_by[, descending, ...])</p></td>
 <td><p>Sort the dataframe by the given columns.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.DataFrame.tail.html#polars.DataFrame.tail" title="polars.DataFrame.tail"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.tail</span></code></a>([n])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.DataFrame.tail.html#polars.DataFrame.tail" title="polars.DataFrame.tail"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.tail</span></code></a>([n])</p></td>
 <td><p>Get the last <cite>n</cite> rows.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.DataFrame.take_every.html#polars.DataFrame.take_every" title="polars.DataFrame.take_every"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.take_every</span></code></a>(n)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.DataFrame.take_every.html#polars.DataFrame.take_every" title="polars.DataFrame.take_every"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.take_every</span></code></a>(n)</p></td>
 <td><p>Take every nth row in the DataFrame and return as a new DataFrame.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.DataFrame.top_k.html#polars.DataFrame.top_k" title="polars.DataFrame.top_k"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.top_k</span></code></a>(k, *, by[, descending, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.DataFrame.top_k.html#polars.DataFrame.top_k" title="polars.DataFrame.top_k"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.top_k</span></code></a>(k, *, by[, descending, ...])</p></td>
 <td><p>Return the <cite>k</cite> largest elements.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.DataFrame.to_dummies.html#polars.DataFrame.to_dummies" title="polars.DataFrame.to_dummies"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.to_dummies</span></code></a>([columns, separator, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.DataFrame.to_dummies.html#polars.DataFrame.to_dummies" title="polars.DataFrame.to_dummies"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.to_dummies</span></code></a>([columns, separator, ...])</p></td>
 <td><p>Convert categorical variables into dummy/indicator variables.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.DataFrame.to_series.html#polars.DataFrame.to_series" title="polars.DataFrame.to_series"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.to_series</span></code></a>([index])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.DataFrame.to_series.html#polars.DataFrame.to_series" title="polars.DataFrame.to_series"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.to_series</span></code></a>([index])</p></td>
 <td><p>Select column as Series at index location.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.DataFrame.transpose.html#polars.DataFrame.transpose" title="polars.DataFrame.transpose"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.transpose</span></code></a>(*[, include_header, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.DataFrame.transpose.html#polars.DataFrame.transpose" title="polars.DataFrame.transpose"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.transpose</span></code></a>(*[, include_header, ...])</p></td>
 <td><p>Transpose a DataFrame over the diagonal.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.DataFrame.unique.html#polars.DataFrame.unique" title="polars.DataFrame.unique"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.unique</span></code></a>([subset, keep, maintain_order])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.DataFrame.unique.html#polars.DataFrame.unique" title="polars.DataFrame.unique"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.unique</span></code></a>([subset, keep, maintain_order])</p></td>
 <td><p>Drop duplicate rows from this dataframe.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.DataFrame.unnest.html#polars.DataFrame.unnest" title="polars.DataFrame.unnest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.unnest</span></code></a>(columns, *more_columns)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.DataFrame.unnest.html#polars.DataFrame.unnest" title="polars.DataFrame.unnest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.unnest</span></code></a>(columns, *more_columns)</p></td>
 <td><p>Decompose struct columns into separate columns for each of their fields.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.DataFrame.unstack.html#polars.DataFrame.unstack" title="polars.DataFrame.unstack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.unstack</span></code></a>(step[, how, columns, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.DataFrame.unstack.html#polars.DataFrame.unstack" title="polars.DataFrame.unstack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.unstack</span></code></a>(step[, how, columns, ...])</p></td>
 <td><p>Unstack a long table to a wide form without doing an aggregation.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.DataFrame.update.html#polars.DataFrame.update" title="polars.DataFrame.update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.update</span></code></a>(other[, on, how])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.DataFrame.update.html#polars.DataFrame.update" title="polars.DataFrame.update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.update</span></code></a>(other[, on, how])</p></td>
 <td><p>Update the values in this <cite>DataFrame</cite> with the non-null values in <cite>other</cite>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.DataFrame.upsample.html#polars.DataFrame.upsample" title="polars.DataFrame.upsample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.upsample</span></code></a>(time_column, *, every[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.DataFrame.upsample.html#polars.DataFrame.upsample" title="polars.DataFrame.upsample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.upsample</span></code></a>(time_column, *, every[, ...])</p></td>
 <td><p>Upsample a DataFrame at a regular frequency.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.DataFrame.vstack.html#polars.DataFrame.vstack" title="polars.DataFrame.vstack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.vstack</span></code></a>(df, *[, in_place])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.DataFrame.vstack.html#polars.DataFrame.vstack" title="polars.DataFrame.vstack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.vstack</span></code></a>(df, *[, in_place])</p></td>
 <td><p>Grow this DataFrame vertically by stacking a DataFrame to it.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.DataFrame.with_columns.html#polars.DataFrame.with_columns" title="polars.DataFrame.with_columns"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.with_columns</span></code></a>(*exprs, **named_exprs)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.DataFrame.with_columns.html#polars.DataFrame.with_columns" title="polars.DataFrame.with_columns"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.with_columns</span></code></a>(*exprs, **named_exprs)</p></td>
 <td><p>Add columns to this DataFrame.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.DataFrame.with_row_count.html#polars.DataFrame.with_row_count" title="polars.DataFrame.with_row_count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.with_row_count</span></code></a>([name, offset])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.DataFrame.with_row_count.html#polars.DataFrame.with_row_count" title="polars.DataFrame.with_row_count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataFrame.with_row_count</span></code></a>([name, offset])</p></td>
 <td><p>Add a column at index 0 that counts the rows.</p></td>
 </tr>
 </tbody>
