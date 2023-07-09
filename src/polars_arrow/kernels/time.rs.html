@@ -105,6 +105,7 @@
 <a href="#105" id="105">105</a>
 <a href="#106" id="106">106</a>
 <a href="#107" id="107">107</a>
+<a href="#108" id="108">108</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>arrow::array::PrimitiveArray;
 <span class="kw">use </span>arrow::compute::arity::try_unary;
 <span class="kw">use </span>arrow::datatypes::{DataType <span class="kw">as </span>ArrowDataType, TimeUnit};
@@ -128,19 +129,20 @@
     ndt: NaiveDateTime,
     use_earliest: <span class="prelude-ty">Option</span>&lt;bool&gt;,
 ) -&gt; <span class="prelude-ty">Result</span>&lt;NaiveDateTime&gt; {
-    <span class="kw">match </span>from_tz.from_local_datetime(<span class="kw-2">&amp;</span>ndt) {
-        LocalResult::Single(dt) =&gt; <span class="prelude-val">Ok</span>(dt.with_timezone(to_tz).naive_local()),
+    <span class="kw">let </span>ndt = from_tz.from_utc_datetime(<span class="kw-2">&amp;</span>ndt).naive_local();
+    <span class="kw">match </span>to_tz.from_local_datetime(<span class="kw-2">&amp;</span>ndt) {
+        LocalResult::Single(dt) =&gt; <span class="prelude-val">Ok</span>(dt.naive_utc()),
         LocalResult::Ambiguous(dt_earliest, dt_latest) =&gt; <span class="kw">match </span>use_earliest {
-            <span class="prelude-val">Some</span>(<span class="bool-val">true</span>) =&gt; <span class="prelude-val">Ok</span>(dt_earliest.with_timezone(to_tz).naive_local()),
-            <span class="prelude-val">Some</span>(<span class="bool-val">false</span>) =&gt; <span class="prelude-val">Ok</span>(dt_latest.with_timezone(to_tz).naive_local()),
+            <span class="prelude-val">Some</span>(<span class="bool-val">true</span>) =&gt; <span class="prelude-val">Ok</span>(dt_earliest.naive_utc()),
+            <span class="prelude-val">Some</span>(<span class="bool-val">false</span>) =&gt; <span class="prelude-val">Ok</span>(dt_latest.naive_utc()),
             <span class="prelude-val">None </span>=&gt; <span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(
-                <span class="macro">format!</span>(<span class="string">&quot;datetime &#39;{}&#39; is ambiguous in time zone &#39;{}&#39;. Please use `use_earliest` to tell how it should be localized.&quot;</span>, ndt, from_tz)
+                <span class="macro">format!</span>(<span class="string">&quot;datetime &#39;{}&#39; is ambiguous in time zone &#39;{}&#39;. Please use `use_earliest` to tell how it should be localized.&quot;</span>, ndt, to_tz)
             ))
         },
         LocalResult::None =&gt; <span class="prelude-val">Err</span>(ArrowError::InvalidArgumentError(
             <span class="macro">format!</span>(
                 <span class="string">&quot;datetime &#39;{}&#39; is non-existent in time zone &#39;{}&#39;. Non-existent datetimes are not yet supported&quot;</span>,
-                ndt, from_tz
+                ndt, to_tz
             )
             ,
         )),
