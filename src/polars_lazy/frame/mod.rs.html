@@ -1519,6 +1519,20 @@
 <a href="#1519" id="1519">1519</a>
 <a href="#1520" id="1520">1520</a>
 <a href="#1521" id="1521">1521</a>
+<a href="#1522" id="1522">1522</a>
+<a href="#1523" id="1523">1523</a>
+<a href="#1524" id="1524">1524</a>
+<a href="#1525" id="1525">1525</a>
+<a href="#1526" id="1526">1526</a>
+<a href="#1527" id="1527">1527</a>
+<a href="#1528" id="1528">1528</a>
+<a href="#1529" id="1529">1529</a>
+<a href="#1530" id="1530">1530</a>
+<a href="#1531" id="1531">1531</a>
+<a href="#1532" id="1532">1532</a>
+<a href="#1533" id="1533">1533</a>
+<a href="#1534" id="1534">1534</a>
+<a href="#1535" id="1535">1535</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Lazy variant of a [DataFrame](polars_core::frame::DataFrame).
 </span><span class="attr">#[cfg(feature = <span class="string">&quot;csv&quot;</span>)]
 </span><span class="kw">mod </span>csv;
@@ -2723,67 +2737,81 @@
         <span class="kw">let </span>add_row_count_in_map = <span class="kw">match </span><span class="kw-2">&amp;mut </span><span class="self">self</span>.logical_plan {
             <span class="comment">// Do the row count at scan
             </span><span class="attr">#[cfg(feature = <span class="string">&quot;csv&quot;</span>)]
-            </span>LogicalPlan::CsvScan { options, .. } =&gt; {
+            </span>LogicalPlan::CsvScan {
+                options, file_info, ..
+            } =&gt; {
                 options.row_count = <span class="prelude-val">Some</span>(RowCount {
                     name: name.to_string(),
                     offset: offset.unwrap_or(<span class="number">0</span>),
                 });
+                file_info.schema = Arc::new(
+                    file_info
+                        .schema
+                        .new_inserting_at_index(<span class="number">0</span>, name.into(), IDX_DTYPE)
+                        .unwrap(),
+                );
                 <span class="bool-val">false
             </span>}
             <span class="attr">#[cfg(feature = <span class="string">&quot;ipc&quot;</span>)]
-            </span>LogicalPlan::IpcScan { options, .. } =&gt; {
+            </span>LogicalPlan::IpcScan {
+                options, file_info, ..
+            } =&gt; {
                 options.row_count = <span class="prelude-val">Some</span>(RowCount {
                     name: name.to_string(),
                     offset: offset.unwrap_or(<span class="number">0</span>),
                 });
+                file_info.schema = Arc::new(
+                    file_info
+                        .schema
+                        .new_inserting_at_index(<span class="number">0</span>, name.into(), IDX_DTYPE)
+                        .unwrap(),
+                );
                 <span class="bool-val">false
             </span>}
             <span class="attr">#[cfg(feature = <span class="string">&quot;parquet&quot;</span>)]
-            </span>LogicalPlan::ParquetScan { options, .. } =&gt; {
+            </span>LogicalPlan::ParquetScan {
+                options, file_info, ..
+            } =&gt; {
                 options.row_count = <span class="prelude-val">Some</span>(RowCount {
                     name: name.to_string(),
                     offset: offset.unwrap_or(<span class="number">0</span>),
                 });
+                file_info.schema = Arc::new(
+                    file_info
+                        .schema
+                        .new_inserting_at_index(<span class="number">0</span>, name.into(), IDX_DTYPE)
+                        .unwrap(),
+                );
                 <span class="bool-val">false
             </span>}
             <span class="kw">_ </span>=&gt; <span class="bool-val">true</span>,
         };
 
-        <span class="kw">let </span>name2: SmartString = name.into();
-        <span class="kw">let </span>udf_schema = <span class="kw">move </span>|s: <span class="kw-2">&amp;</span>Schema| {
-            <span class="comment">// Can&#39;t error, index 0 is always in bounds
-            </span><span class="kw">let </span>new = s
-                .new_inserting_at_index(<span class="number">0</span>, name2.clone(), IDX_DTYPE)
-                .unwrap();
-            <span class="prelude-val">Ok</span>(Arc::new(new))
-        };
-
-        <span class="kw">let </span>name = name.to_owned();
-
-        <span class="comment">// if we do the row count at scan we add a dummy map, to update the schema
-        </span><span class="kw">let </span>opt = <span class="kw">if </span>add_row_count_in_map {
-            AllowedOptimizations {
+        <span class="kw">if </span>add_row_count_in_map {
+            <span class="kw">let </span>name: SmartString = name.into();
+            <span class="kw">let </span>name2: SmartString = name.clone();
+            <span class="kw">let </span>opt = AllowedOptimizations {
                 slice_pushdown: <span class="bool-val">false</span>,
                 predicate_pushdown: <span class="bool-val">false</span>,
                 streaming: <span class="bool-val">false</span>,
                 ..Default::default()
-            }
+            };
+            <span class="kw">let </span>udf_schema = <span class="kw">move </span>|s: <span class="kw-2">&amp;</span>Schema| {
+                <span class="comment">// Can&#39;t error, index 0 is always in bounds
+                </span><span class="kw">let </span>new = s
+                    .new_inserting_at_index(<span class="number">0</span>, name2.clone(), IDX_DTYPE)
+                    .unwrap();
+                <span class="prelude-val">Ok</span>(Arc::new(new))
+            };
+            <span class="self">self</span>.map(
+                <span class="kw">move </span>|df: DataFrame| df.with_row_count(<span class="kw-2">&amp;</span>name, offset),
+                opt,
+                <span class="prelude-val">Some</span>(Arc::new(udf_schema)),
+                <span class="prelude-val">Some</span>(<span class="string">&quot;WITH ROW COUNT&quot;</span>),
+            )
         } <span class="kw">else </span>{
-            AllowedOptimizations::default()
-        };
-
-        <span class="self">self</span>.map(
-            <span class="kw">move </span>|df: DataFrame| {
-                <span class="kw">if </span>add_row_count_in_map {
-                    df.with_row_count(<span class="kw-2">&amp;</span>name, offset)
-                } <span class="kw">else </span>{
-                    <span class="prelude-val">Ok</span>(df)
-                }
-            },
-            opt,
-            <span class="prelude-val">Some</span>(Arc::new(udf_schema)),
-            <span class="prelude-val">Some</span>(<span class="string">&quot;WITH ROW COUNT&quot;</span>),
-        )
+            <span class="self">self
+        </span>}
     }
 
     <span class="doccomment">/// Unnest the given `Struct` columns. This means that the fields of the `Struct` type will be

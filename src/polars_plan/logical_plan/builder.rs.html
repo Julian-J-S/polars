@@ -801,6 +801,24 @@
 <a href="#801" id="801">801</a>
 <a href="#802" id="802">802</a>
 <a href="#803" id="803">803</a>
+<a href="#804" id="804">804</a>
+<a href="#805" id="805">805</a>
+<a href="#806" id="806">806</a>
+<a href="#807" id="807">807</a>
+<a href="#808" id="808">808</a>
+<a href="#809" id="809">809</a>
+<a href="#810" id="810">810</a>
+<a href="#811" id="811">811</a>
+<a href="#812" id="812">812</a>
+<a href="#813" id="813">813</a>
+<a href="#814" id="814">814</a>
+<a href="#815" id="815">815</a>
+<a href="#816" id="816">816</a>
+<a href="#817" id="817">817</a>
+<a href="#818" id="818">818</a>
+<a href="#819" id="819">819</a>
+<a href="#820" id="820">820</a>
+<a href="#821" id="821">821</a>
 </pre></div><pre class="rust"><code><span class="attr">#[cfg(feature = <span class="string">&quot;csv&quot;</span>)]
 </span><span class="kw">use </span>std::io::{Read, Seek};
 
@@ -930,7 +948,7 @@
         <span class="kw">use </span>polars_io::{is_cloud_url, SerReader <span class="kw">as _</span>};
 
         <span class="kw">let </span>path = path.into();
-        <span class="kw">let </span>file_info: PolarsResult&lt;FileInfo&gt; = <span class="kw">if </span>is_cloud_url(<span class="kw-2">&amp;</span>path) {
+        <span class="kw">let </span>(<span class="kw-2">mut </span>schema, num_rows) = <span class="kw">if </span>is_cloud_url(<span class="kw-2">&amp;</span>path) {
             <span class="attr">#[cfg(not(feature = <span class="string">&quot;async&quot;</span>))]
             </span><span class="macro">panic!</span>(
                 <span class="string">&quot;One or more of the cloud storage features (&#39;aws&#39;, &#39;gcp&#39;, ...) must be enabled.&quot;
@@ -939,24 +957,22 @@
             <span class="attr">#[cfg(feature = <span class="string">&quot;async&quot;</span>)]
             </span>{
                 <span class="kw">let </span>uri = path.to_string_lossy();
-                <span class="kw">let </span>(schema, num_rows) =
-                    ParquetAsyncReader::file_info(<span class="kw-2">&amp;</span>uri, cloud_options.as_ref())<span class="question-mark">?</span>;
-                <span class="prelude-val">Ok</span>(FileInfo {
-                    schema: Arc::new(schema),
-                    row_estimation: (<span class="prelude-val">Some</span>(num_rows), num_rows),
-                })
-            }
+                ParquetAsyncReader::file_info(<span class="kw-2">&amp;</span>uri, cloud_options.as_ref())<span class="question-mark">?
+            </span>}
         } <span class="kw">else </span>{
             <span class="kw">let </span>file = std::fs::File::open(<span class="kw-2">&amp;</span>path)<span class="question-mark">?</span>;
             <span class="kw">let </span><span class="kw-2">mut </span>reader = ParquetReader::new(file);
-            <span class="kw">let </span>schema = Arc::new(reader.schema()<span class="question-mark">?</span>);
-            <span class="kw">let </span>num_rows = reader.num_rows()<span class="question-mark">?</span>;
-            <span class="prelude-val">Ok</span>(FileInfo {
-                schema,
-                row_estimation: (<span class="prelude-val">Some</span>(num_rows), num_rows),
-            })
+            (reader.schema()<span class="question-mark">?</span>, reader.num_rows()<span class="question-mark">?</span>)
         };
-        <span class="kw">let </span>file_info = file_info<span class="question-mark">?</span>;
+
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(rc) = <span class="kw-2">&amp;</span>row_count {
+            <span class="kw">let _ </span>= schema.insert_at_index(<span class="number">0</span>, rc.name.as_str().into(), IDX_DTYPE);
+        }
+
+        <span class="kw">let </span>file_info = FileInfo {
+            schema: Arc::new(schema),
+            row_estimation: (<span class="prelude-val">Some</span>(num_rows), num_rows),
+        };
 
         <span class="prelude-val">Ok</span>(LogicalPlan::ParquetScan {
             path,
@@ -988,7 +1004,12 @@
         <span class="kw">let </span>path = path.into();
         <span class="kw">let </span>file = std::fs::File::open(<span class="kw-2">&amp;</span>path)<span class="question-mark">?</span>;
         <span class="kw">let </span><span class="kw-2">mut </span>reader = IpcReader::new(file);
-        <span class="kw">let </span>schema = Arc::new(reader.schema()<span class="question-mark">?</span>);
+
+        <span class="kw">let </span><span class="kw-2">mut </span>schema = reader.schema()<span class="question-mark">?</span>;
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(rc) = <span class="kw-2">&amp;</span>options.row_count {
+            <span class="kw">let _ </span>= schema.insert_at_index(<span class="number">0</span>, rc.name.as_str().into(), IDX_DTYPE);
+        }
+        <span class="kw">let </span>schema = Arc::new(schema);
 
         <span class="kw">let </span>num_rows = reader._num_rows()<span class="question-mark">?</span>;
         <span class="kw">let </span>file_info = FileInfo {
@@ -1014,7 +1035,7 @@
         <span class="kw-2">mut </span>skip_rows: usize,
         n_rows: <span class="prelude-ty">Option</span>&lt;usize&gt;,
         cache: bool,
-        schema: <span class="prelude-ty">Option</span>&lt;Arc&lt;Schema&gt;&gt;,
+        <span class="kw-2">mut </span>schema: <span class="prelude-ty">Option</span>&lt;Arc&lt;Schema&gt;&gt;,
         schema_overwrite: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Schema&gt;,
         low_memory: bool,
         comment_char: <span class="prelude-ty">Option</span>&lt;u8&gt;,
@@ -1042,7 +1063,7 @@
 
         <span class="comment">// TODO! delay inferring schema until absolutely necessary
         // this needs a way to estimated bytes/rows.
-        </span><span class="kw">let </span>(inferred_schema, rows_read, bytes_read) = infer_file_schema(
+        </span><span class="kw">let </span>(<span class="kw-2">mut </span>inferred_schema, rows_read, bytes_read) = infer_file_schema(
             <span class="kw-2">&amp;</span>reader_bytes,
             delimiter,
             infer_schema_length,
@@ -1056,6 +1077,21 @@
             null_values.as_ref(),
             try_parse_dates,
         )<span class="question-mark">?</span>;
+
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(rc) = <span class="kw-2">&amp;</span>row_count {
+            <span class="kw">match </span>schema {
+                <span class="prelude-val">None </span>=&gt; {
+                    <span class="kw">let _ </span>= inferred_schema.insert_at_index(<span class="number">0</span>, rc.name.as_str().into(), IDX_DTYPE);
+                }
+                <span class="prelude-val">Some</span>(inner) =&gt; {
+                    schema = <span class="prelude-val">Some</span>(Arc::new(
+                        inner
+                            .new_inserting_at_index(<span class="number">0</span>, rc.name.as_str().into(), IDX_DTYPE)
+                            .unwrap(),
+                    ));
+                }
+            }
+        }
 
         <span class="kw">let </span>schema = schema.unwrap_or_else(|| Arc::new(inferred_schema));
         <span class="kw">let </span>n_bytes = reader_bytes.len();

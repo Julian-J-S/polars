@@ -794,6 +794,16 @@
 <a href="#794" id="794">794</a>
 <a href="#795" id="795">795</a>
 <a href="#796" id="796">796</a>
+<a href="#797" id="797">797</a>
+<a href="#798" id="798">798</a>
+<a href="#799" id="799">799</a>
+<a href="#800" id="800">800</a>
+<a href="#801" id="801">801</a>
+<a href="#802" id="802">802</a>
+<a href="#803" id="803">803</a>
+<a href="#804" id="804">804</a>
+<a href="#805" id="805">805</a>
+<a href="#806" id="806">806</a>
 </pre></div><pre class="rust"><code><span class="kw">mod </span>functions;
 <span class="kw">mod </span>generic;
 <span class="kw">mod </span>groupby;
@@ -806,6 +816,7 @@
 
 <span class="kw">use </span>polars_core::datatypes::PlHashSet;
 <span class="kw">use </span>polars_core::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span>polars_io::RowCount;
 <span class="attr">#[cfg(feature = <span class="string">&quot;semi_anti_join&quot;</span>)]
 </span><span class="kw">use </span>semi_anti_join::process_semi_anti_join;
 
@@ -834,13 +845,23 @@
 </span><span class="kw">fn </span>get_scan_columns(
     acc_projections: <span class="kw-2">&amp;mut </span>Vec&lt;Node&gt;,
     expr_arena: <span class="kw-2">&amp;</span>Arena&lt;AExpr&gt;,
+    row_count: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>RowCount&gt;,
 ) -&gt; <span class="prelude-ty">Option</span>&lt;Arc&lt;Vec&lt;String&gt;&gt;&gt; {
     <span class="kw">let </span><span class="kw-2">mut </span>with_columns = <span class="prelude-val">None</span>;
     <span class="kw">if </span>!acc_projections.is_empty() {
         <span class="kw">let </span><span class="kw-2">mut </span>columns = Vec::with_capacity(acc_projections.len());
         <span class="kw">for </span>expr <span class="kw">in </span>acc_projections {
             <span class="kw">for </span>name <span class="kw">in </span>aexpr_to_leaf_names(<span class="kw-2">*</span>expr, expr_arena) {
-                columns.push((<span class="kw-2">*</span>name).to_owned())
+                <span class="comment">// we shouldn&#39;t project the row-count column, as that is generated
+                // in the scan
+                </span><span class="kw">let </span>push = <span class="kw">match </span>row_count {
+                    <span class="prelude-val">Some</span>(rc) <span class="kw">if </span>name.as_ref() != rc.name.as_str() =&gt; <span class="bool-val">true</span>,
+                    <span class="prelude-val">None </span>=&gt; <span class="bool-val">true</span>,
+                    <span class="kw">_ </span>=&gt; <span class="bool-val">false</span>,
+                };
+                <span class="kw">if </span>push {
+                    columns.push((<span class="kw-2">*</span>name).to_owned())
+                }
             }
         }
         with_columns = <span class="prelude-val">Some</span>(Arc::new(columns));
@@ -912,11 +933,7 @@
     acc_projections: <span class="kw-2">&amp;</span>[Node],
     expr_arena: <span class="kw-2">&amp;</span>Arena&lt;AExpr&gt;,
     schema: <span class="kw-2">&amp;</span>Schema,
-    <span class="comment">// this is only needed for parsers that sort the projections
-    // currently these are:
-    // sorting parsers: csv,
-    // non-sorting: parquet, ipc
-    </span>sort_projections: bool,
+    sort_projections: bool,
 ) -&gt; PolarsResult&lt;Schema&gt; {
     <span class="kw">let </span><span class="kw-2">mut </span>new_schema = Schema::with_capacity(acc_projections.len());
     <span class="kw">let </span><span class="kw-2">mut </span>new_cols = Vec::with_capacity(acc_projections.len());
@@ -1151,7 +1168,7 @@
                 output_schema,
             } =&gt; {
                 <span class="kw">if </span>function.allows_projection_pushdown() {
-                    options.with_columns = get_scan_columns(<span class="kw-2">&amp;mut </span>acc_projections, expr_arena);
+                    options.with_columns = get_scan_columns(<span class="kw-2">&amp;mut </span>acc_projections, expr_arena, <span class="prelude-val">None</span>);
 
                     <span class="kw">let </span>output_schema = <span class="kw">if </span>options.with_columns.is_none() {
                         <span class="prelude-val">None
@@ -1199,7 +1216,7 @@
                         <span class="kw-2">&amp;</span>schema,
                         <span class="bool-val">false</span>,
                     )<span class="question-mark">?</span>));
-                    projection = get_scan_columns(<span class="kw-2">&amp;mut </span>acc_projections, expr_arena);
+                    projection = get_scan_columns(<span class="kw-2">&amp;mut </span>acc_projections, expr_arena, <span class="prelude-val">None</span>);
                 }
                 <span class="kw">let </span>lp = DataFrameScan {
                     df,
@@ -1218,7 +1235,8 @@
                 <span class="kw-2">mut </span>options,
                 ..
             } =&gt; {
-                <span class="kw">let </span>with_columns = get_scan_columns(<span class="kw-2">&amp;mut </span>acc_projections, expr_arena);
+                <span class="kw">let </span>with_columns =
+                    get_scan_columns(<span class="kw-2">&amp;mut </span>acc_projections, expr_arena, options.row_count.as_ref());
                 <span class="kw">let </span>output_schema = <span class="kw">if </span>with_columns.is_none() {
                     <span class="prelude-val">None
                 </span>} <span class="kw">else </span>{
@@ -1226,7 +1244,7 @@
                         <span class="kw-2">&amp;</span>acc_projections,
                         expr_arena,
                         <span class="kw-2">&amp;</span>file_info.schema,
-                        <span class="bool-val">false</span>,
+                        options.row_count.is_some(),
                     )<span class="question-mark">?</span>))
                 };
                 options.with_columns = with_columns;
@@ -1250,7 +1268,8 @@
                 cloud_options,
                 ..
             } =&gt; {
-                <span class="kw">let </span>with_columns = get_scan_columns(<span class="kw-2">&amp;mut </span>acc_projections, expr_arena);
+                <span class="kw">let </span>with_columns =
+                    get_scan_columns(<span class="kw-2">&amp;mut </span>acc_projections, expr_arena, options.row_count.as_ref());
                 <span class="kw">let </span>output_schema = <span class="kw">if </span>with_columns.is_none() {
                     <span class="prelude-val">None
                 </span>} <span class="kw">else </span>{
@@ -1258,7 +1277,7 @@
                         <span class="kw-2">&amp;</span>acc_projections,
                         expr_arena,
                         <span class="kw-2">&amp;</span>file_info.schema,
-                        <span class="bool-val">false</span>,
+                        options.row_count.is_some(),
                     )<span class="question-mark">?</span>))
                 };
                 options.with_columns = with_columns;
@@ -1278,7 +1297,7 @@
                 <span class="kw-2">mut </span>options,
                 predicate,
             } =&gt; {
-                options.with_columns = get_scan_columns(<span class="kw-2">&amp;mut </span>acc_projections, expr_arena);
+                options.with_columns = get_scan_columns(<span class="kw-2">&amp;mut </span>acc_projections, expr_arena, <span class="prelude-val">None</span>);
 
                 options.output_schema = <span class="kw">if </span>options.with_columns.is_none() {
                     <span class="prelude-val">None
@@ -1300,7 +1319,8 @@
                 predicate,
                 ..
             } =&gt; {
-                options.with_columns = get_scan_columns(<span class="kw-2">&amp;mut </span>acc_projections, expr_arena);
+                options.with_columns =
+                    get_scan_columns(<span class="kw-2">&amp;mut </span>acc_projections, expr_arena, options.row_count.as_ref());
 
                 <span class="kw">let </span>output_schema = <span class="kw">if </span>options.with_columns.is_none() {
                     <span class="prelude-val">None

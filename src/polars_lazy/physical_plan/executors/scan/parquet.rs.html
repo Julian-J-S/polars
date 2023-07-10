@@ -82,6 +82,7 @@
 <a href="#82" id="82">82</a>
 <a href="#83" id="83">83</a>
 <a href="#84" id="84">84</a>
+<a href="#85" id="85">85</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::path::PathBuf;
 
 <span class="kw">use </span>polars_core::cloud::CloudOptions;
@@ -121,6 +122,7 @@
             <span class="kw-2">&amp;mut </span><span class="self">self</span>.options.with_columns,
             <span class="kw-2">&amp;mut </span><span class="self">self</span>.schema,
             <span class="self">self</span>.options.n_rows,
+            <span class="self">self</span>.options.row_count.is_some(),
         );
 
         ParquetReader::new(file)

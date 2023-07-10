@@ -126,6 +126,7 @@
 <a href="#126" id="126">126</a>
 <a href="#127" id="127">127</a>
 <a href="#128" id="128">128</a>
+<a href="#129" id="129">129</a>
 </pre></div><pre class="rust"><code><span class="attr">#[cfg(feature = <span class="string">&quot;csv&quot;</span>)]
 </span><span class="kw">mod </span>csv;
 <span class="attr">#[cfg(feature = <span class="string">&quot;ipc&quot;</span>)]
@@ -168,6 +169,7 @@
     with_columns: <span class="kw-2">&amp;mut </span><span class="prelude-ty">Option</span>&lt;Arc&lt;Vec&lt;String&gt;&gt;&gt;,
     schema: <span class="kw-2">&amp;mut </span>SchemaRef,
     n_rows: <span class="prelude-ty">Option</span>&lt;usize&gt;,
+    has_row_count: bool,
 ) -&gt; (std::fs::File, Projection, StopNRows, Predicate) {
     <span class="kw">let </span>file = std::fs::File::open(path).unwrap();
 
@@ -177,7 +179,7 @@
     <span class="kw">let </span>projection: <span class="prelude-ty">Option</span>&lt;Vec&lt;<span class="kw">_</span>&gt;&gt; = with_columns.map(|with_columns| {
         with_columns
             .iter()
-            .map(|name| schema.index_of(name).unwrap())
+            .map(|name| schema.index_of(name).unwrap() - has_row_count <span class="kw">as </span>usize)
             .collect()
     });
 

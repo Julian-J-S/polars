@@ -62,6 +62,7 @@
 <a href="#62" id="62">62</a>
 <a href="#63" id="63">63</a>
 <a href="#64" id="64">64</a>
+<a href="#65" id="65">65</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::path::PathBuf;
 
 <span class="kw">use super</span>::<span class="kw-2">*</span>;
@@ -81,6 +82,7 @@
             <span class="kw-2">&amp;mut </span><span class="self">self</span>.options.with_columns,
             <span class="kw-2">&amp;mut </span><span class="self">self</span>.schema,
             <span class="self">self</span>.options.n_rows,
+            <span class="self">self</span>.options.row_count.is_some(),
         );
         IpcReader::new(file)
             .with_n_rows(n_rows)
