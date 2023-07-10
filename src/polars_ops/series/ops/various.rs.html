@@ -60,6 +60,24 @@
 <a href="#60" id="60">60</a>
 <a href="#61" id="61">61</a>
 <a href="#62" id="62">62</a>
+<a href="#63" id="63">63</a>
+<a href="#64" id="64">64</a>
+<a href="#65" id="65">65</a>
+<a href="#66" id="66">66</a>
+<a href="#67" id="67">67</a>
+<a href="#68" id="68">68</a>
+<a href="#69" id="69">69</a>
+<a href="#70" id="70">70</a>
+<a href="#71" id="71">71</a>
+<a href="#72" id="72">72</a>
+<a href="#73" id="73">73</a>
+<a href="#74" id="74">74</a>
+<a href="#75" id="75">75</a>
+<a href="#76" id="76">76</a>
+<a href="#77" id="77">77</a>
+<a href="#78" id="78">78</a>
+<a href="#79" id="79">79</a>
+<a href="#80" id="80">80</a>
 </pre></div><pre class="rust"><code><span class="attr">#[cfg(feature = <span class="string">&quot;hash&quot;</span>)]
 </span><span class="kw">use </span>polars_core::export::ahash;
 <span class="kw">use </span>polars_core::prelude::<span class="kw-2">*</span>;
@@ -101,7 +119,7 @@
         }
     }
 
-    <span class="kw">fn </span>is_sorted(<span class="kw-2">&amp;</span><span class="self">self</span>, options: SortOptions) -&gt; bool {
+    <span class="kw">fn </span>is_sorted(<span class="kw-2">&amp;</span><span class="self">self</span>, options: SortOptions) -&gt; PolarsResult&lt;bool&gt; {
         <span class="kw">let </span>s = <span class="self">self</span>.as_series();
 
         <span class="comment">// fast paths
@@ -112,12 +130,30 @@
                 &amp;&amp; !options.nulls_last
                 &amp;&amp; <span class="macro">matches!</span>(s.is_sorted_flag(), IsSorted::Ascending))
         {
-            <span class="kw">return </span><span class="bool-val">true</span>;
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="bool-val">true</span>);
         }
-
-        <span class="comment">// TODO! optimize
-        </span><span class="kw">let </span>out = s.sort_with(options);
-        out.eq(s)
+        <span class="kw">let </span>nc = s.null_count();
+        <span class="kw">let </span>slen = s.len() - nc - <span class="number">1</span>; <span class="comment">// Number of comparisons we might have to do
+        </span><span class="kw">if </span>nc == s.len() {
+            <span class="comment">// All nulls is all equal
+            </span><span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="bool-val">true</span>);
+        }
+        <span class="kw">if </span>nc &gt; <span class="number">0 </span>{
+            <span class="kw">let </span>nulls = s.chunks().iter().flat_map(|c| c.validity().unwrap());
+            <span class="kw">let </span><span class="kw-2">mut </span>npairs = nulls.clone().zip(nulls.skip(<span class="number">1</span>));
+            <span class="comment">// A null never precedes (follows) a non-null iff all nulls are at the end (beginning)
+            </span><span class="kw">if </span>(options.nulls_last &amp;&amp; npairs.any(|(a, b)| !a &amp;&amp; b)) || npairs.any(|(a, b)| a &amp;&amp; !b)
+            {
+                <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="bool-val">false</span>);
+            }
+        }
+        <span class="comment">// Compare adjacent elements with no-copy slices that don&#39;t include any nulls
+        </span><span class="kw">let </span>offset = !options.nulls_last <span class="kw">as </span>i64 * nc <span class="kw">as </span>i64;
+        <span class="kw">let </span>(s1, s2) = (s.slice(offset, slen), s.slice(offset + <span class="number">1</span>, slen));
+        <span class="kw">match </span>options.descending {
+            <span class="bool-val">true </span>=&gt; <span class="prelude-val">Ok</span>(Series::gt_eq(<span class="kw-2">&amp;</span>s1, <span class="kw-2">&amp;</span>s2)<span class="question-mark">?</span>.all()),
+            <span class="bool-val">false </span>=&gt; <span class="prelude-val">Ok</span>(Series::lt_eq(<span class="kw-2">&amp;</span>s1, <span class="kw-2">&amp;</span>s2)<span class="question-mark">?</span>.all()),
+        }
     }
 }
 
