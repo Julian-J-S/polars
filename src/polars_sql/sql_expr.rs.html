@@ -531,6 +531,12 @@
 <a href="#531" id="531">531</a>
 <a href="#532" id="532">532</a>
 <a href="#533" id="533">533</a>
+<a href="#534" id="534">534</a>
+<a href="#535" id="535">535</a>
+<a href="#536" id="536">536</a>
+<a href="#537" id="537">537</a>
+<a href="#538" id="538">538</a>
+<a href="#539" id="539">539</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>polars_arrow::error::to_compute_err;
 <span class="kw">use </span>polars_core::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span>polars_lazy::dsl::Expr;
@@ -553,17 +559,23 @@
             DataType::List(Box::new(map_sql_polars_datatype(inner_type)<span class="question-mark">?</span>))
         }
         SQLDataType::BigInt(<span class="kw">_</span>) =&gt; DataType::Int64,
+        SQLDataType::Binary(<span class="kw">_</span>) | SQLDataType::Blob(<span class="kw">_</span>) | SQLDataType::Varbinary(<span class="kw">_</span>) =&gt; {
+            DataType::Binary
+        }
         SQLDataType::Boolean =&gt; DataType::Boolean,
         SQLDataType::Char(<span class="kw">_</span>)
-        | SQLDataType::Varchar(<span class="kw">_</span>)
-        | SQLDataType::Uuid
+        | SQLDataType::CharVarying(<span class="kw">_</span>)
+        | SQLDataType::Character(<span class="kw">_</span>)
+        | SQLDataType::CharacterVarying(<span class="kw">_</span>)
         | SQLDataType::Clob(<span class="kw">_</span>)
+        | SQLDataType::String
         | SQLDataType::Text
-        | SQLDataType::String =&gt; DataType::Utf8,
+        | SQLDataType::Uuid
+        | SQLDataType::Varchar(<span class="kw">_</span>) =&gt; DataType::Utf8,
         SQLDataType::Date =&gt; DataType::Date,
-        SQLDataType::Double =&gt; DataType::Float64,
+        SQLDataType::Double | SQLDataType::DoublePrecision =&gt; DataType::Float64,
         SQLDataType::Float(<span class="kw">_</span>) =&gt; DataType::Float32,
-        SQLDataType::Int(<span class="kw">_</span>) =&gt; DataType::Int32,
+        SQLDataType::Int(<span class="kw">_</span>) | SQLDataType::Integer(<span class="kw">_</span>) =&gt; DataType::Int32,
         SQLDataType::Interval =&gt; DataType::Duration(TimeUnit::Milliseconds),
         SQLDataType::Real =&gt; DataType::Float32,
         SQLDataType::SmallInt(<span class="kw">_</span>) =&gt; DataType::Int16,
@@ -571,7 +583,7 @@
         SQLDataType::Timestamp { .. } =&gt; DataType::Datetime(TimeUnit::Milliseconds, <span class="prelude-val">None</span>),
         SQLDataType::TinyInt(<span class="kw">_</span>) =&gt; DataType::Int8,
         SQLDataType::UnsignedBigInt(<span class="kw">_</span>) =&gt; DataType::UInt64,
-        SQLDataType::UnsignedInt(<span class="kw">_</span>) =&gt; DataType::UInt32,
+        SQLDataType::UnsignedInt(<span class="kw">_</span>) | SQLDataType::UnsignedInteger(<span class="kw">_</span>) =&gt; DataType::UInt32,
         SQLDataType::UnsignedSmallInt(<span class="kw">_</span>) =&gt; DataType::UInt16,
         SQLDataType::UnsignedTinyInt(<span class="kw">_</span>) =&gt; DataType::UInt8,
 
