@@ -4798,8 +4798,8 @@
     }
 
     <span class="kw">pub fn </span>drop_many&lt;S: AsRef&lt;str&gt;&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, names: <span class="kw-2">&amp;</span>[S]) -&gt; <span class="self">Self </span>{
-        <span class="kw">let </span>names = names.iter().map(|s| s.as_ref()).collect();
-        <span class="kw">fn </span>inner(df: <span class="kw-2">&amp;</span>DataFrame, names: Vec&lt;<span class="kw-2">&amp;</span>str&gt;) -&gt; DataFrame {
+        <span class="kw">let </span>names: PlHashSet&lt;<span class="kw">_</span>&gt; = names.iter().map(|s| s.as_ref()).collect();
+        <span class="kw">fn </span>inner(df: <span class="kw-2">&amp;</span>DataFrame, names: PlHashSet&lt;<span class="kw-2">&amp;</span>str&gt;) -&gt; DataFrame {
             <span class="kw">let </span><span class="kw-2">mut </span>new_cols = Vec::with_capacity(df.columns.len() - names.len());
             df.columns.iter().for_each(|s| {
                 <span class="kw">if </span>!names.contains(<span class="kw-2">&amp;</span>s.name()) {
