@@ -2588,9 +2588,9 @@
     /// Equal to `LazyFrame::filter(col(&quot;*&quot;).is_not_null())`
     </span><span class="kw">pub fn </span>drop_nulls(<span class="self">self</span>, subset: <span class="prelude-ty">Option</span>&lt;Vec&lt;Expr&gt;&gt;) -&gt; LazyFrame {
         <span class="kw">match </span>subset {
-            <span class="prelude-val">None </span>=&gt; <span class="self">self</span>.filter(all_exprs([col(<span class="string">&quot;*&quot;</span>).is_not_null()])),
+            <span class="prelude-val">None </span>=&gt; <span class="self">self</span>.filter(all_horizontal([col(<span class="string">&quot;*&quot;</span>).is_not_null()])),
             <span class="prelude-val">Some</span>(subset) =&gt; {
-                <span class="kw">let </span>predicate = all_exprs(
+                <span class="kw">let </span>predicate = all_horizontal(
                     subset
                         .into_iter()
                         .map(|e| e.is_not_null())

@@ -268,6 +268,18 @@
 <a href="#268" id="268">268</a>
 <a href="#269" id="269">269</a>
 <a href="#270" id="270">270</a>
+<a href="#271" id="271">271</a>
+<a href="#272" id="272">272</a>
+<a href="#273" id="273">273</a>
+<a href="#274" id="274">274</a>
+<a href="#275" id="275">275</a>
+<a href="#276" id="276">276</a>
+<a href="#277" id="277">277</a>
+<a href="#278" id="278">278</a>
+<a href="#279" id="279">279</a>
+<a href="#280" id="280">280</a>
+<a href="#281" id="281">281</a>
+<a href="#282" id="282">282</a>
 </pre></div><pre class="rust"><code><span class="kw">use super</span>::<span class="kw-2">*</span>;
 
 <span class="attr">#[cfg(feature = <span class="string">&quot;dtype-struct&quot;</span>)]
@@ -460,24 +472,40 @@
     }
 }
 
-<span class="doccomment">/// Create a new column with the the sum of the values in each row.
+<span class="doccomment">/// Create a new column with the the bitwise-and of the elements in each row.
 ///
-/// The name of the resulting column will be `&quot;sum&quot;`; use [`alias`](Expr::alias) to choose a different name.
-</span><span class="kw">pub fn </span>sum_exprs&lt;E: AsRef&lt;[Expr]&gt;&gt;(exprs: E) -&gt; Expr {
-    <span class="kw">let </span><span class="kw-2">mut </span>exprs = exprs.as_ref().to_vec();
-    <span class="kw">let </span>func = |s1, s2| <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>s1 + <span class="kw-2">&amp;</span>s2));
-    <span class="kw">let </span>init = <span class="kw">match </span>exprs.pop() {
-        <span class="prelude-val">Some</span>(e) =&gt; e,
-        <span class="comment">// use u32 as that is not cast to float as eagerly
-        </span><span class="kw">_ </span>=&gt; lit(<span class="number">0u32</span>),
+/// The name of the resulting column will be &quot;all&quot;; use [`alias`](Expr::alias) to choose a different name.
+</span><span class="kw">pub fn </span>all_horizontal&lt;E: AsRef&lt;[Expr]&gt;&gt;(exprs: E) -&gt; Expr {
+    <span class="kw">let </span>exprs = exprs.as_ref().to_vec();
+    <span class="kw">let </span>func = |s1: Series, s2: Series| {
+        <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(
+            s1.bool()<span class="question-mark">?
+                </span>.bitand(s2.cast(<span class="kw-2">&amp;</span>DataType::Boolean)<span class="question-mark">?</span>.bool()<span class="question-mark">?</span>)
+                .into_series(),
+        ))
     };
-    fold_exprs(init, func, exprs).alias(<span class="string">&quot;sum&quot;</span>)
+    fold_exprs(lit(<span class="bool-val">true</span>), func, exprs).alias(<span class="string">&quot;all&quot;</span>)
+}
+
+<span class="doccomment">/// Create a new column with the the bitwise-or of the elements in each row.
+///
+/// The name of the resulting column will be &quot;any&quot;; use [`alias`](Expr::alias) to choose a different name.
+</span><span class="kw">pub fn </span>any_horizontal&lt;E: AsRef&lt;[Expr]&gt;&gt;(exprs: E) -&gt; Expr {
+    <span class="kw">let </span>exprs = exprs.as_ref().to_vec();
+    <span class="kw">let </span>func = |s1: Series, s2: Series| {
+        <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(
+            s1.bool()<span class="question-mark">?
+                </span>.bitor(s2.cast(<span class="kw-2">&amp;</span>DataType::Boolean)<span class="question-mark">?</span>.bool()<span class="question-mark">?</span>)
+                .into_series(),
+        ))
+    };
+    fold_exprs(lit(<span class="bool-val">false</span>), func, exprs).alias(<span class="string">&quot;any&quot;</span>)
 }
 
 <span class="doccomment">/// Create a new column with the the maximum value per row.
 ///
 /// The name of the resulting column will be `&quot;max&quot;`; use [`alias`](Expr::alias) to choose a different name.
-</span><span class="kw">pub fn </span>max_exprs&lt;E: AsRef&lt;[Expr]&gt;&gt;(exprs: E) -&gt; Expr {
+</span><span class="kw">pub fn </span>max_horizontal&lt;E: AsRef&lt;[Expr]&gt;&gt;(exprs: E) -&gt; Expr {
     <span class="kw">let </span>exprs = exprs.as_ref().to_vec();
     <span class="kw">if </span>exprs.is_empty() {
         <span class="kw">return </span>Expr::Columns(Vec::new());
@@ -492,7 +520,7 @@
 <span class="doccomment">/// Create a new column with the the minimum value per row.
 ///
 /// The name of the resulting column will be `&quot;min&quot;`; use [`alias`](Expr::alias) to choose a different name.
-</span><span class="kw">pub fn </span>min_exprs&lt;E: AsRef&lt;[Expr]&gt;&gt;(exprs: E) -&gt; Expr {
+</span><span class="kw">pub fn </span>min_horizontal&lt;E: AsRef&lt;[Expr]&gt;&gt;(exprs: E) -&gt; Expr {
     <span class="kw">let </span>exprs = exprs.as_ref().to_vec();
     <span class="kw">if </span>exprs.is_empty() {
         <span class="kw">return </span>Expr::Columns(Vec::new());
@@ -504,22 +532,18 @@
     reduce_exprs(func, exprs).alias(<span class="string">&quot;min&quot;</span>)
 }
 
-<span class="doccomment">/// Create a new column with the the bitwise-or of the elements in each row.
+<span class="doccomment">/// Create a new column with the the sum of the values in each row.
 ///
-/// The name of the resulting column is arbitrary; use [`alias`](Expr::alias) to choose a different name.
-</span><span class="kw">pub fn </span>any_exprs&lt;E: AsRef&lt;[Expr]&gt;&gt;(exprs: E) -&gt; Expr {
-    <span class="kw">let </span>exprs = exprs.as_ref().to_vec();
-    <span class="kw">let </span>func = |s1: Series, s2: Series| <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(s1.bool()<span class="question-mark">?</span>.bitor(s2.bool()<span class="question-mark">?</span>).into_series()));
-    fold_exprs(lit(<span class="bool-val">false</span>), func, exprs)
-}
-
-<span class="doccomment">/// Create a new column with the the bitwise-and of the elements in each row.
-///
-/// The name of the resulting column is arbitrary; use [`alias`](Expr::alias) to choose a different name.
-</span><span class="kw">pub fn </span>all_exprs&lt;E: AsRef&lt;[Expr]&gt;&gt;(exprs: E) -&gt; Expr {
-    <span class="kw">let </span>exprs = exprs.as_ref().to_vec();
-    <span class="kw">let </span>func = |s1: Series, s2: Series| <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(s1.bool()<span class="question-mark">?</span>.bitand(s2.bool()<span class="question-mark">?</span>).into_series()));
-    fold_exprs(lit(<span class="bool-val">true</span>), func, exprs)
+/// The name of the resulting column will be `&quot;sum&quot;`; use [`alias`](Expr::alias) to choose a different name.
+</span><span class="kw">pub fn </span>sum_horizontal&lt;E: AsRef&lt;[Expr]&gt;&gt;(exprs: E) -&gt; Expr {
+    <span class="kw">let </span><span class="kw-2">mut </span>exprs = exprs.as_ref().to_vec();
+    <span class="kw">let </span>func = |s1, s2| <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>s1 + <span class="kw-2">&amp;</span>s2));
+    <span class="kw">let </span>init = <span class="kw">match </span>exprs.pop() {
+        <span class="prelude-val">Some</span>(e) =&gt; e,
+        <span class="comment">// use u32 as that is not cast to float as eagerly
+        </span><span class="kw">_ </span>=&gt; lit(<span class="number">0u32</span>),
+    };
+    fold_exprs(init, func, exprs).alias(<span class="string">&quot;sum&quot;</span>)
 }
 
 <span class="doccomment">/// Folds the expressions from left to right keeping the first non-null values.

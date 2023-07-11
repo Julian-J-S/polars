@@ -1361,7 +1361,7 @@
                             This is ambiguous. Try to combine the predicates with the &#39;all&#39; or `any&#39; expression.&quot;</span>)
                     } <span class="kw">else </span>{
                         <span class="macro">format!</span>(<span class="string">&quot;The predicate passed to &#39;LazyFrame.filter&#39; expanded to multiple expressions: \n\n{expanded}\n\
-                            This is ambiguous. Try to combine the predicates with the &#39;all_exprs&#39; or `any_exprs&#39; expression.&quot;</span>)
+                            This is ambiguous. Try to combine the predicates with the &#39;all_horizontal&#39; or `any_horizontal&#39; expression.&quot;</span>)
                     };
                     <span class="kw">return </span><span class="macro">raise_err!</span>(<span class="macro">polars_err!</span>(ComputeError: msg), <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, into);
                 }
