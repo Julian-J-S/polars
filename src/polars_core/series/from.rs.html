@@ -725,6 +725,7 @@
 <a href="#725" id="725">725</a>
 <a href="#726" id="726">726</a>
 <a href="#727" id="727">727</a>
+<a href="#728" id="728">728</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::convert::TryFrom;
 
 <span class="kw">use </span>arrow::compute::cast::utf8_to_large_utf8;
@@ -927,8 +928,9 @@
                 <span class="kw">let </span><span class="kw-2">mut </span>tz = tz.clone();
                 <span class="kw">if </span>tz.as_deref() == <span class="prelude-val">Some</span>(<span class="string">&quot;&quot;</span>) {
                     tz = <span class="prelude-val">None</span>;
-                }
-                <span class="kw">if let </span><span class="prelude-val">Some</span>(_tz) = <span class="kw-2">&amp;</span>tz {
+                } <span class="kw">else if </span>tz.as_deref() == <span class="prelude-val">Some</span>(<span class="string">&quot;+00:00&quot;</span>) {
+                    tz = <span class="prelude-val">Some</span>(<span class="string">&quot;UTC&quot;</span>.to_string());
+                } <span class="kw">else if let </span><span class="prelude-val">Some</span>(_tz) = <span class="kw-2">&amp;</span>tz {
                     <span class="attr">#[cfg(feature = <span class="string">&quot;timezones&quot;</span>)]
                     </span>validate_time_zone(_tz)<span class="question-mark">?</span>;
                 }
