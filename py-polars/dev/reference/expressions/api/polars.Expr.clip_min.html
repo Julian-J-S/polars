@@ -48,7 +48,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'reference/expressions/api/polars.Expr.clip_min';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="polars.Expr.drop_nans" href="polars.Expr.drop_nans.html" />
+    <link rel="next" title="polars.Expr.cut" href="polars.Expr.cut.html" />
     <link rel="prev" title="polars.Expr.clip_max" href="polars.Expr.clip_max.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -1239,6 +1239,7 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="polars.Expr.clip.html">polars.Expr.clip</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.Expr.clip_max.html">polars.Expr.clip_max</a></li>
 <li class="toctree-l3 current active"><a class="current reference internal" href="#">polars.Expr.clip_min</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polars.Expr.cut.html">polars.Expr.cut</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.Expr.drop_nans.html">polars.Expr.drop_nans</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.Expr.drop_nulls.html">polars.Expr.drop_nulls</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.Expr.explode.html">polars.Expr.explode</a></li>
@@ -1256,6 +1257,7 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="polars.Expr.lower_bound.html">polars.Expr.lower_bound</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.Expr.map_dict.html">polars.Expr.map_dict</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.Expr.pipe.html">polars.Expr.pipe</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polars.Expr.qcut.html">polars.Expr.qcut</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.Expr.rechunk.html">polars.Expr.rechunk</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.Expr.reinterpret.html">polars.Expr.reinterpret</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.Expr.repeat_by.html">polars.Expr.repeat_by</a></li>
@@ -1604,7 +1606,7 @@ document.write(`
 <h1>polars.Expr.clip_min<a class="headerlink" href="#polars-expr-clip-min" title="Permalink to this heading">#</a></h1>
 <dl class="py method">
 <dt class="sig sig-object py" id="polars.Expr.clip_min">
-<span class="sig-prename descclassname"><span class="pre">Expr.</span></span><span class="sig-name descname"><span class="pre">clip_min</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lower_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference external" href="https://github.com/pola-rs/polars/blob/main/py-polars/polars/expr/expr.py#L7112-L7143"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polars.Expr.clip_min" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">Expr.</span></span><span class="sig-name descname"><span class="pre">clip_min</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lower_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference external" href="https://github.com/pola-rs/polars/blob/main/py-polars/polars/expr/expr.py#L7140-L7171"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polars.Expr.clip_min" title="Permalink to this definition">#</a></dt>
 <dd><p>Clip (limit) the values in an array to a <cite>min</cite> boundary.</p>
 <p>Only works for numerical types.</p>
 <p>If you want to clip other dtypes, consider writing a “when, then, otherwise”
@@ -1658,11 +1660,11 @@ expression. See <a class="reference internal" href="polars.when.html#polars.when
       </div>
     </a>
     <a class="right-next"
-       href="polars.Expr.drop_nans.html"
+       href="polars.Expr.cut.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">polars.Expr.drop_nans</p>
+        <p class="prev-next-title">polars.Expr.cut</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

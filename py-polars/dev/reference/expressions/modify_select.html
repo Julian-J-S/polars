@@ -1235,6 +1235,7 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.clip.html">polars.Expr.clip</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.clip_max.html">polars.Expr.clip_max</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.clip_min.html">polars.Expr.clip_min</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.cut.html">polars.Expr.cut</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.drop_nans.html">polars.Expr.drop_nans</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.drop_nulls.html">polars.Expr.drop_nulls</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.explode.html">polars.Expr.explode</a></li>
@@ -1252,6 +1253,7 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.lower_bound.html">polars.Expr.lower_bound</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.map_dict.html">polars.Expr.map_dict</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.pipe.html">polars.Expr.pipe</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.qcut.html">polars.Expr.qcut</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.rechunk.html">polars.Expr.rechunk</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.reinterpret.html">polars.Expr.reinterpret</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.repeat_by.html">polars.Expr.repeat_by</a></li>
@@ -1625,56 +1627,62 @@ document.write(`
 <tr class="row-even"><td><p><a class="reference internal" href="api/polars.Expr.clip_min.html#polars.Expr.clip_min" title="polars.Expr.clip_min"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.clip_min</span></code></a>(lower_bound)</p></td>
 <td><p>Clip (limit) the values in an array to a <cite>min</cite> boundary.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Expr.drop_nans.html#polars.Expr.drop_nans" title="polars.Expr.drop_nans"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.drop_nans</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Expr.cut.html#polars.Expr.cut" title="polars.Expr.cut"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.cut</span></code></a>(breaks[, labels, left_closed, ...])</p></td>
+<td><p>Bin continuous values into discrete categories.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Expr.drop_nans.html#polars.Expr.drop_nans" title="polars.Expr.drop_nans"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.drop_nans</span></code></a>()</p></td>
 <td><p>Drop floating point NaN values.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Expr.drop_nulls.html#polars.Expr.drop_nulls" title="polars.Expr.drop_nulls"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.drop_nulls</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Expr.drop_nulls.html#polars.Expr.drop_nulls" title="polars.Expr.drop_nulls"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.drop_nulls</span></code></a>()</p></td>
 <td><p>Drop all null values.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Expr.explode.html#polars.Expr.explode" title="polars.Expr.explode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.explode</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Expr.explode.html#polars.Expr.explode" title="polars.Expr.explode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.explode</span></code></a>()</p></td>
 <td><p>Explode a list Series.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Expr.extend_constant.html#polars.Expr.extend_constant" title="polars.Expr.extend_constant"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.extend_constant</span></code></a>(value, n)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Expr.extend_constant.html#polars.Expr.extend_constant" title="polars.Expr.extend_constant"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.extend_constant</span></code></a>(value, n)</p></td>
 <td><p>Extremely fast method for extending the Series with 'n' copies of a value.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Expr.fill_nan.html#polars.Expr.fill_nan" title="polars.Expr.fill_nan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.fill_nan</span></code></a>(value)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Expr.fill_nan.html#polars.Expr.fill_nan" title="polars.Expr.fill_nan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.fill_nan</span></code></a>(value)</p></td>
 <td><p>Fill floating point NaN value with a fill value.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Expr.fill_null.html#polars.Expr.fill_null" title="polars.Expr.fill_null"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.fill_null</span></code></a>([value, strategy, limit])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Expr.fill_null.html#polars.Expr.fill_null" title="polars.Expr.fill_null"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.fill_null</span></code></a>([value, strategy, limit])</p></td>
 <td><p>Fill null values using the specified value or strategy.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Expr.filter.html#polars.Expr.filter" title="polars.Expr.filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.filter</span></code></a>(predicate)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Expr.filter.html#polars.Expr.filter" title="polars.Expr.filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.filter</span></code></a>(predicate)</p></td>
 <td><p>Filter a single column.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Expr.flatten.html#polars.Expr.flatten" title="polars.Expr.flatten"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.flatten</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Expr.flatten.html#polars.Expr.flatten" title="polars.Expr.flatten"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.flatten</span></code></a>()</p></td>
 <td><p>Flatten a list or string column.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Expr.floor.html#polars.Expr.floor" title="polars.Expr.floor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.floor</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Expr.floor.html#polars.Expr.floor" title="polars.Expr.floor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.floor</span></code></a>()</p></td>
 <td><p>Rounds down to the nearest integer value.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Expr.forward_fill.html#polars.Expr.forward_fill" title="polars.Expr.forward_fill"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.forward_fill</span></code></a>([limit])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Expr.forward_fill.html#polars.Expr.forward_fill" title="polars.Expr.forward_fill"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.forward_fill</span></code></a>([limit])</p></td>
 <td><p>Fill missing values with the latest seen values.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Expr.head.html#polars.Expr.head" title="polars.Expr.head"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.head</span></code></a>([n])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Expr.head.html#polars.Expr.head" title="polars.Expr.head"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.head</span></code></a>([n])</p></td>
 <td><p>Get the first <cite>n</cite> rows.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Expr.inspect.html#polars.Expr.inspect" title="polars.Expr.inspect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.inspect</span></code></a>([fmt])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Expr.inspect.html#polars.Expr.inspect" title="polars.Expr.inspect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.inspect</span></code></a>([fmt])</p></td>
 <td><p>Print the value that this expression evaluates to and pass on the value.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Expr.interpolate.html#polars.Expr.interpolate" title="polars.Expr.interpolate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.interpolate</span></code></a>([method])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Expr.interpolate.html#polars.Expr.interpolate" title="polars.Expr.interpolate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.interpolate</span></code></a>([method])</p></td>
 <td><p>Fill nulls with linear interpolation over missing values.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Expr.limit.html#polars.Expr.limit" title="polars.Expr.limit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.limit</span></code></a>([n])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Expr.limit.html#polars.Expr.limit" title="polars.Expr.limit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.limit</span></code></a>([n])</p></td>
 <td><p>Get the first <cite>n</cite> rows (alias for <a class="reference internal" href="api/polars.Expr.head.html#polars.Expr.head" title="polars.Expr.head"><code class="xref py py-func docutils literal notranslate"><span class="pre">Expr.head()</span></code></a>).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Expr.lower_bound.html#polars.Expr.lower_bound" title="polars.Expr.lower_bound"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.lower_bound</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Expr.lower_bound.html#polars.Expr.lower_bound" title="polars.Expr.lower_bound"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.lower_bound</span></code></a>()</p></td>
 <td><p>Calculate the lower bound.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Expr.map_dict.html#polars.Expr.map_dict" title="polars.Expr.map_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.map_dict</span></code></a>(remapping, *[, default, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Expr.map_dict.html#polars.Expr.map_dict" title="polars.Expr.map_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.map_dict</span></code></a>(remapping, *[, default, ...])</p></td>
 <td><p>Replace values in column according to remapping dictionary.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Expr.pipe.html#polars.Expr.pipe" title="polars.Expr.pipe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.pipe</span></code></a>(function, *args, **kwargs)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Expr.pipe.html#polars.Expr.pipe" title="polars.Expr.pipe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.pipe</span></code></a>(function, *args, **kwargs)</p></td>
 <td><p>Offers a structured way to apply a sequence of user-defined functions (UDFs).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Expr.qcut.html#polars.Expr.qcut" title="polars.Expr.qcut"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.qcut</span></code></a>(probs[, labels, left_closed, ...])</p></td>
+<td><p>Bin continuous values into discrete categories based on their quantiles.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="api/polars.Expr.rechunk.html#polars.Expr.rechunk" title="polars.Expr.rechunk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.rechunk</span></code></a>()</p></td>
 <td><p>Create a single chunk of memory for this Series.</p></td>

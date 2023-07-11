@@ -1239,6 +1239,7 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="../../expressions/api/polars.Expr.clip.html">polars.Expr.clip</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../expressions/api/polars.Expr.clip_max.html">polars.Expr.clip_max</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../expressions/api/polars.Expr.clip_min.html">polars.Expr.clip_min</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../expressions/api/polars.Expr.cut.html">polars.Expr.cut</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../expressions/api/polars.Expr.drop_nans.html">polars.Expr.drop_nans</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../expressions/api/polars.Expr.drop_nulls.html">polars.Expr.drop_nulls</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../expressions/api/polars.Expr.explode.html">polars.Expr.explode</a></li>
@@ -1256,6 +1257,7 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="../../expressions/api/polars.Expr.lower_bound.html">polars.Expr.lower_bound</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../expressions/api/polars.Expr.map_dict.html">polars.Expr.map_dict</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../expressions/api/polars.Expr.pipe.html">polars.Expr.pipe</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../expressions/api/polars.Expr.qcut.html">polars.Expr.qcut</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../expressions/api/polars.Expr.rechunk.html">polars.Expr.rechunk</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../expressions/api/polars.Expr.reinterpret.html">polars.Expr.reinterpret</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../expressions/api/polars.Expr.repeat_by.html">polars.Expr.repeat_by</a></li>
@@ -1604,7 +1606,7 @@ document.write(`
 <h1>polars.Series.is_empty<a class="headerlink" href="#polars-series-is-empty" title="Permalink to this heading">#</a></h1>
 <dl class="py method">
 <dt class="sig sig-object py" id="polars.Series.is_empty">
-<span class="sig-prename descclassname"><span class="pre">Series.</span></span><span class="sig-name descname"><span class="pre">is_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span></span><a class="reference external" href="https://github.com/pola-rs/polars/blob/main/py-polars/polars/series/series.py#L2714-L2725"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polars.Series.is_empty" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">Series.</span></span><span class="sig-name descname"><span class="pre">is_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span></span><a class="reference external" href="https://github.com/pola-rs/polars/blob/main/py-polars/polars/series/series.py#L2736-L2747"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polars.Series.is_empty" title="Permalink to this definition">#</a></dt>
 <dd><p>Check if the Series is empty.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">Float32</span><span class="p">)</span>
