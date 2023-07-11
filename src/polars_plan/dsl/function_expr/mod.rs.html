@@ -753,6 +753,17 @@
 <a href="#753" id="753">753</a>
 <a href="#754" id="754">754</a>
 <a href="#755" id="755">755</a>
+<a href="#756" id="756">756</a>
+<a href="#757" id="757">757</a>
+<a href="#758" id="758">758</a>
+<a href="#759" id="759">759</a>
+<a href="#760" id="760">760</a>
+<a href="#761" id="761">761</a>
+<a href="#762" id="762">762</a>
+<a href="#763" id="763">763</a>
+<a href="#764" id="764">764</a>
+<a href="#765" id="765">765</a>
+<a href="#766" id="766">766</a>
 </pre></div><pre class="rust"><code><span class="attr">#[cfg(feature = <span class="string">&quot;abs&quot;</span>)]
 </span><span class="kw">mod </span>abs;
 <span class="attr">#[cfg(feature = <span class="string">&quot;arg_where&quot;</span>)]
@@ -960,6 +971,7 @@
         breaks: Vec&lt;f64&gt;,
         labels: <span class="prelude-ty">Option</span>&lt;Vec&lt;String&gt;&gt;,
         left_closed: bool,
+        include_breaks: bool,
     },
     <span class="attr">#[cfg(feature = <span class="string">&quot;cutqcut&quot;</span>)]
     </span>QCut {
@@ -967,6 +979,7 @@
         labels: <span class="prelude-ty">Option</span>&lt;Vec&lt;String&gt;&gt;,
         left_closed: bool,
         allow_duplicates: bool,
+        include_breaks: bool,
     },
     ToPhysical,
     <span class="attr">#[cfg(feature = <span class="string">&quot;random&quot;</span>)]
@@ -1309,19 +1322,28 @@
                 breaks,
                 labels,
                 left_closed,
-            } =&gt; <span class="macro">map!</span>(cut, breaks.clone(), labels.clone(), left_closed),
+                include_breaks,
+            } =&gt; <span class="macro">map!</span>(
+                cut,
+                breaks.clone(),
+                labels.clone(),
+                left_closed,
+                include_breaks
+            ),
             <span class="attr">#[cfg(feature = <span class="string">&quot;cutqcut&quot;</span>)]
             </span>QCut {
                 probs,
                 labels,
                 left_closed,
                 allow_duplicates,
+                include_breaks,
             } =&gt; <span class="macro">map!</span>(
                 qcut,
                 probs.clone(),
                 labels.clone(),
                 left_closed,
-                allow_duplicates
+                allow_duplicates,
+                include_breaks
             ),
             ToPhysical =&gt; <span class="macro">map!</span>(dispatch::to_physical),
             <span class="attr">#[cfg(feature = <span class="string">&quot;random&quot;</span>)]

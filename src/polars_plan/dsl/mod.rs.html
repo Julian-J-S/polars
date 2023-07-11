@@ -1909,6 +1909,15 @@
 <a href="#1909" id="1909">1909</a>
 <a href="#1910" id="1910">1910</a>
 <a href="#1911" id="1911">1911</a>
+<a href="#1912" id="1912">1912</a>
+<a href="#1913" id="1913">1913</a>
+<a href="#1914" id="1914">1914</a>
+<a href="#1915" id="1915">1915</a>
+<a href="#1916" id="1916">1916</a>
+<a href="#1917" id="1917">1917</a>
+<a href="#1918" id="1918">1918</a>
+<a href="#1919" id="1919">1919</a>
+<a href="#1920" id="1920">1920</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(ambiguous_glob_reexports)]
 </span><span class="doccomment">//! Domain specific language for the Lazy API.
 </span><span class="attr">#[cfg(feature = <span class="string">&quot;dtype-categorical&quot;</span>)]
@@ -3376,11 +3385,18 @@
     }
 
     <span class="attr">#[cfg(feature = <span class="string">&quot;cutqcut&quot;</span>)]
-    </span><span class="kw">pub fn </span>cut(<span class="self">self</span>, breaks: Vec&lt;f64&gt;, labels: <span class="prelude-ty">Option</span>&lt;Vec&lt;String&gt;&gt;, left_closed: bool) -&gt; Expr {
+    </span><span class="kw">pub fn </span>cut(
+        <span class="self">self</span>,
+        breaks: Vec&lt;f64&gt;,
+        labels: <span class="prelude-ty">Option</span>&lt;Vec&lt;String&gt;&gt;,
+        left_closed: bool,
+        include_breaks: bool,
+    ) -&gt; Expr {
         <span class="self">self</span>.apply_private(FunctionExpr::Cut {
             breaks,
             labels,
             left_closed,
+            include_breaks,
         })
     }
 
@@ -3391,12 +3407,14 @@
         labels: <span class="prelude-ty">Option</span>&lt;Vec&lt;String&gt;&gt;,
         left_closed: bool,
         allow_duplicates: bool,
+        include_breaks: bool,
     ) -&gt; Expr {
         <span class="self">self</span>.apply_private(FunctionExpr::QCut {
             probs,
             labels,
             left_closed,
             allow_duplicates,
+            include_breaks,
         })
     }
 
