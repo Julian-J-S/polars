@@ -95,6 +95,10 @@
 <a href="#95" id="95">95</a>
 <a href="#96" id="96">96</a>
 <a href="#97" id="97">97</a>
+<a href="#98" id="98">98</a>
+<a href="#99" id="99">99</a>
+<a href="#100" id="100">100</a>
+<a href="#101" id="101">101</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::path::{Path, PathBuf};
 
 <span class="kw">use </span>polars_core::prelude::<span class="kw-2">*</span>;
@@ -139,20 +143,24 @@
     <span class="kw">fn </span>finish_no_glob(<span class="self">self</span>) -&gt; PolarsResult&lt;LazyFrame&gt; {
         <span class="kw">let </span>args = <span class="self">self</span>.args;
         <span class="kw">let </span>path = <span class="self">self</span>.path;
+
         <span class="kw">let </span>options = IpcScanOptions {
-            n_rows: args.n_rows,
-            cache: args.cache,
-            with_columns: <span class="prelude-val">None</span>,
-            row_count: <span class="prelude-val">None</span>,
-            rechunk: args.rechunk,
             memmap: args.memmap,
         };
-        <span class="kw">let </span>row_count = args.row_count;
-        <span class="kw">let </span><span class="kw-2">mut </span>lf: LazyFrame = LogicalPlanBuilder::scan_ipc(path, options)<span class="question-mark">?</span>.build().into();
+        <span class="kw">let </span><span class="kw-2">mut </span>lf: LazyFrame = LogicalPlanBuilder::scan_ipc(
+            path,
+            options,
+            args.n_rows,
+            args.cache,
+            args.row_count.clone(),
+            args.rechunk,
+        )<span class="question-mark">?
+        </span>.build()
+        .into();
         lf.opt_state.file_caching = <span class="bool-val">true</span>;
 
         <span class="comment">// it is a bit hacky, but this row_count function updates the schema
-        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(row_count) = row_count {
+        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(row_count) = args.row_count {
             lf = lf.with_row_count(<span class="kw-2">&amp;</span>row_count.name, <span class="prelude-val">Some</span>(row_count.offset))
         }
 

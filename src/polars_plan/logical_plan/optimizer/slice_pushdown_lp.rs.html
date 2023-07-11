@@ -356,30 +356,6 @@
 <a href="#356" id="356">356</a>
 <a href="#357" id="357">357</a>
 <a href="#358" id="358">358</a>
-<a href="#359" id="359">359</a>
-<a href="#360" id="360">360</a>
-<a href="#361" id="361">361</a>
-<a href="#362" id="362">362</a>
-<a href="#363" id="363">363</a>
-<a href="#364" id="364">364</a>
-<a href="#365" id="365">365</a>
-<a href="#366" id="366">366</a>
-<a href="#367" id="367">367</a>
-<a href="#368" id="368">368</a>
-<a href="#369" id="369">369</a>
-<a href="#370" id="370">370</a>
-<a href="#371" id="371">371</a>
-<a href="#372" id="372">372</a>
-<a href="#373" id="373">373</a>
-<a href="#374" id="374">374</a>
-<a href="#375" id="375">375</a>
-<a href="#376" id="376">376</a>
-<a href="#377" id="377">377</a>
-<a href="#378" id="378">378</a>
-<a href="#379" id="379">379</a>
-<a href="#380" id="380">380</a>
-<a href="#381" id="381">381</a>
-<a href="#382" id="382">382</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>polars_core::prelude::<span class="kw-2">*</span>;
 
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
@@ -518,73 +494,49 @@
                 };
                 <span class="prelude-val">Ok</span>(lp)
             }
-
-            <span class="attr">#[cfg(feature = <span class="string">&quot;parquet&quot;</span>)]
-            </span>(ParquetScan {
-                path,
-                file_info,
-                output_schema,
-                predicate,
-                <span class="kw-2">mut </span>options,
-                cloud_options,
-
-            },
-                <span class="comment">// TODO! we currently skip slice pushdown if there is a predicate.
-                // we can modify the readers to only limit after predicates have been applied
-                </span><span class="prelude-val">Some</span>(state)) <span class="kw">if </span>state.offset == <span class="number">0 </span>&amp;&amp; predicate.is_none() =&gt; {
-                options.n_rows = <span class="prelude-val">Some</span>(state.len <span class="kw">as </span>usize);
-                <span class="kw">let </span>lp = ParquetScan {
-                    path,
-                    file_info,
-                    output_schema,
-                    predicate,
-                    options,
-                    cloud_options,
-                };
-
-                <span class="prelude-val">Ok</span>(lp)
-            },
-            <span class="attr">#[cfg(feature = <span class="string">&quot;ipc&quot;</span>)]
-            </span>(IpcScan {path,
-            file_info,
-                output_schema,
-                predicate,
-                <span class="kw-2">mut </span>options
-            }, <span class="prelude-val">Some</span>(state)) <span class="kw">if </span>state.offset == <span class="number">0 </span>&amp;&amp; predicate.is_none() =&gt; {
-                options.n_rows = <span class="prelude-val">Some</span>(state.len <span class="kw">as </span>usize);
-                <span class="kw">let </span>lp = IpcScan {
-                    path,
-                    file_info,
-                    output_schema,
-                    predicate,
-                    options
-                };
-
-                <span class="prelude-val">Ok</span>(lp)
-
-            }
-
             <span class="attr">#[cfg(feature = <span class="string">&quot;csv&quot;</span>)]
-            </span>(CsvScan {
+            </span>(Scan {
                 path,
                 file_info,
                 output_schema,
-                <span class="kw-2">mut </span>options,
+                file_options: <span class="kw-2">mut </span>options,
                 predicate,
-            }, <span class="prelude-val">Some</span>(state)) <span class="kw">if </span>state.offset &gt;= <span class="number">0 </span>&amp;&amp; predicate.is_none() =&gt; {
-                options.skip_rows += state.offset <span class="kw">as </span>usize;
+                scan_type: FileScan::Csv {options: <span class="kw-2">mut </span>csv_options}
+            }, <span class="prelude-val">Some</span>(state)) <span class="kw">if </span>predicate.is_none() &amp;&amp; state.offset &gt;= <span class="number">0 </span>=&gt;  {
                 options.n_rows = <span class="prelude-val">Some</span>(state.len <span class="kw">as </span>usize);
+                csv_options.skip_rows += state.offset <span class="kw">as </span>usize;
 
-                <span class="kw">let </span>lp = CsvScan {
+                <span class="kw">let </span>lp = Scan {
                     path,
                     file_info,
                     output_schema,
-                    options,
+                    scan_type: FileScan::Csv {options: csv_options},
+                    file_options: options,
                     predicate,
                 };
                 <span class="prelude-val">Ok</span>(lp)
-            }
+            },
+            (Scan {
+                path,
+                file_info,
+                output_schema,
+                file_options: <span class="kw-2">mut </span>options,
+                predicate,
+                scan_type
+            }, <span class="prelude-val">Some</span>(state)) <span class="kw">if </span>state.offset == <span class="number">0 </span>&amp;&amp; predicate.is_none() =&gt; {
 
+                options.n_rows = <span class="prelude-val">Some</span>(state.len <span class="kw">as </span>usize);
+                <span class="kw">let </span>lp = Scan {
+                    path,
+                    file_info,
+                    output_schema,
+                    predicate,
+                    file_options: options,
+                    scan_type
+                };
+
+                <span class="prelude-val">Ok</span>(lp)
+            }
             (Union {inputs, <span class="kw-2">mut </span>options }, <span class="prelude-val">Some</span>(state)) =&gt; {
                 options.slice = <span class="prelude-val">Some</span>((state.offset, state.len <span class="kw">as </span>usize));
                 <span class="prelude-val">Ok</span>(Union {inputs, options})

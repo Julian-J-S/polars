@@ -268,7 +268,7 @@
 </span><span class="attr">#[allow(dead_code)]
 </span><span class="kw">type </span>Configs&lt;T&gt; = Vec&lt;(T, String)&gt;;
 
-<span class="attr">#[derive(Clone, Debug, Default)]
+<span class="attr">#[derive(Clone, Debug, Default, PartialEq)]
 #[cfg_attr(feature = <span class="string">&quot;serde-lazy&quot;</span>, derive(Serialize, Deserialize))]
 </span><span class="doccomment">/// Options to connect to various cloud providers.
 </span><span class="kw">pub struct </span>CloudOptions {

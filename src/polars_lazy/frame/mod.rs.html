@@ -1501,38 +1501,6 @@
 <a href="#1501" id="1501">1501</a>
 <a href="#1502" id="1502">1502</a>
 <a href="#1503" id="1503">1503</a>
-<a href="#1504" id="1504">1504</a>
-<a href="#1505" id="1505">1505</a>
-<a href="#1506" id="1506">1506</a>
-<a href="#1507" id="1507">1507</a>
-<a href="#1508" id="1508">1508</a>
-<a href="#1509" id="1509">1509</a>
-<a href="#1510" id="1510">1510</a>
-<a href="#1511" id="1511">1511</a>
-<a href="#1512" id="1512">1512</a>
-<a href="#1513" id="1513">1513</a>
-<a href="#1514" id="1514">1514</a>
-<a href="#1515" id="1515">1515</a>
-<a href="#1516" id="1516">1516</a>
-<a href="#1517" id="1517">1517</a>
-<a href="#1518" id="1518">1518</a>
-<a href="#1519" id="1519">1519</a>
-<a href="#1520" id="1520">1520</a>
-<a href="#1521" id="1521">1521</a>
-<a href="#1522" id="1522">1522</a>
-<a href="#1523" id="1523">1523</a>
-<a href="#1524" id="1524">1524</a>
-<a href="#1525" id="1525">1525</a>
-<a href="#1526" id="1526">1526</a>
-<a href="#1527" id="1527">1527</a>
-<a href="#1528" id="1528">1528</a>
-<a href="#1529" id="1529">1529</a>
-<a href="#1530" id="1530">1530</a>
-<a href="#1531" id="1531">1531</a>
-<a href="#1532" id="1532">1532</a>
-<a href="#1533" id="1533">1533</a>
-<a href="#1534" id="1534">1534</a>
-<a href="#1535" id="1535">1535</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Lazy variant of a [DataFrame](polars_core::frame::DataFrame).
 </span><span class="attr">#[cfg(feature = <span class="string">&quot;csv&quot;</span>)]
 </span><span class="kw">mod </span>csv;
@@ -2735,42 +2703,10 @@
     /// This may for instance block predicate pushdown optimization.
     </span><span class="kw">pub fn </span>with_row_count(<span class="kw-2">mut </span><span class="self">self</span>, name: <span class="kw-2">&amp;</span>str, offset: <span class="prelude-ty">Option</span>&lt;IdxSize&gt;) -&gt; LazyFrame {
         <span class="kw">let </span>add_row_count_in_map = <span class="kw">match </span><span class="kw-2">&amp;mut </span><span class="self">self</span>.logical_plan {
-            <span class="comment">// Do the row count at scan
-            </span><span class="attr">#[cfg(feature = <span class="string">&quot;csv&quot;</span>)]
-            </span>LogicalPlan::CsvScan {
-                options, file_info, ..
-            } =&gt; {
-                options.row_count = <span class="prelude-val">Some</span>(RowCount {
-                    name: name.to_string(),
-                    offset: offset.unwrap_or(<span class="number">0</span>),
-                });
-                file_info.schema = Arc::new(
-                    file_info
-                        .schema
-                        .new_inserting_at_index(<span class="number">0</span>, name.into(), IDX_DTYPE)
-                        .unwrap(),
-                );
-                <span class="bool-val">false
-            </span>}
-            <span class="attr">#[cfg(feature = <span class="string">&quot;ipc&quot;</span>)]
-            </span>LogicalPlan::IpcScan {
-                options, file_info, ..
-            } =&gt; {
-                options.row_count = <span class="prelude-val">Some</span>(RowCount {
-                    name: name.to_string(),
-                    offset: offset.unwrap_or(<span class="number">0</span>),
-                });
-                file_info.schema = Arc::new(
-                    file_info
-                        .schema
-                        .new_inserting_at_index(<span class="number">0</span>, name.into(), IDX_DTYPE)
-                        .unwrap(),
-                );
-                <span class="bool-val">false
-            </span>}
-            <span class="attr">#[cfg(feature = <span class="string">&quot;parquet&quot;</span>)]
-            </span>LogicalPlan::ParquetScan {
-                options, file_info, ..
+            LogicalPlan::Scan {
+                file_options: options,
+                file_info,
+                ..
             } =&gt; {
                 options.row_count = <span class="prelude-val">Some</span>(RowCount {
                     name: name.to_string(),

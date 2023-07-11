@@ -276,25 +276,8 @@
 <a href="#276" id="276">276</a>
 <a href="#277" id="277">277</a>
 <a href="#278" id="278">278</a>
-<a href="#279" id="279">279</a>
-<a href="#280" id="280">280</a>
-<a href="#281" id="281">281</a>
-<a href="#282" id="282">282</a>
-<a href="#283" id="283">283</a>
-<a href="#284" id="284">284</a>
-<a href="#285" id="285">285</a>
-<a href="#286" id="286">286</a>
-<a href="#287" id="287">287</a>
-<a href="#288" id="288">288</a>
-<a href="#289" id="289">289</a>
-<a href="#290" id="290">290</a>
-<a href="#291" id="291">291</a>
-<a href="#292" id="292">292</a>
-<a href="#293" id="293">293</a>
-<a href="#294" id="294">294</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::fmt::Debug;
-<span class="attr">#[cfg(any(feature = <span class="string">&quot;ipc&quot;</span>, feature = <span class="string">&quot;csv&quot;</span>, feature = <span class="string">&quot;parquet&quot;</span>))]
-</span><span class="kw">use </span>std::path::PathBuf;
+<span class="kw">use </span>std::path::PathBuf;
 <span class="kw">use </span>std::sync::{Arc, Mutex};
 
 <span class="attr">#[cfg(feature = <span class="string">&quot;parquet&quot;</span>)]
@@ -314,6 +297,7 @@
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>conversion;
 <span class="attr">#[cfg(feature = <span class="string">&quot;debugging&quot;</span>)]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>debug;
+<span class="kw">mod </span>file_scan;
 <span class="kw">mod </span>format;
 <span class="kw">mod </span>functions;
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>iterator;
@@ -334,6 +318,7 @@
 <span class="kw">pub use </span>apply::<span class="kw-2">*</span>;
 <span class="kw">pub use </span>builder::<span class="kw-2">*</span>;
 <span class="kw">pub use </span>conversion::<span class="kw-2">*</span>;
+<span class="kw">pub use </span>file_scan::<span class="kw-2">*</span>;
 <span class="kw">pub use </span>functions::<span class="kw-2">*</span>;
 <span class="kw">pub use </span>iterator::<span class="kw-2">*</span>;
 <span class="kw">pub use </span>lit::<span class="kw-2">*</span>;
@@ -341,6 +326,7 @@
 <span class="kw">pub use </span>schema::<span class="kw-2">*</span>;
 <span class="attr">#[cfg(feature = <span class="string">&quot;serde&quot;</span>)]
 </span><span class="kw">use </span>serde::{Deserialize, Serialize};
+<span class="kw">use </span>strum_macros::IntoStaticStr;
 
 <span class="attr">#[cfg(any(feature = <span class="string">&quot;ipc&quot;</span>, feature = <span class="string">&quot;parquet&quot;</span>, feature = <span class="string">&quot;csv&quot;</span>, feature = <span class="string">&quot;cse&quot;</span>))]
 </span><span class="kw">pub use </span><span class="kw">crate</span>::logical_plan::optimizer::file_caching::{
@@ -449,30 +435,12 @@
         id: usize,
         count: usize,
     },
-    <span class="doccomment">/// Scan a CSV file
-    </span><span class="attr">#[cfg(feature = <span class="string">&quot;csv&quot;</span>)]
-    </span>CsvScan {
-        path: PathBuf,
-        file_info: FileInfo,
-        options: CsvParserOptions,
-        <span class="doccomment">/// Filters at the scan level
-        </span>predicate: <span class="prelude-ty">Option</span>&lt;Expr&gt;,
-    },
-    <span class="attr">#[cfg(feature = <span class="string">&quot;parquet&quot;</span>)]
-    </span><span class="doccomment">/// Scan a Parquet file
-    </span>ParquetScan {
+    Scan {
         path: PathBuf,
         file_info: FileInfo,
         predicate: <span class="prelude-ty">Option</span>&lt;Expr&gt;,
-        options: ParquetOptions,
-        cloud_options: <span class="prelude-ty">Option</span>&lt;CloudOptions&gt;,
-    },
-    <span class="attr">#[cfg(feature = <span class="string">&quot;ipc&quot;</span>)]
-    </span>IpcScan {
-        path: PathBuf,
-        file_info: FileInfo,
-        options: IpcScanOptionsInner,
-        predicate: <span class="prelude-ty">Option</span>&lt;Expr&gt;,
+        file_options: FileScanOptions,
+        scan_type: FileScan,
     },
     <span class="comment">// we keep track of the projection and selection as it is cheaper to first project and then filter
     </span><span class="doccomment">/// In memory DataFrame

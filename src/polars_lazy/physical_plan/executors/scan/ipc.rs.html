@@ -63,6 +63,7 @@
 <a href="#63" id="63">63</a>
 <a href="#64" id="64">64</a>
 <a href="#65" id="65">65</a>
+<a href="#66" id="66">66</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::path::PathBuf;
 
 <span class="kw">use super</span>::<span class="kw-2">*</span>;
@@ -71,7 +72,8 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) path: PathBuf,
     <span class="kw">pub</span>(<span class="kw">crate</span>) schema: SchemaRef,
     <span class="kw">pub</span>(<span class="kw">crate</span>) predicate: <span class="prelude-ty">Option</span>&lt;Arc&lt;<span class="kw">dyn </span>PhysicalExpr&gt;&gt;,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) options: IpcScanOptionsInner,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) options: IpcScanOptions,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) file_options: FileScanOptions,
 }
 
 <span class="kw">impl </span>IpcExec {
@@ -79,15 +81,15 @@
         <span class="kw">let </span>(file, projection, n_rows, predicate) = prepare_scan_args(
             <span class="kw-2">&amp;</span><span class="self">self</span>.path,
             <span class="kw-2">&amp;</span><span class="self">self</span>.predicate,
-            <span class="kw-2">&amp;mut </span><span class="self">self</span>.options.with_columns,
+            <span class="kw-2">&amp;mut </span><span class="self">self</span>.file_options.with_columns,
             <span class="kw-2">&amp;mut </span><span class="self">self</span>.schema,
-            <span class="self">self</span>.options.n_rows,
-            <span class="self">self</span>.options.row_count.is_some(),
+            <span class="self">self</span>.file_options.n_rows,
+            <span class="self">self</span>.file_options.row_count.is_some(),
         );
         IpcReader::new(file)
             .with_n_rows(n_rows)
-            .with_row_count(std::mem::take(<span class="kw-2">&amp;mut </span><span class="self">self</span>.options.row_count))
-            .set_rechunk(<span class="self">self</span>.options.rechunk)
+            .with_row_count(std::mem::take(<span class="kw-2">&amp;mut </span><span class="self">self</span>.file_options.row_count))
+            .set_rechunk(<span class="self">self</span>.file_options.rechunk)
             .with_projection(projection)
             .memory_mapped(<span class="self">self</span>.options.memmap)
             .finish_with_scan_ops(predicate, verbose)
@@ -102,7 +104,7 @@
                 </span>.predicate
                 .as_ref()
                 .map(|ae| ae.as_expression().unwrap().clone()),
-            slice: (<span class="number">0</span>, <span class="self">self</span>.options.n_rows),
+            slice: (<span class="number">0</span>, <span class="self">self</span>.file_options.n_rows),
         };
 
         <span class="kw">let </span>profile_name = <span class="kw">if </span>state.has_node_timer() {
@@ -120,7 +122,7 @@
             || {
                 state
                     .file_cache
-                    .read(finger_print, <span class="self">self</span>.options.file_counter, <span class="kw-2">&amp;mut </span>|| {
+                    .read(finger_print, <span class="self">self</span>.file_options.file_counter, <span class="kw-2">&amp;mut </span>|| {
                         <span class="self">self</span>.read(state.verbose())
                     })
             },

@@ -300,37 +300,6 @@
 <a href="#300" id="300">300</a>
 <a href="#301" id="301">301</a>
 <a href="#302" id="302">302</a>
-<a href="#303" id="303">303</a>
-<a href="#304" id="304">304</a>
-<a href="#305" id="305">305</a>
-<a href="#306" id="306">306</a>
-<a href="#307" id="307">307</a>
-<a href="#308" id="308">308</a>
-<a href="#309" id="309">309</a>
-<a href="#310" id="310">310</a>
-<a href="#311" id="311">311</a>
-<a href="#312" id="312">312</a>
-<a href="#313" id="313">313</a>
-<a href="#314" id="314">314</a>
-<a href="#315" id="315">315</a>
-<a href="#316" id="316">316</a>
-<a href="#317" id="317">317</a>
-<a href="#318" id="318">318</a>
-<a href="#319" id="319">319</a>
-<a href="#320" id="320">320</a>
-<a href="#321" id="321">321</a>
-<a href="#322" id="322">322</a>
-<a href="#323" id="323">323</a>
-<a href="#324" id="324">324</a>
-<a href="#325" id="325">325</a>
-<a href="#326" id="326">326</a>
-<a href="#327" id="327">327</a>
-<a href="#328" id="328">328</a>
-<a href="#329" id="329">329</a>
-<a href="#330" id="330">330</a>
-<a href="#331" id="331">331</a>
-<a href="#332" id="332">332</a>
-<a href="#333" id="333">333</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::path::PathBuf;
 
 <span class="kw">use </span>polars_core::prelude::<span class="kw-2">*</span>;
@@ -362,30 +331,18 @@
     <span class="kw">pub </span>eol_char: u8,
     <span class="kw">pub </span>has_header: bool,
     <span class="kw">pub </span>skip_rows: usize,
-    <span class="kw">pub </span>n_rows: <span class="prelude-ty">Option</span>&lt;usize&gt;,
-    <span class="kw">pub </span>with_columns: <span class="prelude-ty">Option</span>&lt;Arc&lt;Vec&lt;String&gt;&gt;&gt;,
     <span class="kw">pub </span>low_memory: bool,
     <span class="kw">pub </span>ignore_errors: bool,
-    <span class="kw">pub </span>cache: bool,
     <span class="kw">pub </span>null_values: <span class="prelude-ty">Option</span>&lt;NullValues&gt;,
-    <span class="kw">pub </span>rechunk: bool,
     <span class="kw">pub </span>encoding: CsvEncoding,
-    <span class="kw">pub </span>row_count: <span class="prelude-ty">Option</span>&lt;RowCount&gt;,
     <span class="kw">pub </span>try_parse_dates: bool,
-    <span class="kw">pub </span>file_counter: FileCount,
 }
 
 <span class="attr">#[cfg(feature = <span class="string">&quot;parquet&quot;</span>)]
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = <span class="string">&quot;serde&quot;</span>, derive(Serialize, Deserialize))]
 </span><span class="kw">pub struct </span>ParquetOptions {
-    <span class="kw">pub </span>n_rows: <span class="prelude-ty">Option</span>&lt;usize&gt;,
-    <span class="kw">pub </span>with_columns: <span class="prelude-ty">Option</span>&lt;Arc&lt;Vec&lt;String&gt;&gt;&gt;,
-    <span class="kw">pub </span>cache: bool,
     <span class="kw">pub </span>parallel: polars_io::parquet::ParallelStrategy,
-    <span class="kw">pub </span>rechunk: bool,
-    <span class="kw">pub </span>row_count: <span class="prelude-ty">Option</span>&lt;RowCount&gt;,
-    <span class="kw">pub </span>file_counter: FileCount,
     <span class="kw">pub </span>low_memory: bool,
     <span class="kw">pub </span>use_statistics: bool,
 }
@@ -416,41 +373,22 @@
     </span><span class="kw">pub </span>maintain_order: bool,
 }
 
-<span class="attr">#[derive(Clone, Debug)]
+<span class="attr">#[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = <span class="string">&quot;serde&quot;</span>, derive(Serialize, Deserialize))]
 </span><span class="kw">pub struct </span>IpcScanOptions {
-    <span class="kw">pub </span>n_rows: <span class="prelude-ty">Option</span>&lt;usize&gt;,
-    <span class="kw">pub </span>with_columns: <span class="prelude-ty">Option</span>&lt;Arc&lt;Vec&lt;String&gt;&gt;&gt;,
-    <span class="kw">pub </span>cache: bool,
-    <span class="kw">pub </span>row_count: <span class="prelude-ty">Option</span>&lt;RowCount&gt;,
-    <span class="kw">pub </span>rechunk: bool,
     <span class="kw">pub </span>memmap: bool,
 }
 
 <span class="attr">#[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(feature = <span class="string">&quot;serde&quot;</span>, derive(Serialize, Deserialize))]
-</span><span class="kw">pub struct </span>IpcScanOptionsInner {
+</span><span class="doccomment">/// Generic options for all file types
+</span><span class="kw">pub struct </span>FileScanOptions {
     <span class="kw">pub </span>n_rows: <span class="prelude-ty">Option</span>&lt;usize&gt;,
     <span class="kw">pub </span>with_columns: <span class="prelude-ty">Option</span>&lt;Arc&lt;Vec&lt;String&gt;&gt;&gt;,
     <span class="kw">pub </span>cache: bool,
     <span class="kw">pub </span>row_count: <span class="prelude-ty">Option</span>&lt;RowCount&gt;,
     <span class="kw">pub </span>rechunk: bool,
     <span class="kw">pub </span>file_counter: FileCount,
-    <span class="kw">pub </span>memmap: bool,
-}
-
-<span class="kw">impl </span>From&lt;IpcScanOptions&gt; <span class="kw">for </span>IpcScanOptionsInner {
-    <span class="kw">fn </span>from(options: IpcScanOptions) -&gt; <span class="self">Self </span>{
-        <span class="self">Self </span>{
-            n_rows: options.n_rows,
-            with_columns: options.with_columns,
-            cache: options.cache,
-            row_count: options.row_count,
-            rechunk: options.rechunk,
-            file_counter: Default::default(),
-            memmap: options.memmap,
-        }
-    }
 }
 
 <span class="attr">#[derive(Clone, Debug, Copy, Default, Eq, PartialEq)]

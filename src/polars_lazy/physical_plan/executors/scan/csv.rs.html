@@ -80,6 +80,9 @@
 <a href="#80" id="80">80</a>
 <a href="#81" id="81">81</a>
 <a href="#82" id="82">82</a>
+<a href="#83" id="83">83</a>
+<a href="#84" id="84">84</a>
+<a href="#85" id="85">85</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::path::PathBuf;
 
 <span class="kw">use super</span>::<span class="kw-2">*</span>;
@@ -88,12 +91,13 @@
     <span class="kw">pub </span>path: PathBuf,
     <span class="kw">pub </span>schema: SchemaRef,
     <span class="kw">pub </span>options: CsvParserOptions,
+    <span class="kw">pub </span>file_options: FileScanOptions,
     <span class="kw">pub </span>predicate: <span class="prelude-ty">Option</span>&lt;Arc&lt;<span class="kw">dyn </span>PhysicalExpr&gt;&gt;,
 }
 
 <span class="kw">impl </span>CsvExec {
     <span class="kw">fn </span>read(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; PolarsResult&lt;DataFrame&gt; {
-        <span class="kw">let </span><span class="kw-2">mut </span>with_columns = mem::take(<span class="kw-2">&amp;mut </span><span class="self">self</span>.options.with_columns);
+        <span class="kw">let </span><span class="kw-2">mut </span>with_columns = mem::take(<span class="kw-2">&amp;mut </span><span class="self">self</span>.file_options.with_columns);
         <span class="kw">let </span><span class="kw-2">mut </span>projected_len = <span class="number">0</span>;
         with_columns.as_ref().map(|columns| {
             projected_len = columns.len();
@@ -103,7 +107,7 @@
         <span class="kw">if </span>projected_len == <span class="number">0 </span>{
             with_columns = <span class="prelude-val">None</span>;
         }
-        <span class="kw">let </span>n_rows = _set_n_rows_for_scan(<span class="self">self</span>.options.n_rows);
+        <span class="kw">let </span>n_rows = _set_n_rows_for_scan(<span class="self">self</span>.file_options.n_rows);
         <span class="kw">let </span>predicate = <span class="self">self</span>.predicate.clone().map(phys_expr_to_io_expr);
 
         CsvReader::from_path(<span class="kw-2">&amp;</span><span class="self">self</span>.path)
@@ -123,8 +127,8 @@
             .with_quote_char(<span class="self">self</span>.options.quote_char)
             .with_end_of_line_char(<span class="self">self</span>.options.eol_char)
             .with_encoding(<span class="self">self</span>.options.encoding)
-            .with_rechunk(<span class="self">self</span>.options.rechunk)
-            .with_row_count(std::mem::take(<span class="kw-2">&amp;mut </span><span class="self">self</span>.options.row_count))
+            .with_rechunk(<span class="self">self</span>.file_options.rechunk)
+            .with_row_count(std::mem::take(<span class="kw-2">&amp;mut </span><span class="self">self</span>.file_options.row_count))
             .with_try_parse_dates(<span class="self">self</span>.options.try_parse_dates)
             .finish()
     }
@@ -138,7 +142,7 @@
                 </span>.predicate
                 .as_ref()
                 .map(|ae| ae.as_expression().unwrap().clone()),
-            slice: (<span class="self">self</span>.options.skip_rows, <span class="self">self</span>.options.n_rows),
+            slice: (<span class="self">self</span>.options.skip_rows, <span class="self">self</span>.file_options.n_rows),
         };
 
         <span class="kw">let </span>profile_name = <span class="kw">if </span>state.has_node_timer() {
@@ -156,7 +160,9 @@
             || {
                 state
                     .file_cache
-                    .read(finger_print, <span class="self">self</span>.options.file_counter, <span class="kw-2">&amp;mut </span>|| <span class="self">self</span>.read())
+                    .read(finger_print, <span class="self">self</span>.file_options.file_counter, <span class="kw-2">&amp;mut </span>|| {
+                        <span class="self">self</span>.read()
+                    })
             },
             profile_name,
         )

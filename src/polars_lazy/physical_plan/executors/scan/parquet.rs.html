@@ -83,6 +83,11 @@
 <a href="#83" id="83">83</a>
 <a href="#84" id="84">84</a>
 <a href="#85" id="85">85</a>
+<a href="#86" id="86">86</a>
+<a href="#87" id="87">87</a>
+<a href="#88" id="88">88</a>
+<a href="#89" id="89">89</a>
+<a href="#90" id="90">90</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::path::PathBuf;
 
 <span class="kw">use </span>polars_core::cloud::CloudOptions;
@@ -96,6 +101,7 @@
     predicate: <span class="prelude-ty">Option</span>&lt;Arc&lt;<span class="kw">dyn </span>PhysicalExpr&gt;&gt;,
     options: ParquetOptions,
     cloud_options: <span class="prelude-ty">Option</span>&lt;CloudOptions&gt;,
+    file_options: FileScanOptions,
 }
 
 <span class="kw">impl </span>ParquetExec {
@@ -105,6 +111,7 @@
         predicate: <span class="prelude-ty">Option</span>&lt;Arc&lt;<span class="kw">dyn </span>PhysicalExpr&gt;&gt;,
         options: ParquetOptions,
         cloud_options: <span class="prelude-ty">Option</span>&lt;CloudOptions&gt;,
+        file_options: FileScanOptions,
     ) -&gt; <span class="self">Self </span>{
         ParquetExec {
             path,
@@ -112,6 +119,7 @@
             predicate,
             options,
             cloud_options,
+            file_options,
         }
     }
 
@@ -119,17 +127,17 @@
         <span class="kw">let </span>(file, projection, n_rows, predicate) = prepare_scan_args(
             <span class="kw-2">&amp;</span><span class="self">self</span>.path,
             <span class="kw-2">&amp;</span><span class="self">self</span>.predicate,
-            <span class="kw-2">&amp;mut </span><span class="self">self</span>.options.with_columns,
+            <span class="kw-2">&amp;mut </span><span class="self">self</span>.file_options.with_columns,
             <span class="kw-2">&amp;mut </span><span class="self">self</span>.schema,
-            <span class="self">self</span>.options.n_rows,
-            <span class="self">self</span>.options.row_count.is_some(),
+            <span class="self">self</span>.file_options.n_rows,
+            <span class="self">self</span>.file_options.row_count.is_some(),
         );
 
         ParquetReader::new(file)
             .with_n_rows(n_rows)
             .read_parallel(<span class="self">self</span>.options.parallel)
-            .with_row_count(mem::take(<span class="kw-2">&amp;mut </span><span class="self">self</span>.options.row_count))
-            .set_rechunk(<span class="self">self</span>.options.rechunk)
+            .with_row_count(mem::take(<span class="kw-2">&amp;mut </span><span class="self">self</span>.file_options.row_count))
+            .set_rechunk(<span class="self">self</span>.file_options.rechunk)
             .set_low_memory(<span class="self">self</span>.options.low_memory)
             .use_statistics(<span class="self">self</span>.options.use_statistics)
             ._finish_with_scan_ops(predicate, projection.as_ref().map(|v| v.as_ref()))
@@ -144,7 +152,7 @@
                 </span>.predicate
                 .as_ref()
                 .map(|ae| ae.as_expression().unwrap().clone()),
-            slice: (<span class="number">0</span>, <span class="self">self</span>.options.n_rows),
+            slice: (<span class="number">0</span>, <span class="self">self</span>.file_options.n_rows),
         };
 
         <span class="kw">let </span>profile_name = <span class="kw">if </span>state.has_node_timer() {
@@ -162,7 +170,9 @@
             || {
                 state
                     .file_cache
-                    .read(finger_print, <span class="self">self</span>.options.file_counter, <span class="kw-2">&amp;mut </span>|| <span class="self">self</span>.read())
+                    .read(finger_print, <span class="self">self</span>.file_options.file_counter, <span class="kw-2">&amp;mut </span>|| {
+                        <span class="self">self</span>.read()
+                    })
             },
             profile_name,
         )

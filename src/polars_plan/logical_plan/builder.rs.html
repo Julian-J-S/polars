@@ -819,6 +819,36 @@
 <a href="#819" id="819">819</a>
 <a href="#820" id="820">820</a>
 <a href="#821" id="821">821</a>
+<a href="#822" id="822">822</a>
+<a href="#823" id="823">823</a>
+<a href="#824" id="824">824</a>
+<a href="#825" id="825">825</a>
+<a href="#826" id="826">826</a>
+<a href="#827" id="827">827</a>
+<a href="#828" id="828">828</a>
+<a href="#829" id="829">829</a>
+<a href="#830" id="830">830</a>
+<a href="#831" id="831">831</a>
+<a href="#832" id="832">832</a>
+<a href="#833" id="833">833</a>
+<a href="#834" id="834">834</a>
+<a href="#835" id="835">835</a>
+<a href="#836" id="836">836</a>
+<a href="#837" id="837">837</a>
+<a href="#838" id="838">838</a>
+<a href="#839" id="839">839</a>
+<a href="#840" id="840">840</a>
+<a href="#841" id="841">841</a>
+<a href="#842" id="842">842</a>
+<a href="#843" id="843">843</a>
+<a href="#844" id="844">844</a>
+<a href="#845" id="845">845</a>
+<a href="#846" id="846">846</a>
+<a href="#847" id="847">847</a>
+<a href="#848" id="848">848</a>
+<a href="#849" id="849">849</a>
+<a href="#850" id="850">850</a>
+<a href="#851" id="851">851</a>
 </pre></div><pre class="rust"><code><span class="attr">#[cfg(feature = <span class="string">&quot;csv&quot;</span>)]
 </span><span class="kw">use </span>std::io::{Read, Seek};
 
@@ -833,7 +863,12 @@
 </span><span class="kw">use </span>polars_io::parquet::ParquetAsyncReader;
 <span class="attr">#[cfg(feature = <span class="string">&quot;parquet&quot;</span>)]
 </span><span class="kw">use </span>polars_io::parquet::ParquetReader;
-<span class="attr">#[cfg(any(feature = <span class="string">&quot;parquet&quot;</span>, feature = <span class="string">&quot;parquet_async&quot;</span>, feature = <span class="string">&quot;csv&quot;</span>))]
+<span class="attr">#[cfg(any(
+    feature = <span class="string">&quot;parquet&quot;</span>,
+    feature = <span class="string">&quot;parquet_async&quot;</span>,
+    feature = <span class="string">&quot;csv&quot;</span>,
+    feature = <span class="string">&quot;ipc&quot;
+</span>))]
 </span><span class="kw">use </span>polars_io::RowCount;
 <span class="attr">#[cfg(feature = <span class="string">&quot;csv&quot;</span>)]
 </span><span class="kw">use </span>polars_io::{
@@ -974,22 +1009,27 @@
             row_estimation: (<span class="prelude-val">Some</span>(num_rows), num_rows),
         };
 
-        <span class="prelude-val">Ok</span>(LogicalPlan::ParquetScan {
+        <span class="kw">let </span>options = FileScanOptions {
+            with_columns: <span class="prelude-val">None</span>,
+            cache,
+            n_rows,
+            rechunk,
+            row_count,
+            file_counter: Default::default(),
+        };
+        <span class="prelude-val">Ok</span>(LogicalPlan::Scan {
             path,
             file_info,
+            file_options: options,
             predicate: <span class="prelude-val">None</span>,
-            options: ParquetOptions {
-                n_rows,
-                with_columns: <span class="prelude-val">None</span>,
-                cache,
-                parallel,
-                row_count,
-                rechunk,
-                file_counter: Default::default(),
-                low_memory,
-                use_statistics,
+            scan_type: FileScan::Parquet {
+                options: ParquetOptions {
+                    parallel,
+                    low_memory,
+                    use_statistics,
+                },
+                cloud_options,
             },
-            cloud_options,
         }
         .into())
     }
@@ -998,6 +1038,10 @@
     </span><span class="kw">pub fn </span>scan_ipc&lt;P: Into&lt;std::path::PathBuf&gt;&gt;(
         path: P,
         options: IpcScanOptions,
+        n_rows: <span class="prelude-ty">Option</span>&lt;usize&gt;,
+        cache: bool,
+        row_count: <span class="prelude-ty">Option</span>&lt;RowCount&gt;,
+        rechunk: bool,
     ) -&gt; PolarsResult&lt;<span class="self">Self</span>&gt; {
         <span class="kw">use </span>polars_io::SerReader <span class="kw">as _</span>;
 
@@ -1006,7 +1050,7 @@
         <span class="kw">let </span><span class="kw-2">mut </span>reader = IpcReader::new(file);
 
         <span class="kw">let </span><span class="kw-2">mut </span>schema = reader.schema()<span class="question-mark">?</span>;
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(rc) = <span class="kw-2">&amp;</span>options.row_count {
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(rc) = <span class="kw-2">&amp;</span>row_count {
             <span class="kw">let _ </span>= schema.insert_at_index(<span class="number">0</span>, rc.name.as_str().into(), IDX_DTYPE);
         }
         <span class="kw">let </span>schema = Arc::new(schema);
@@ -1016,11 +1060,21 @@
             schema,
             row_estimation: (<span class="prelude-val">None</span>, num_rows),
         };
-        <span class="prelude-val">Ok</span>(LogicalPlan::IpcScan {
+
+        <span class="kw">let </span>file_options = FileScanOptions {
+            with_columns: <span class="prelude-val">None</span>,
+            cache,
+            n_rows,
+            rechunk,
+            row_count,
+            file_counter: Default::default(),
+        };
+        <span class="prelude-val">Ok</span>(LogicalPlan::Scan {
             path,
             file_info,
+            file_options,
             predicate: <span class="prelude-val">None</span>,
-            options: options.into(),
+            scan_type: FileScan::Ipc { options },
         }
         .into())
     }
@@ -1102,29 +1156,35 @@
             schema,
             row_estimation: (<span class="prelude-val">None</span>, estimated_n_rows),
         };
-        <span class="prelude-val">Ok</span>(LogicalPlan::CsvScan {
+
+        <span class="kw">let </span>options = FileScanOptions {
+            with_columns: <span class="prelude-val">None</span>,
+            cache,
+            n_rows,
+            rechunk,
+            row_count,
+            file_counter: Default::default(),
+        };
+        <span class="prelude-val">Ok</span>(LogicalPlan::Scan {
             path,
             file_info,
-            options: CsvParserOptions {
-                has_header,
-                delimiter,
-                ignore_errors,
-                skip_rows,
-                n_rows,
-                with_columns: <span class="prelude-val">None</span>,
-                low_memory,
-                cache,
-                comment_char,
-                quote_char,
-                eol_char,
-                null_values,
-                rechunk,
-                encoding,
-                row_count,
-                try_parse_dates,
-                file_counter: Default::default(),
-            },
+            file_options: options,
             predicate: <span class="prelude-val">None</span>,
+            scan_type: FileScan::Csv {
+                options: CsvParserOptions {
+                    has_header,
+                    delimiter,
+                    ignore_errors,
+                    skip_rows,
+                    low_memory,
+                    comment_char,
+                    quote_char,
+                    eol_char,
+                    null_values,
+                    encoding,
+                    try_parse_dates,
+                },
+            },
         }
         .into())
     }
