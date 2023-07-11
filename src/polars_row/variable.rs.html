@@ -267,6 +267,10 @@
 <a href="#267" id="267">267</a>
 <a href="#268" id="268">268</a>
 <a href="#269" id="269">269</a>
+<a href="#270" id="270">270</a>
+<a href="#271" id="271">271</a>
+<a href="#272" id="272">272</a>
+<a href="#273" id="273">273</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Variable length values are encoded as
 //!
 //! - single `0_u8` if null
@@ -346,9 +350,9 @@
                 EMPTY_SENTINEL
             };
             <span class="kw-2">*</span>out.get_unchecked_release_mut(<span class="number">0</span>) = MaybeUninit::new(byte);
-            <span class="comment">// write remainder as zeros
-            </span>out.get_unchecked_release_mut(<span class="number">1</span>..).fill(MaybeUninit::new(<span class="number">0</span>));
-            <span class="number">1
+            <span class="comment">// // write remainder as zeros
+            // out.get_unchecked_release_mut(1..).fill(maybeuninit::new(0));
+            </span><span class="number">1
         </span>}
         <span class="prelude-val">Some</span>(val) =&gt; {
             <span class="kw">let </span>block_count = ceil(val.len(), BLOCK_SIZE);
@@ -412,9 +416,9 @@
         }
         <span class="prelude-val">None </span>=&gt; {
             <span class="kw-2">*</span>out.get_unchecked_release_mut(<span class="number">0</span>) = MaybeUninit::new(get_null_sentinel(field));
-            <span class="comment">// write remainder as zeros
-            </span>out.get_unchecked_release_mut(<span class="number">1</span>..).fill(MaybeUninit::new(<span class="number">0</span>));
-            <span class="number">1
+            <span class="comment">// // write remainder as zeros
+            // out.get_unchecked_release_mut(1..).fill(MaybeUninit::new(0));
+            </span><span class="number">1
         </span>}
     }
 }
@@ -430,6 +434,10 @@
         <span class="kw">let </span>written_len = encode_one(dst, opt_value.map(|v| v.as_uninit()), field);
         <span class="kw-2">*</span>offset += written_len;
     }
+    <span class="kw">let </span>offset = out.offsets.last().unwrap();
+    <span class="kw">let </span>dst = values.get_unchecked_release_mut(<span class="kw-2">*</span>offset..);
+    <span class="comment">// write remainder as zeros
+    </span>dst.fill(MaybeUninit::new(<span class="number">0</span>));
     out.values.set_len(out.values.capacity())
 }
 
