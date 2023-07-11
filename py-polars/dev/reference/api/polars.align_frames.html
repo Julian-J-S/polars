@@ -1115,7 +1115,9 @@ document.write(`
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../expressions/functions.html">Functions</a><input class="toctree-checkbox" id="toctree-checkbox-42" name="toctree-checkbox-42" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-42"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../expressions/api/polars.all.html">polars.all</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../expressions/api/polars.all_horizontal.html">polars.all_horizontal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../expressions/api/polars.any.html">polars.any</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../expressions/api/polars.any_horizontal.html">polars.any_horizontal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../expressions/api/polars.apply.html">polars.apply</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../expressions/api/polars.approx_unique.html">polars.approx_unique</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../expressions/api/polars.arange.html">polars.arange</a></li>
@@ -1131,6 +1133,7 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="../expressions/api/polars.cumfold.html">polars.cumfold</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../expressions/api/polars.cumreduce.html">polars.cumreduce</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../expressions/api/polars.cumsum.html">polars.cumsum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../expressions/api/polars.cumsum_horizontal.html">polars.cumsum_horizontal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../expressions/api/polars.date.html">polars.date</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../expressions/api/polars.datetime.html">polars.datetime</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../expressions/api/polars.date_range.html">polars.date_range</a></li>
@@ -1150,9 +1153,11 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="../expressions/api/polars.lit.html">polars.lit</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../expressions/api/polars.map.html">polars.map</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../expressions/api/polars.max.html">polars.max</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../expressions/api/polars.max_horizontal.html">polars.max_horizontal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../expressions/api/polars.mean.html">polars.mean</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../expressions/api/polars.median.html">polars.median</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../expressions/api/polars.min.html">polars.min</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../expressions/api/polars.min_horizontal.html">polars.min_horizontal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../expressions/api/polars.n_unique.html">polars.n_unique</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../expressions/api/polars.ones.html">polars.ones</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../expressions/api/polars.quantile.html">polars.quantile</a></li>
@@ -1164,6 +1169,7 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="../expressions/api/polars.std.html">polars.std</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../expressions/api/polars.struct.html">polars.struct</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../expressions/api/polars.sum.html">polars.sum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../expressions/api/polars.sum_horizontal.html">polars.sum_horizontal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../expressions/api/polars.sql_expr.html">polars.sql_expr</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../expressions/api/polars.tail.html">polars.tail</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../expressions/api/polars.time.html">polars.time</a></li>
@@ -1718,7 +1724,7 @@ required keys, you can set <code class="docutils literal notranslate"><span clas
 </pre></div>
 </div>
 <p>Now data is aligned, and you can easily calculate the row-wise dot product:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">af1</span> <span class="o">*</span> <span class="n">af2</span> <span class="o">*</span> <span class="n">af3</span><span class="p">)</span><span class="o">.</span><span class="n">fill_null</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;dot&quot;</span><span class="p">))</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">af1</span> <span class="o">*</span> <span class="n">af2</span> <span class="o">*</span> <span class="n">af3</span><span class="p">)</span><span class="o">.</span><span class="n">fill_null</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">sum_horizontal</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;dot&quot;</span><span class="p">))</span>
 <span class="go">shape: (3, 1)</span>
 <span class="go">┌───────┐</span>
 <span class="go">│ dot   │</span>

@@ -48,7 +48,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'reference/expressions/api/polars.max';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="polars.mean" href="polars.mean.html" />
+    <link rel="next" title="polars.max_horizontal" href="polars.max_horizontal.html" />
     <link rel="prev" title="polars.map" href="polars.map.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -1115,7 +1115,9 @@ document.write(`
 </li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="../functions.html">Functions</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-42" name="toctree-checkbox-42" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-42"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="polars.all.html">polars.all</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polars.all_horizontal.html">polars.all_horizontal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.any.html">polars.any</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polars.any_horizontal.html">polars.any_horizontal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.apply.html">polars.apply</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.approx_unique.html">polars.approx_unique</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.arange.html">polars.arange</a></li>
@@ -1131,6 +1133,7 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="polars.cumfold.html">polars.cumfold</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.cumreduce.html">polars.cumreduce</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.cumsum.html">polars.cumsum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polars.cumsum_horizontal.html">polars.cumsum_horizontal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.date.html">polars.date</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.datetime.html">polars.datetime</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.date_range.html">polars.date_range</a></li>
@@ -1150,9 +1153,11 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="polars.lit.html">polars.lit</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.map.html">polars.map</a></li>
 <li class="toctree-l3 current active"><a class="current reference internal" href="#">polars.max</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polars.max_horizontal.html">polars.max_horizontal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.mean.html">polars.mean</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.median.html">polars.median</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.min.html">polars.min</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polars.min_horizontal.html">polars.min_horizontal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.n_unique.html">polars.n_unique</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.ones.html">polars.ones</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.quantile.html">polars.quantile</a></li>
@@ -1164,6 +1169,7 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="polars.std.html">polars.std</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.struct.html">polars.struct</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.sum.html">polars.sum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polars.sum_horizontal.html">polars.sum_horizontal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.sql_expr.html">polars.sql_expr</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.tail.html">polars.tail</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.time.html">polars.time</a></li>
@@ -1606,14 +1612,16 @@ document.write(`
 <h1>polars.max<a class="headerlink" href="#polars-max" title="Permalink to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="polars.max">
-<span class="sig-prename descclassname"><span class="pre">polars.</span></span><span class="sig-name descname"><span class="pre">max</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exprs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">PythonLiteral</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="reference external" href="https://github.com/pola-rs/polars/blob/main/py-polars/polars/functions/lazy.py#L441-L524"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polars.max" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">polars.</span></span><span class="sig-name descname"><span class="pre">max</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exprs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">PythonLiteral</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="reference external" href="https://github.com/pola-rs/polars/blob/main/py-polars/polars/functions/aggregation/vertical.py#L187-L268"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polars.max" title="Permalink to this definition">#</a></dt>
 <dt class="sig sig-object py">
 <span class="sig-prename descclassname"><span class="pre">polars.</span></span><span class="sig-name descname"><span class="pre">max</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exprs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">IntoExpr</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">IntoExpr</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">more_exprs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">IntoExpr</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Expr</span></span></span></dt>
 <dd><p>Get the maximum value.</p>
-<p>If a single string is passed, this is an alias for <code class="docutils literal notranslate"><span class="pre">pl.col(name).max()</span></code>.
-If a single Series is passed, this is an alias for <code class="docutils literal notranslate"><span class="pre">Series.max()</span></code>.</p>
+<p>If a single string is passed, this is an alias for <code class="docutils literal notranslate"><span class="pre">pl.col(name).max()</span></code>.</p>
+<p>If a single Series is passed, this is an alias for <code class="docutils literal notranslate"><span class="pre">Series.max()</span></code>.
+<strong>This functionality is deprecated</strong>.</p>
 <p>Otherwise, this function computes the maximum value horizontally across multiple
-columns.</p>
+columns.
+<strong>This functionality is deprecated</strong>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
@@ -1626,7 +1634,7 @@ parsed as column names, other non-expression inputs are parsed as literals.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p>Get the maximum value by row by passing multiple columns/expressions.</p>
+<p>Get the maximum value of a column by passing a single column name.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="p">{</span>
 <span class="gp">... </span>        <span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
@@ -1634,21 +1642,7 @@ parsed as column names, other non-expression inputs are parsed as literals.</p>
 <span class="gp">... </span>        <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="s2">&quot;bar&quot;</span><span class="p">,</span> <span class="s2">&quot;foo&quot;</span><span class="p">],</span>
 <span class="gp">... </span>    <span class="p">}</span>
 <span class="gp">... </span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">))</span>
-<span class="go">shape: (3, 1)</span>
-<span class="go">┌─────┐</span>
-<span class="go">│ max │</span>
-<span class="go">│ --- │</span>
-<span class="go">│ i64 │</span>
-<span class="go">╞═════╡</span>
-<span class="go">│ 4   │</span>
-<span class="go">│ 8   │</span>
-<span class="go">│ 3   │</span>
-<span class="go">└─────┘</span>
-</pre></div>
-</div>
-<p>Get the maximum value of a column by passing a single column name.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">))</span>
 <span class="go">shape: (1, 1)</span>
 <span class="go">┌─────┐</span>
 <span class="go">│ a   │</span>
@@ -1706,11 +1700,11 @@ or call <code class="docutils literal notranslate"><span class="pre">.max()</spa
       </div>
     </a>
     <a class="right-next"
-       href="polars.mean.html"
+       href="polars.max_horizontal.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">polars.mean</p>
+        <p class="prev-next-title">polars.max_horizontal</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
