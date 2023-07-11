@@ -894,7 +894,7 @@
     <span class="prelude-val">Ok</span>((exprs, schema))
 }
 
-<span class="kw">pub struct </span>LogicalPlanBuilder(LogicalPlan);
+<span class="kw">pub struct </span>LogicalPlanBuilder(<span class="kw">pub </span>LogicalPlan);
 
 <span class="kw">impl </span>From&lt;LogicalPlan&gt; <span class="kw">for </span>LogicalPlanBuilder {
     <span class="kw">fn </span>from(lp: LogicalPlan) -&gt; <span class="self">Self </span>{
