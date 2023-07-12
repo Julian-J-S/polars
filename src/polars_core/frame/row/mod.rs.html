@@ -200,6 +200,7 @@
 <a href="#200" id="200">200</a>
 <a href="#201" id="201">201</a>
 <a href="#202" id="202">202</a>
+<a href="#203" id="203">203</a>
 </pre></div><pre class="rust"><code><span class="kw">mod </span>av_buffer;
 <span class="kw">mod </span>dataframe;
 <span class="kw">mod </span>transpose;
@@ -295,14 +296,15 @@
     }
 }
 
-<span class="kw">pub fn </span>any_values_to_dtype(column: <span class="kw-2">&amp;</span>[AnyValue]) -&gt; PolarsResult&lt;DataType&gt; {
+<span class="kw">pub fn </span>any_values_to_dtype(column: <span class="kw-2">&amp;</span>[AnyValue]) -&gt; PolarsResult&lt;(DataType, usize)&gt; {
     <span class="comment">// we need an index-map as the order of dtypes influences how the
     // struct fields are constructed.
     </span><span class="kw">let </span><span class="kw-2">mut </span>types_set = PlIndexSet::new();
     <span class="kw">for </span>val <span class="kw">in </span>column.iter() {
         types_set.insert(val.into());
     }
-    types_set_to_dtype(types_set)
+    <span class="kw">let </span>n_types = types_set.len();
+    <span class="prelude-val">Ok</span>((types_set_to_dtype(types_set)<span class="question-mark">?</span>, n_types))
 }
 
 <span class="kw">fn </span>types_set_to_dtype(types_set: PlIndexSet&lt;DataType&gt;) -&gt; PolarsResult&lt;DataType&gt; {
