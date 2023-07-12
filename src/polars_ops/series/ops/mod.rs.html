@@ -56,6 +56,10 @@
 <a href="#56" id="56">56</a>
 <a href="#57" id="57">57</a>
 <a href="#58" id="58">58</a>
+<a href="#59" id="59">59</a>
+<a href="#60" id="60">60</a>
+<a href="#61" id="61">61</a>
+<a href="#62" id="62">62</a>
 </pre></div><pre class="rust"><code><span class="kw">mod </span>approx_algo;
 <span class="attr">#[cfg(feature = <span class="string">&quot;approx_unique&quot;</span>)]
 </span><span class="kw">mod </span>approx_unique;
@@ -72,6 +76,8 @@
 </span><span class="kw">mod </span>is_unique;
 <span class="attr">#[cfg(feature = <span class="string">&quot;log&quot;</span>)]
 </span><span class="kw">mod </span>log;
+<span class="attr">#[cfg(feature = <span class="string">&quot;rle&quot;</span>)]
+</span><span class="kw">mod </span>rle;
 <span class="attr">#[cfg(feature = <span class="string">&quot;rolling_window&quot;</span>)]
 </span><span class="kw">mod </span>rolling;
 <span class="attr">#[cfg(feature = <span class="string">&quot;search_sorted&quot;</span>)]
@@ -97,6 +103,8 @@
 <span class="attr">#[cfg(feature = <span class="string">&quot;log&quot;</span>)]
 </span><span class="kw">pub use </span>log::<span class="kw-2">*</span>;
 <span class="kw">use </span>polars_core::prelude::<span class="kw-2">*</span>;
+<span class="attr">#[cfg(feature = <span class="string">&quot;rle&quot;</span>)]
+</span><span class="kw">pub use </span>rle::<span class="kw-2">*</span>;
 <span class="attr">#[cfg(feature = <span class="string">&quot;rolling_window&quot;</span>)]
 </span><span class="kw">pub use </span>rolling::<span class="kw-2">*</span>;
 <span class="attr">#[cfg(feature = <span class="string">&quot;search_sorted&quot;</span>)]

@@ -1918,6 +1918,15 @@
 <a href="#1918" id="1918">1918</a>
 <a href="#1919" id="1919">1919</a>
 <a href="#1920" id="1920">1920</a>
+<a href="#1921" id="1921">1921</a>
+<a href="#1922" id="1922">1922</a>
+<a href="#1923" id="1923">1923</a>
+<a href="#1924" id="1924">1924</a>
+<a href="#1925" id="1925">1925</a>
+<a href="#1926" id="1926">1926</a>
+<a href="#1927" id="1927">1927</a>
+<a href="#1928" id="1928">1928</a>
+<a href="#1929" id="1929">1929</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(ambiguous_glob_reexports)]
 </span><span class="doccomment">//! Domain specific language for the Lazy API.
 </span><span class="attr">#[cfg(feature = <span class="string">&quot;dtype-categorical&quot;</span>)]
@@ -3416,6 +3425,15 @@
             allow_duplicates,
             include_breaks,
         })
+    }
+
+    <span class="attr">#[cfg(feature = <span class="string">&quot;rle&quot;</span>)]
+    </span><span class="kw">pub fn </span>rle(<span class="self">self</span>) -&gt; Expr {
+        <span class="self">self</span>.apply_private(FunctionExpr::RLE)
+    }
+    <span class="attr">#[cfg(feature = <span class="string">&quot;rle&quot;</span>)]
+    </span><span class="kw">pub fn </span>rle_id(<span class="self">self</span>) -&gt; Expr {
+        <span class="self">self</span>.apply_private(FunctionExpr::RLEID)
     }
 
     <span class="attr">#[cfg(feature = <span class="string">&quot;diff&quot;</span>)]
