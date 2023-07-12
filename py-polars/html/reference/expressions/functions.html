@@ -609,6 +609,8 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="../series/api/polars.Series.rename.html">polars.Series.rename</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../series/api/polars.Series.reshape.html">polars.Series.reshape</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../series/api/polars.Series.reverse.html">polars.Series.reverse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../series/api/polars.Series.rle.html">polars.Series.rle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../series/api/polars.Series.rle_id.html">polars.Series.rle_id</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../series/api/polars.Series.round.html">polars.Series.round</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../series/api/polars.Series.sample.html">polars.Series.sample</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../series/api/polars.Series.set.html">polars.Series.set</a></li>
@@ -844,6 +846,7 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="../dataframe/api/polars.DataFrame.reverse.html">polars.DataFrame.reverse</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dataframe/api/polars.DataFrame.row.html">polars.DataFrame.row</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dataframe/api/polars.DataFrame.rows.html">polars.DataFrame.rows</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dataframe/api/polars.DataFrame.rows_by_key.html">polars.DataFrame.rows_by_key</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dataframe/api/polars.DataFrame.sample.html">polars.DataFrame.sample</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dataframe/api/polars.DataFrame.select.html">polars.DataFrame.select</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../dataframe/api/polars.DataFrame.set_sorted.html">polars.DataFrame.set_sorted</a></li>
@@ -1110,7 +1113,9 @@ document.write(`
 </li>
 <li class="toctree-l2 current active has-children"><a class="current reference internal" href="#">Functions</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-42" name="toctree-checkbox-42" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-42"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.all.html">polars.all</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/polars.all_horizontal.html">polars.all_horizontal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.any.html">polars.any</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/polars.any_horizontal.html">polars.any_horizontal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.apply.html">polars.apply</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.approx_unique.html">polars.approx_unique</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.arange.html">polars.arange</a></li>
@@ -1126,6 +1131,7 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="api/polars.cumfold.html">polars.cumfold</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.cumreduce.html">polars.cumreduce</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.cumsum.html">polars.cumsum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/polars.cumsum_horizontal.html">polars.cumsum_horizontal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.date.html">polars.date</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.datetime.html">polars.datetime</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.date_range.html">polars.date_range</a></li>
@@ -1141,12 +1147,15 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="api/polars.implode.html">polars.implode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.int_range.html">polars.int_range</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.int_ranges.html">polars.int_ranges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/polars.last.html">polars.last</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.lit.html">polars.lit</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.map.html">polars.map</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.max.html">polars.max</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/polars.max_horizontal.html">polars.max_horizontal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.mean.html">polars.mean</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.median.html">polars.median</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.min.html">polars.min</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/polars.min_horizontal.html">polars.min_horizontal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.n_unique.html">polars.n_unique</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.ones.html">polars.ones</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.quantile.html">polars.quantile</a></li>
@@ -1158,6 +1167,7 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="api/polars.std.html">polars.std</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.struct.html">polars.struct</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.sum.html">polars.sum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/polars.sum_horizontal.html">polars.sum_horizontal</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.sql_expr.html">polars.sql_expr</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.tail.html">polars.tail</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.time.html">polars.time</a></li>
@@ -1233,6 +1243,7 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.clip.html">polars.Expr.clip</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.clip_max.html">polars.Expr.clip_max</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.clip_min.html">polars.Expr.clip_min</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.cut.html">polars.Expr.cut</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.drop_nans.html">polars.Expr.drop_nans</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.drop_nulls.html">polars.Expr.drop_nulls</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.explode.html">polars.Expr.explode</a></li>
@@ -1250,11 +1261,14 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.lower_bound.html">polars.Expr.lower_bound</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.map_dict.html">polars.Expr.map_dict</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.pipe.html">polars.Expr.pipe</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.qcut.html">polars.Expr.qcut</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.rechunk.html">polars.Expr.rechunk</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.reinterpret.html">polars.Expr.reinterpret</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.repeat_by.html">polars.Expr.repeat_by</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.reshape.html">polars.Expr.reshape</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.reverse.html">polars.Expr.reverse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.rle.html">polars.Expr.rle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.rle_id.html">polars.Expr.rle_id</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.round.html">polars.Expr.round</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.sample.html">polars.Expr.sample</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.shift.html">polars.Expr.shift</a></li>
@@ -1599,8 +1613,14 @@ document.write(`
 <tr class="row-odd"><td><p><a class="reference internal" href="api/polars.all.html#polars.all" title="polars.all"><code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span></code></a>()</p></td>
 <td><p>Either return an expression representing all columns, or evaluate a bitwise AND operation.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.any.html#polars.any" title="polars.any"><code class="xref py py-obj docutils literal notranslate"><span class="pre">any</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.all_horizontal.html#polars.all_horizontal" title="polars.all_horizontal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">all_horizontal</span></code></a>(*exprs)</p></td>
+<td><p>Compute the bitwise AND horizontally across columns.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.any.html#polars.any" title="polars.any"><code class="xref py py-obj docutils literal notranslate"><span class="pre">any</span></code></a>()</p></td>
 <td><p>Evaluate a bitwise OR operation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.any_horizontal.html#polars.any_horizontal" title="polars.any_horizontal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">any_horizontal</span></code></a>(*exprs)</p></td>
+<td><p>Compute the bitwise OR horizontally across columns.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="api/polars.apply.html#polars.apply" title="polars.apply"><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply</span></code></a>(exprs, function[, return_dtype, ...])</p></td>
 <td><p>Apply a custom/user-defined function (UDF) in a GroupBy context.</p></td>
@@ -1647,50 +1667,56 @@ document.write(`
 <tr class="row-odd"><td><p><a class="reference internal" href="api/polars.cumsum.html#polars.cumsum" title="polars.cumsum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cumsum</span></code></a>()</p></td>
 <td><p>Cumulatively sum all values.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.date.html#polars.date" title="polars.date"><code class="xref py py-obj docutils literal notranslate"><span class="pre">date</span></code></a>(year, month, day)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.cumsum_horizontal.html#polars.cumsum_horizontal" title="polars.cumsum_horizontal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cumsum_horizontal</span></code></a>(*exprs)</p></td>
+<td><p>Cumulatively sum all values horizontally across columns.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.date.html#polars.date" title="polars.date"><code class="xref py py-obj docutils literal notranslate"><span class="pre">date</span></code></a>(year, month, day)</p></td>
 <td><p>Create a Polars literal expression of type Date.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.datetime.html#polars.datetime" title="polars.datetime"><code class="xref py py-obj docutils literal notranslate"><span class="pre">datetime</span></code></a>(year, month, day[, hour, minute, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.datetime.html#polars.datetime" title="polars.datetime"><code class="xref py py-obj docutils literal notranslate"><span class="pre">datetime</span></code></a>(year, month, day[, hour, minute, ...])</p></td>
 <td><p>Create a Polars literal expression of type Datetime.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.date_range.html#polars.date_range" title="polars.date_range"><code class="xref py py-obj docutils literal notranslate"><span class="pre">date_range</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.date_range.html#polars.date_range" title="polars.date_range"><code class="xref py py-obj docutils literal notranslate"><span class="pre">date_range</span></code></a>()</p></td>
 <td><p>Create a range of type <cite>Datetime</cite> (or <cite>Date</cite>).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.duration.html#polars.duration" title="polars.duration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">duration</span></code></a>(*[, days, seconds, nanoseconds, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.duration.html#polars.duration" title="polars.duration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">duration</span></code></a>(*[, days, seconds, nanoseconds, ...])</p></td>
 <td><p>Create polars <cite>Duration</cite> from distinct time components.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.element.html#polars.element" title="polars.element"><code class="xref py py-obj docutils literal notranslate"><span class="pre">element</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.element.html#polars.element" title="polars.element"><code class="xref py py-obj docutils literal notranslate"><span class="pre">element</span></code></a>()</p></td>
 <td><p>Alias for an element being evaluated in an <cite>eval</cite> expression.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.exclude.html#polars.exclude" title="polars.exclude"><code class="xref py py-obj docutils literal notranslate"><span class="pre">exclude</span></code></a>(columns, *more_columns)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.exclude.html#polars.exclude" title="polars.exclude"><code class="xref py py-obj docutils literal notranslate"><span class="pre">exclude</span></code></a>(columns, *more_columns)</p></td>
 <td><p>Represent all columns except for the given columns.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.first.html#polars.first" title="polars.first"><code class="xref py py-obj docutils literal notranslate"><span class="pre">first</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.first.html#polars.first" title="polars.first"><code class="xref py py-obj docutils literal notranslate"><span class="pre">first</span></code></a>()</p></td>
 <td><p>Get the first value.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.fold.html#polars.fold" title="polars.fold"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fold</span></code></a>(acc, function, exprs)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.fold.html#polars.fold" title="polars.fold"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fold</span></code></a>(acc, function, exprs)</p></td>
 <td><p>Accumulate over multiple columns horizontally/ row wise with a left fold.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.format.html#polars.format" title="polars.format"><code class="xref py py-obj docutils literal notranslate"><span class="pre">format</span></code></a>(f_string, *args)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.format.html#polars.format" title="polars.format"><code class="xref py py-obj docutils literal notranslate"><span class="pre">format</span></code></a>(f_string, *args)</p></td>
 <td><p>Format expressions as a string.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.from_epoch.html#polars.from_epoch" title="polars.from_epoch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_epoch</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.from_epoch.html#polars.from_epoch" title="polars.from_epoch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_epoch</span></code></a>()</p></td>
 <td><p>Utility function that parses an epoch timestamp (or Unix time) to Polars Date(time).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.groups.html#polars.groups" title="polars.groups"><code class="xref py py-obj docutils literal notranslate"><span class="pre">groups</span></code></a>(column)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.groups.html#polars.groups" title="polars.groups"><code class="xref py py-obj docutils literal notranslate"><span class="pre">groups</span></code></a>(column)</p></td>
 <td><p>Syntactic sugar for <cite>pl.col(&quot;foo&quot;).agg_groups()</cite>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.head.html#polars.head" title="polars.head"><code class="xref py py-obj docutils literal notranslate"><span class="pre">head</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.head.html#polars.head" title="polars.head"><code class="xref py py-obj docutils literal notranslate"><span class="pre">head</span></code></a>()</p></td>
 <td><p>Get the first <cite>n</cite> rows.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.implode.html#polars.implode" title="polars.implode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">implode</span></code></a>(name)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.implode.html#polars.implode" title="polars.implode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">implode</span></code></a>(name)</p></td>
 <td><p>Aggregate all column values into a list.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.int_range.html#polars.int_range" title="polars.int_range"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int_range</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.int_range.html#polars.int_range" title="polars.int_range"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int_range</span></code></a>()</p></td>
 <td><p>Generate a range of integers.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.int_ranges.html#polars.int_ranges" title="polars.int_ranges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int_ranges</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.int_ranges.html#polars.int_ranges" title="polars.int_ranges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int_ranges</span></code></a>()</p></td>
 <td><p>Generate a range of integers for each row of the input columns.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.last.html#polars.last" title="polars.last"><code class="xref py py-obj docutils literal notranslate"><span class="pre">last</span></code></a>()</p></td>
+<td><p>Get the last value.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="api/polars.lit.html#polars.lit" title="polars.lit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lit</span></code></a>(value[, dtype, allow_object])</p></td>
 <td><p>Return an expression representing a literal value.</p></td>
@@ -1701,14 +1727,20 @@ document.write(`
 <tr class="row-odd"><td><p><a class="reference internal" href="api/polars.max.html#polars.max" title="polars.max"><code class="xref py py-obj docutils literal notranslate"><span class="pre">max</span></code></a>()</p></td>
 <td><p>Get the maximum value.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.mean.html#polars.mean" title="polars.mean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mean</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.max_horizontal.html#polars.max_horizontal" title="polars.max_horizontal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">max_horizontal</span></code></a>(*exprs)</p></td>
+<td><p>Get the maximum value horizontally across columns.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.mean.html#polars.mean" title="polars.mean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mean</span></code></a>()</p></td>
 <td><p>Get the mean value.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.median.html#polars.median" title="polars.median"><code class="xref py py-obj docutils literal notranslate"><span class="pre">median</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.median.html#polars.median" title="polars.median"><code class="xref py py-obj docutils literal notranslate"><span class="pre">median</span></code></a>()</p></td>
 <td><p>Get the median value.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.min.html#polars.min" title="polars.min"><code class="xref py py-obj docutils literal notranslate"><span class="pre">min</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.min.html#polars.min" title="polars.min"><code class="xref py py-obj docutils literal notranslate"><span class="pre">min</span></code></a>()</p></td>
 <td><p>Get the minimum value.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.min_horizontal.html#polars.min_horizontal" title="polars.min_horizontal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">min_horizontal</span></code></a>(*exprs)</p></td>
+<td><p>Get the minimum value horizontally across columns.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="api/polars.n_unique.html#polars.n_unique" title="polars.n_unique"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_unique</span></code></a>()</p></td>
 <td><p>Count unique values.</p></td>
@@ -1743,25 +1775,28 @@ document.write(`
 <tr class="row-odd"><td><p><a class="reference internal" href="api/polars.sum.html#polars.sum" title="polars.sum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sum</span></code></a>()</p></td>
 <td><p>Sum all values.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.sql_expr.html#polars.sql_expr" title="polars.sql_expr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sql_expr</span></code></a>(sql)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.sum_horizontal.html#polars.sum_horizontal" title="polars.sum_horizontal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sum_horizontal</span></code></a>(*exprs)</p></td>
+<td><p>Sum all values horizontally across columns.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.sql_expr.html#polars.sql_expr" title="polars.sql_expr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sql_expr</span></code></a>(sql)</p></td>
 <td><p>Parse a SQL expression to a polars expression.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.tail.html#polars.tail" title="polars.tail"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tail</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.tail.html#polars.tail" title="polars.tail"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tail</span></code></a>()</p></td>
 <td><p>Get the last <cite>n</cite> rows.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.time.html#polars.time" title="polars.time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">time</span></code></a>([hour, minute, second, microsecond])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.time.html#polars.time" title="polars.time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">time</span></code></a>([hour, minute, second, microsecond])</p></td>
 <td><p>Create a Polars literal expression of type Time.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.time_range.html#polars.time_range" title="polars.time_range"><code class="xref py py-obj docutils literal notranslate"><span class="pre">time_range</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.time_range.html#polars.time_range" title="polars.time_range"><code class="xref py py-obj docutils literal notranslate"><span class="pre">time_range</span></code></a>()</p></td>
 <td><p>Create a range of type <cite>Time</cite>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.var.html#polars.var" title="polars.var"><code class="xref py py-obj docutils literal notranslate"><span class="pre">var</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.var.html#polars.var" title="polars.var"><code class="xref py py-obj docutils literal notranslate"><span class="pre">var</span></code></a>()</p></td>
 <td><p>Get the variance.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.when.html#polars.when" title="polars.when"><code class="xref py py-obj docutils literal notranslate"><span class="pre">when</span></code></a>(expr)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.when.html#polars.when" title="polars.when"><code class="xref py py-obj docutils literal notranslate"><span class="pre">when</span></code></a>(expr)</p></td>
 <td><p>Start a &quot;when, then, otherwise&quot; expression.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.zeros.html#polars.zeros" title="polars.zeros"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zeros</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.zeros.html#polars.zeros" title="polars.zeros"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zeros</span></code></a>()</p></td>
 <td><p>Construct a column of length <cite>n</cite> filled with zeros.</p></td>
 </tr>
 </tbody>
