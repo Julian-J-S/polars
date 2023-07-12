@@ -245,6 +245,17 @@
 <a href="#245" id="245">245</a>
 <a href="#246" id="246">246</a>
 <a href="#247" id="247">247</a>
+<a href="#248" id="248">248</a>
+<a href="#249" id="249">249</a>
+<a href="#250" id="250">250</a>
+<a href="#251" id="251">251</a>
+<a href="#252" id="252">252</a>
+<a href="#253" id="253">253</a>
+<a href="#254" id="254">254</a>
+<a href="#255" id="255">255</a>
+<a href="#256" id="256">256</a>
+<a href="#257" id="257">257</a>
+<a href="#258" id="258">258</a>
 </pre></div><pre class="rust"><code><span class="attr">#[cfg(feature = <span class="string">&quot;date_offset&quot;</span>)]
 </span><span class="kw">use </span>polars_arrow::time_zone::Tz;
 <span class="kw">use </span>polars_core::utils::arrow::temporal_conversions::SECONDS_IN_DAY;
@@ -255,11 +266,13 @@
 
 <span class="attr">#[cfg(feature = <span class="string">&quot;date_offset&quot;</span>)]
 </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>date_offset(s: Series, offset: Duration) -&gt; PolarsResult&lt;Series&gt; {
+    <span class="kw">let </span>preserve_sortedness: bool;
     <span class="kw">let </span>out = <span class="kw">match </span>s.dtype().clone() {
         DataType::Date =&gt; {
             <span class="kw">let </span>s = s
                 .cast(<span class="kw-2">&amp;</span>DataType::Datetime(TimeUnit::Milliseconds, <span class="prelude-val">None</span>))
                 .unwrap();
+            preserve_sortedness = <span class="bool-val">true</span>;
             date_offset(s, offset).and_then(|s| s.cast(<span class="kw-2">&amp;</span>DataType::Date))
         }
         DataType::Datetime(tu, tz) =&gt; {
@@ -284,16 +297,25 @@
                     ca.<span class="number">0</span>.try_apply(|v| offset_fn(<span class="kw-2">&amp;</span>offset, v, <span class="prelude-val">None</span>))
                 }
             }<span class="question-mark">?</span>;
+            <span class="comment">// Sortedness may not be preserved when crossing daylight savings time boundaries
+            // for calendar-aware durations.
+            // Constant durations (e.g. 2 hours) always preserve sortedness.
+            </span>preserve_sortedness =
+                tz.is_none() || tz.as_deref() == <span class="prelude-val">Some</span>(<span class="string">&quot;UTC&quot;</span>) || offset.is_constant_duration();
             out.cast(<span class="kw-2">&amp;</span>DataType::Datetime(tu, tz))
         }
         dt =&gt; <span class="macro">polars_bail!</span>(
             ComputeError: <span class="string">&quot;cannot use &#39;date_offset&#39; on Series of datatype {}&quot;</span>, dt,
         ),
     };
-    out.map(|<span class="kw-2">mut </span>out| {
-        out.set_sorted_flag(s.is_sorted_flag());
+    <span class="kw">if </span>preserve_sortedness {
+        out.map(|<span class="kw-2">mut </span>out| {
+            out.set_sorted_flag(s.is_sorted_flag());
+            out
+        })
+    } <span class="kw">else </span>{
         out
-    })
+    }
 }
 
 <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>combine(s: <span class="kw-2">&amp;</span>[Series], tu: TimeUnit) -&gt; PolarsResult&lt;Series&gt; {

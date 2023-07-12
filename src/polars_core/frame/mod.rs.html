@@ -3722,6 +3722,11 @@
 <a href="#3722" id="3722">3722</a>
 <a href="#3723" id="3723">3723</a>
 <a href="#3724" id="3724">3724</a>
+<a href="#3725" id="3725">3725</a>
+<a href="#3726" id="3726">3726</a>
+<a href="#3727" id="3727">3727</a>
+<a href="#3728" id="3728">3728</a>
+<a href="#3729" id="3729">3729</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! DataFrame module.
 </span><span class="kw">use </span>std::borrow::Cow;
 <span class="kw">use </span>std::iter::{FromIterator, Iterator};
@@ -4797,22 +4802,27 @@
         <span class="prelude-val">Ok</span>(DataFrame::new_no_checks(new_cols))
     }
 
-    <span class="kw">pub fn </span>drop_many&lt;S: AsRef&lt;str&gt;&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, names: <span class="kw-2">&amp;</span>[S]) -&gt; <span class="self">Self </span>{
+    <span class="doccomment">/// Drop columns that are in `names`.
+    </span><span class="kw">pub fn </span>drop_many&lt;S: AsRef&lt;str&gt;&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, names: <span class="kw-2">&amp;</span>[S]) -&gt; <span class="self">Self </span>{
         <span class="kw">let </span>names: PlHashSet&lt;<span class="kw">_</span>&gt; = names.iter().map(|s| s.as_ref()).collect();
-        <span class="kw">fn </span>inner(df: <span class="kw-2">&amp;</span>DataFrame, names: PlHashSet&lt;<span class="kw-2">&amp;</span>str&gt;) -&gt; DataFrame {
-            <span class="kw">let </span><span class="kw-2">mut </span>new_cols = Vec::with_capacity(df.columns.len() - names.len());
-            df.columns.iter().for_each(|s| {
-                <span class="kw">if </span>!names.contains(<span class="kw-2">&amp;</span>s.name()) {
-                    new_cols.push(s.clone())
-                }
-            });
-
-            DataFrame::new_no_checks(new_cols)
-        }
-        inner(<span class="self">self</span>, names)
+        <span class="self">self</span>.drop_many_amortized(<span class="kw-2">&amp;</span>names)
     }
 
-    <span class="kw">fn </span>insert_at_idx_no_name_check(
+    <span class="doccomment">/// Drop columns that are in `names` without allocating a `HashSet`.
+    </span><span class="kw">pub fn </span>drop_many_amortized(<span class="kw-2">&amp;</span><span class="self">self</span>, names: <span class="kw-2">&amp;</span>PlHashSet&lt;<span class="kw-2">&amp;</span>str&gt;) -&gt; DataFrame {
+        <span class="kw">let </span><span class="kw-2">mut </span>new_cols = Vec::with_capacity(<span class="self">self</span>.columns.len() - names.len());
+        <span class="self">self</span>.columns.iter().for_each(|s| {
+            <span class="kw">if </span>!names.contains(<span class="kw-2">&amp;</span>s.name()) {
+                new_cols.push(s.clone())
+            }
+        });
+
+        DataFrame::new_no_checks(new_cols)
+    }
+
+    <span class="doccomment">/// Insert a new column at a given index without checking for duplicates.
+    /// This can leave the DataFrame at an invalid state
+    </span><span class="kw">fn </span>insert_at_idx_no_name_check(
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         index: usize,
         series: Series,
