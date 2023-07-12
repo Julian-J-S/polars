@@ -67,7 +67,7 @@ The lazy API allows you to create complex well performing queries on top of Pola
 </span><span class="kw">let </span>descending = <span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">false</span>];
 
 <span class="kw">let </span>sorted = df.lazy()
-    .sort_by_exprs(<span class="macro">vec!</span>[col(<span class="string">&quot;b&quot;</span>), col(<span class="string">&quot;a&quot;</span>)], descending, <span class="bool-val">false</span>)
+    .sort_by_exprs(<span class="macro">vec!</span>[col(<span class="string">&quot;b&quot;</span>), col(<span class="string">&quot;a&quot;</span>)], descending, <span class="bool-val">false</span>, <span class="bool-val">false</span>)
     .collect()<span class="question-mark">?</span>;
 
 <span class="comment">// sorted:

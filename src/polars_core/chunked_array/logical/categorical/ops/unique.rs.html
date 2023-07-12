@@ -127,7 +127,7 @@
         counts.rename(<span class="string">&quot;counts&quot;</span>);
         <span class="kw">let </span>cols = <span class="macro">vec!</span>[values.into_series(), counts.into_series()];
         <span class="kw">let </span>df = DataFrame::new_no_checks(cols);
-        df.sort([<span class="string">&quot;counts&quot;</span>], <span class="bool-val">true</span>)
+        df.sort([<span class="string">&quot;counts&quot;</span>], <span class="bool-val">true</span>, <span class="bool-val">false</span>)
     }
 }
 </code></pre></div></section></main></body></html>

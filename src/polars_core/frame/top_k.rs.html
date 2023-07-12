@@ -96,6 +96,15 @@
 <a href="#96" id="96">96</a>
 <a href="#97" id="97">97</a>
 <a href="#98" id="98">98</a>
+<a href="#99" id="99">99</a>
+<a href="#100" id="100">100</a>
+<a href="#101" id="101">101</a>
+<a href="#102" id="102">102</a>
+<a href="#103" id="103">103</a>
+<a href="#104" id="104">104</a>
+<a href="#105" id="105">105</a>
+<a href="#106" id="106">106</a>
+<a href="#107" id="107">107</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::cmp::Ordering;
 
 <span class="kw">use </span>polars_error::PolarsResult;
@@ -144,7 +153,7 @@
     ) -&gt; PolarsResult&lt;DataFrame&gt; {
         <span class="kw">let </span>by_column = <span class="self">self</span>.select_series(by_column)<span class="question-mark">?</span>;
         <span class="kw">let </span>descending = descending.into_vec();
-        <span class="self">self</span>.top_k_impl(k, descending, by_column, <span class="bool-val">false</span>)
+        <span class="self">self</span>.top_k_impl(k, descending, by_column, <span class="bool-val">false</span>, <span class="bool-val">false</span>)
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>top_k_impl(
@@ -153,6 +162,7 @@
         <span class="kw-2">mut </span>descending: Vec&lt;bool&gt;,
         by_column: Vec&lt;Series&gt;,
         nulls_last: bool,
+        maintain_order: bool,
     ) -&gt; PolarsResult&lt;DataFrame&gt; {
         _broadcast_descending(by_column.len(), <span class="kw-2">&amp;mut </span>descending);
         <span class="kw">let </span>encoded = _get_rows_encoded(<span class="kw-2">&amp;</span>by_column, <span class="kw-2">&amp;</span>descending, nulls_last)<span class="question-mark">?</span>;
@@ -164,8 +174,16 @@
             .collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 
         <span class="kw">let </span>sorted = <span class="kw">if </span>k &gt;= <span class="self">self</span>.height() {
-            rows.sort_unstable();
+            <span class="kw">if </span>maintain_order {
+                rows.sort();
+            } <span class="kw">else </span>{
+                rows.sort_unstable();
+            }
             <span class="kw-2">&amp;</span>rows
+        } <span class="kw">else if </span>maintain_order {
+            <span class="comment">// todo: maybe there is some more efficient method, comparable to select_nth_unstable
+            </span>rows.sort();
+            <span class="kw-2">&amp;</span>rows[..k]
         } <span class="kw">else </span>{
             <span class="kw">let </span>(lower, _el, _upper) = rows.select_nth_unstable(k);
             lower.sort_unstable();

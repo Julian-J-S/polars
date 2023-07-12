@@ -913,6 +913,15 @@
 <a href="#913" id="913">913</a>
 <a href="#914" id="914">914</a>
 <a href="#915" id="915">915</a>
+<a href="#916" id="916">916</a>
+<a href="#917" id="917">917</a>
+<a href="#918" id="918">918</a>
+<a href="#919" id="919">919</a>
+<a href="#920" id="920">920</a>
+<a href="#921" id="921">921</a>
+<a href="#922" id="922">922</a>
+<a href="#923" id="923">923</a>
+<a href="#924" id="924">924</a>
 </pre></div><pre class="rust"><code><span class="kw">mod </span>arg_sort;
 
 <span class="kw">pub mod </span>arg_sort_multiple;
@@ -1341,6 +1350,7 @@
             descending,
             nulls_last: <span class="bool-val">false</span>,
             multithreaded: <span class="bool-val">true</span>,
+            maintain_order: <span class="bool-val">false</span>,
         })
     }
 
@@ -1460,6 +1470,7 @@
             descending,
             nulls_last: <span class="bool-val">false</span>,
             multithreaded: <span class="bool-val">true</span>,
+            maintain_order: <span class="bool-val">false</span>,
         })
     }
 
@@ -1552,6 +1563,7 @@
             descending,
             nulls_last: <span class="bool-val">false</span>,
             multithreaded: <span class="bool-val">true</span>,
+            maintain_order: <span class="bool-val">false</span>,
         })
     }
 
@@ -1690,6 +1702,7 @@
             descending: <span class="bool-val">false</span>,
             nulls_last: <span class="bool-val">false</span>,
             multithreaded: <span class="bool-val">true</span>,
+            maintain_order: <span class="bool-val">false</span>,
         });
         <span class="macro">assert_eq!</span>(
             Vec::from(<span class="kw-2">&amp;</span>out),
@@ -1708,6 +1721,7 @@
             descending: <span class="bool-val">false</span>,
             nulls_last: <span class="bool-val">true</span>,
             multithreaded: <span class="bool-val">true</span>,
+            maintain_order: <span class="bool-val">false</span>,
         });
         <span class="macro">assert_eq!</span>(
             Vec::from(<span class="kw-2">&amp;</span>out),
@@ -1732,7 +1746,7 @@
         <span class="kw">let </span>c = Utf8Chunked::new(<span class="string">&quot;c&quot;</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>, <span class="string">&quot;d&quot;</span>, <span class="string">&quot;e&quot;</span>, <span class="string">&quot;f&quot;</span>, <span class="string">&quot;g&quot;</span>, <span class="string">&quot;h&quot;</span>]);
         <span class="kw">let </span>df = DataFrame::new(<span class="macro">vec!</span>[a.into_series(), b.into_series(), c.into_series()])<span class="question-mark">?</span>;
 
-        <span class="kw">let </span>out = df.sort([<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>], <span class="bool-val">false</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>out = df.sort([<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>], <span class="bool-val">false</span>, <span class="bool-val">false</span>)<span class="question-mark">?</span>;
         <span class="macro">assert_eq!</span>(
             Vec::from(out.column(<span class="string">&quot;b&quot;</span>)<span class="question-mark">?</span>.i64()<span class="question-mark">?</span>),
             <span class="kw-2">&amp;</span>[
@@ -1752,7 +1766,7 @@
         <span class="kw">let </span>b = Int32Chunked::new(<span class="string">&quot;b&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">5</span>, <span class="number">4</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]).into_series();
         <span class="kw">let </span>df = DataFrame::new(<span class="macro">vec!</span>[a, b])<span class="question-mark">?</span>;
 
-        <span class="kw">let </span>out = df.sort([<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>], <span class="bool-val">false</span>)<span class="question-mark">?</span>;
+        <span class="kw">let </span>out = df.sort([<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>], <span class="bool-val">false</span>, <span class="bool-val">false</span>)<span class="question-mark">?</span>;
         <span class="kw">let </span>expected = <span class="macro">df!</span>(
             <span class="string">&quot;a&quot; </span>=&gt; [<span class="string">&quot;a&quot;</span>, <span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>, <span class="string">&quot;c&quot;</span>],
             <span class="string">&quot;b&quot; </span>=&gt; [<span class="number">3</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">2</span>, <span class="number">5</span>]
@@ -1764,14 +1778,14 @@
             <span class="string">&quot;values&quot; </span>=&gt; [<span class="string">&quot;a&quot;</span>, <span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>]
         )<span class="question-mark">?</span>;
 
-        <span class="kw">let </span>out = df.sort([<span class="string">&quot;groups&quot;</span>, <span class="string">&quot;values&quot;</span>], <span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">false</span>])<span class="question-mark">?</span>;
+        <span class="kw">let </span>out = df.sort([<span class="string">&quot;groups&quot;</span>, <span class="string">&quot;values&quot;</span>], <span class="macro">vec!</span>[<span class="bool-val">true</span>, <span class="bool-val">false</span>], <span class="bool-val">false</span>)<span class="question-mark">?</span>;
         <span class="kw">let </span>expected = <span class="macro">df!</span>(
             <span class="string">&quot;groups&quot; </span>=&gt; [<span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>],
             <span class="string">&quot;values&quot; </span>=&gt; [<span class="string">&quot;b&quot;</span>, <span class="string">&quot;a&quot;</span>, <span class="string">&quot;a&quot;</span>]
         )<span class="question-mark">?</span>;
         <span class="macro">assert!</span>(out.frame_equal(<span class="kw-2">&amp;</span>expected));
 
-        <span class="kw">let </span>out = df.sort([<span class="string">&quot;values&quot;</span>, <span class="string">&quot;groups&quot;</span>], <span class="macro">vec!</span>[<span class="bool-val">false</span>, <span class="bool-val">true</span>])<span class="question-mark">?</span>;
+        <span class="kw">let </span>out = df.sort([<span class="string">&quot;values&quot;</span>, <span class="string">&quot;groups&quot;</span>], <span class="macro">vec!</span>[<span class="bool-val">false</span>, <span class="bool-val">true</span>], <span class="bool-val">false</span>)<span class="question-mark">?</span>;
         <span class="kw">let </span>expected = <span class="macro">df!</span>(
             <span class="string">&quot;groups&quot; </span>=&gt; [<span class="number">2</span>, <span class="number">1</span>, <span class="number">3</span>],
             <span class="string">&quot;values&quot; </span>=&gt; [<span class="string">&quot;a&quot;</span>, <span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>]
@@ -1788,6 +1802,7 @@
             descending: <span class="bool-val">false</span>,
             nulls_last: <span class="bool-val">false</span>,
             multithreaded: <span class="bool-val">true</span>,
+            maintain_order: <span class="bool-val">false</span>,
         });
         <span class="kw">let </span>expected = <span class="kw-2">&amp;</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;b&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;c&quot;</span>)];
         <span class="macro">assert_eq!</span>(Vec::from(<span class="kw-2">&amp;</span>out), expected);
@@ -1796,6 +1811,7 @@
             descending: <span class="bool-val">true</span>,
             nulls_last: <span class="bool-val">false</span>,
             multithreaded: <span class="bool-val">true</span>,
+            maintain_order: <span class="bool-val">false</span>,
         });
 
         <span class="kw">let </span>expected = <span class="kw-2">&amp;</span>[<span class="prelude-val">None</span>, <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="string">&quot;c&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;b&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>)];
@@ -1805,6 +1821,7 @@
             descending: <span class="bool-val">false</span>,
             nulls_last: <span class="bool-val">true</span>,
             multithreaded: <span class="bool-val">true</span>,
+            maintain_order: <span class="bool-val">false</span>,
         });
         <span class="kw">let </span>expected = <span class="kw-2">&amp;</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;b&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;c&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>];
         <span class="macro">assert_eq!</span>(Vec::from(<span class="kw-2">&amp;</span>out), expected);
@@ -1813,6 +1830,7 @@
             descending: <span class="bool-val">true</span>,
             nulls_last: <span class="bool-val">true</span>,
             multithreaded: <span class="bool-val">true</span>,
+            maintain_order: <span class="bool-val">false</span>,
         });
         <span class="kw">let </span>expected = <span class="kw-2">&amp;</span>[<span class="prelude-val">Some</span>(<span class="string">&quot;c&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;b&quot;</span>), <span class="prelude-val">Some</span>(<span class="string">&quot;a&quot;</span>), <span class="prelude-val">None</span>, <span class="prelude-val">None</span>];
         <span class="macro">assert_eq!</span>(Vec::from(<span class="kw-2">&amp;</span>out), expected);

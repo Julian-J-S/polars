@@ -61,6 +61,9 @@
 <a href="#61" id="61">61</a>
 <a href="#62" id="62">62</a>
 <a href="#63" id="63">63</a>
+<a href="#64" id="64">64</a>
+<a href="#65" id="65">65</a>
+<a href="#66" id="66">66</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::sync::{Arc, Mutex};
 <span class="kw">use </span>std::time::Instant;
 
@@ -120,8 +123,11 @@
         <span class="kw">let </span><span class="kw-2">mut </span>end = end.into_inner();
         end.rename(<span class="string">&quot;end&quot;</span>);
 
-        DataFrame::new_no_checks(<span class="macro">vec!</span>[nodes_s, start.into_series(), end.into_series()])
-            .sort(<span class="macro">vec!</span>[<span class="string">&quot;start&quot;</span>], <span class="macro">vec!</span>[<span class="bool-val">false</span>])
+        DataFrame::new_no_checks(<span class="macro">vec!</span>[nodes_s, start.into_series(), end.into_series()]).sort(
+            <span class="macro">vec!</span>[<span class="string">&quot;start&quot;</span>],
+            <span class="macro">vec!</span>[<span class="bool-val">false</span>],
+            <span class="bool-val">false</span>,
+        )
     }
 }
 </code></pre></div></section></main></body></html>

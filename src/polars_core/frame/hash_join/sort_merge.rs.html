@@ -338,6 +338,9 @@
 <a href="#338" id="338">338</a>
 <a href="#339" id="339">339</a>
 <a href="#340" id="340">340</a>
+<a href="#341" id="341">341</a>
+<a href="#342" id="342">342</a>
+<a href="#343" id="343">343</a>
 </pre></div><pre class="rust"><code><span class="attr">#[cfg(feature = <span class="string">&quot;performant&quot;</span>)]
 </span><span class="kw">use </span>polars_arrow::kernels::sorted_join;
 
@@ -564,6 +567,7 @@
                 descending: <span class="bool-val">false</span>,
                 nulls_last: <span class="bool-val">false</span>,
                 multithreaded: <span class="bool-val">true</span>,
+                maintain_order: <span class="bool-val">false</span>,
             });
             <span class="kw">let </span>s_right = <span class="kw">unsafe </span>{ s_right.take_unchecked(<span class="kw-2">&amp;</span>sort_idx).unwrap() };
             <span class="kw">let </span>ids = par_sorted_merge_inner_no_nulls(s_left, <span class="kw-2">&amp;</span>s_right);
@@ -590,6 +594,7 @@
                 descending: <span class="bool-val">false</span>,
                 nulls_last: <span class="bool-val">false</span>,
                 multithreaded: <span class="bool-val">true</span>,
+                maintain_order: <span class="bool-val">false</span>,
             });
             <span class="kw">let </span>s_left = <span class="kw">unsafe </span>{ s_left.take_unchecked(<span class="kw-2">&amp;</span>sort_idx).unwrap() };
             <span class="kw">let </span>ids = par_sorted_merge_inner_no_nulls(<span class="kw-2">&amp;</span>s_left, s_right);
@@ -658,6 +663,7 @@
                 descending: <span class="bool-val">false</span>,
                 nulls_last: <span class="bool-val">false</span>,
                 multithreaded: <span class="bool-val">true</span>,
+                maintain_order: <span class="bool-val">false</span>,
             });
             <span class="kw">let </span>s_right = <span class="kw">unsafe </span>{ s_right.take_unchecked(<span class="kw-2">&amp;</span>sort_idx).unwrap() };
 

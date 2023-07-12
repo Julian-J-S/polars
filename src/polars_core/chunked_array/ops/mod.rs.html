@@ -769,6 +769,8 @@
 <a href="#769" id="769">769</a>
 <a href="#770" id="770">770</a>
 <a href="#771" id="771">771</a>
+<a href="#772" id="772">772</a>
+<a href="#773" id="773">773</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Traits for miscellaneous operations on ChunkedArray
 </span><span class="kw">use </span>arrow::offset::OffsetsBuffer;
 <span class="kw">use </span>polars_arrow::prelude::QuantileInterpolOptions;
@@ -1250,6 +1252,7 @@
     <span class="kw">pub </span>descending: bool,
     <span class="kw">pub </span>nulls_last: bool,
     <span class="kw">pub </span>multithreaded: bool,
+    <span class="kw">pub </span>maintain_order: bool,
 }
 
 <span class="attr">#[derive(Clone)]
@@ -1266,6 +1269,7 @@
             descending: <span class="bool-val">false</span>,
             nulls_last: <span class="bool-val">false</span>,
             multithreaded: <span class="bool-val">true</span>,
+            maintain_order: <span class="bool-val">false</span>,
         }
     }
 }

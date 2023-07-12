@@ -3727,6 +3727,11 @@
 <a href="#3727" id="3727">3727</a>
 <a href="#3728" id="3728">3728</a>
 <a href="#3729" id="3729">3729</a>
+<a href="#3730" id="3730">3730</a>
+<a href="#3731" id="3731">3731</a>
+<a href="#3732" id="3732">3732</a>
+<a href="#3733" id="3733">3733</a>
+<a href="#3734" id="3734">3734</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! DataFrame module.
 </span><span class="kw">use </span>std::borrow::Cow;
 <span class="kw">use </span>std::iter::{FromIterator, Iterator};
@@ -5570,11 +5575,12 @@
         <span class="kw-2">&amp;mut </span><span class="self">self</span>,
         by_column: <span class="kw">impl </span>IntoVec&lt;SmartString&gt;,
         descending: <span class="kw">impl </span>IntoVec&lt;bool&gt;,
+        maintain_order: bool,
     ) -&gt; PolarsResult&lt;<span class="kw-2">&amp;mut </span><span class="self">Self</span>&gt; {
         <span class="kw">let </span>by_column = <span class="self">self</span>.select_series(by_column)<span class="question-mark">?</span>;
         <span class="kw">let </span>descending = descending.into_vec();
         <span class="self">self</span>.columns = <span class="self">self
-            </span>.sort_impl(by_column, descending, <span class="bool-val">false</span>, <span class="prelude-val">None</span>, <span class="bool-val">true</span>)<span class="question-mark">?
+            </span>.sort_impl(by_column, descending, <span class="bool-val">false</span>, maintain_order, <span class="prelude-val">None</span>, <span class="bool-val">true</span>)<span class="question-mark">?
             </span>.columns;
         <span class="prelude-val">Ok</span>(<span class="self">self</span>)
     }
@@ -5585,6 +5591,7 @@
         by_column: Vec&lt;Series&gt;,
         descending: Vec&lt;bool&gt;,
         nulls_last: bool,
+        maintain_order: bool,
         slice: <span class="prelude-ty">Option</span>&lt;(i64, usize)&gt;,
         parallel: bool,
     ) -&gt; PolarsResult&lt;<span class="self">Self</span>&gt; {
@@ -5619,7 +5626,7 @@
         }
 
         <span class="kw">if let </span><span class="prelude-val">Some</span>((<span class="number">0</span>, k)) = slice {
-            <span class="kw">return </span><span class="self">self</span>.top_k_impl(k, descending, by_column, nulls_last);
+            <span class="kw">return </span><span class="self">self</span>.top_k_impl(k, descending, by_column, nulls_last, maintain_order);
         }
 
         <span class="attr">#[cfg(feature = <span class="string">&quot;dtype-struct&quot;</span>)]
@@ -5641,6 +5648,7 @@
                     descending: descending[<span class="number">0</span>],
                     nulls_last,
                     multithreaded: parallel,
+                    maintain_order,
                 };
                 <span class="comment">// fast path for a frame with a single series
                 // no need to compute the sort indices and then take by these indices
@@ -5688,20 +5696,21 @@
     /// ```
     /// # use polars_core::prelude::*;
     /// fn sort_example(df: &amp;DataFrame, descending: bool) -&gt; PolarsResult&lt;DataFrame&gt; {
-    ///     df.sort([&quot;a&quot;], descending)
+    ///     df.sort([&quot;a&quot;], descending, false)
     /// }
     ///
     /// fn sort_by_multiple_columns_example(df: &amp;DataFrame) -&gt; PolarsResult&lt;DataFrame&gt; {
-    ///     df.sort(&amp;[&quot;a&quot;, &quot;b&quot;], vec![false, true])
+    ///     df.sort(&amp;[&quot;a&quot;, &quot;b&quot;], vec![false, true], false)
     /// }
     /// ```
     </span><span class="kw">pub fn </span>sort(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         by_column: <span class="kw">impl </span>IntoVec&lt;SmartString&gt;,
         descending: <span class="kw">impl </span>IntoVec&lt;bool&gt;,
+        maintain_order: bool,
     ) -&gt; PolarsResult&lt;<span class="self">Self</span>&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>df = <span class="self">self</span>.clone();
-        df.sort_in_place(by_column, descending)<span class="question-mark">?</span>;
+        df.sort_in_place(by_column, descending, maintain_order)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(df)
     }
 
@@ -5715,6 +5724,7 @@
                 by_column,
                 descending,
                 options.nulls_last,
+                options.maintain_order,
                 <span class="prelude-val">None</span>,
                 options.multithreaded,
             )<span class="question-mark">?
@@ -7332,7 +7342,7 @@
         <span class="kw">let </span>df = df
             .unique_stable(<span class="prelude-val">None</span>, UniqueKeepStrategy::First, <span class="prelude-val">None</span>)
             .unwrap()
-            .sort([<span class="string">&quot;flt&quot;</span>], <span class="bool-val">false</span>)
+            .sort([<span class="string">&quot;flt&quot;</span>], <span class="bool-val">false</span>, <span class="bool-val">false</span>)
             .unwrap();
         <span class="kw">let </span>valid = <span class="macro">df! </span>{
             <span class="string">&quot;flt&quot; </span>=&gt; [<span class="number">1.</span>, <span class="number">2.</span>, <span class="number">3.</span>],

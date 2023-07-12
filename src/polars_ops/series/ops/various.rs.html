@@ -97,7 +97,7 @@
         <span class="kw">let </span>cols = <span class="macro">vec!</span>[values, counts.into_series()];
         <span class="kw">let </span>df = DataFrame::new_no_checks(cols);
         <span class="kw">if </span>sorted {
-            df.sort([<span class="string">&quot;counts&quot;</span>], <span class="bool-val">true</span>)
+            df.sort([<span class="string">&quot;counts&quot;</span>], <span class="bool-val">true</span>, <span class="bool-val">false</span>)
         } <span class="kw">else </span>{
             <span class="prelude-val">Ok</span>(df)
         }
