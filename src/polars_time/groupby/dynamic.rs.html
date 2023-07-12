@@ -941,12 +941,6 @@
 <a href="#941" id="941">941</a>
 <a href="#942" id="942">942</a>
 <a href="#943" id="943">943</a>
-<a href="#944" id="944">944</a>
-<a href="#945" id="945">945</a>
-<a href="#946" id="946">946</a>
-<a href="#947" id="947">947</a>
-<a href="#948" id="948">948</a>
-<a href="#949" id="949">949</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>polars_arrow::time_zone::Tz;
 <span class="kw">use </span>polars_arrow::utils::CustomIterTools;
 <span class="kw">use </span>polars_core::export::rayon::prelude::<span class="kw-2">*</span>;
@@ -1709,17 +1703,11 @@
             <span class="string">&quot;&quot;</span>,
             [<span class="number">0.0</span>, <span class="number">8.0</span>, <span class="number">4.000000000000002</span>, <span class="number">6.666666666666667</span>, <span class="number">24.5</span>, <span class="number">0.0</span>],
         );
-        <span class="macro">assert_eq!</span>(
-            (var - expected).abs().unwrap().lt(<span class="number">1e-12</span>).unwrap().all(),
-            <span class="bool-val">true
-        </span>);
+        <span class="macro">assert!</span>((var - expected).abs().unwrap().lt(<span class="number">1e-12</span>).unwrap().all());
 
         <span class="kw">let </span>var = <span class="kw">unsafe </span>{ nulls.agg_var(<span class="kw-2">&amp;</span>groups, <span class="number">1</span>) };
         <span class="kw">let </span>expected = Series::new(<span class="string">&quot;&quot;</span>, [<span class="number">0.0</span>, <span class="number">8.0</span>, <span class="number">8.0</span>, <span class="number">9.333333333333343</span>, <span class="number">24.5</span>, <span class="number">0.0</span>]);
-        <span class="macro">assert_eq!</span>(
-            (var - expected).abs().unwrap().lt(<span class="number">1e-12</span>).unwrap().all(),
-            <span class="bool-val">true
-        </span>);
+        <span class="macro">assert!</span>((var - expected).abs().unwrap().lt(<span class="number">1e-12</span>).unwrap().all());
 
         <span class="kw">let </span>quantile = <span class="kw">unsafe </span>{ a.agg_quantile(<span class="kw-2">&amp;</span>groups, <span class="number">0.5</span>, QuantileInterpolOptions::Linear) };
         <span class="kw">let </span>expected = Series::new(<span class="string">&quot;&quot;</span>, [<span class="number">3.0</span>, <span class="number">5.0</span>, <span class="number">5.0</span>, <span class="number">6.0</span>, <span class="number">5.5</span>, <span class="number">1.0</span>]);

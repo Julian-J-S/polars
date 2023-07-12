@@ -128,6 +128,7 @@
 <a href="#128" id="128">128</a>
 <a href="#129" id="129">129</a>
 <a href="#130" id="130">130</a>
+<a href="#131" id="131">131</a>
 </pre></div><pre class="rust"><code><span class="kw">use super</span>::<span class="kw-2">*</span>;
 
 <span class="doccomment">/// An implementor of this trait decides how and in which order its nodes get traversed
@@ -215,7 +216,8 @@
         <span class="kw">struct </span>VisitPath {
             pre_idx: usize,
             pre_stack: Vec&lt;usize&gt;,
-            post_idx: usize,
+            <span class="attr">#[allow(dead_code)]
+            </span>post_idx: usize,
             post_stack: Vec&lt;usize&gt;,
         }
 

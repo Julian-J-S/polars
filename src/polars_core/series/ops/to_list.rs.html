@@ -313,7 +313,7 @@
         <span class="kw">let </span>s = Series::new(<span class="string">&quot;a&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);
 
         <span class="kw">let </span><span class="kw-2">mut </span>builder = get_list_builder(s.dtype(), s.len(), <span class="number">1</span>, s.name())<span class="question-mark">?</span>;
-        builder.append_series(<span class="kw-2">&amp;</span>s);
+        builder.append_series(<span class="kw-2">&amp;</span>s).unwrap();
         <span class="kw">let </span>expected = builder.finish();
 
         <span class="kw">let </span>out = s.implode()<span class="question-mark">?</span>;

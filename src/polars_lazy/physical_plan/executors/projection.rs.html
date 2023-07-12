@@ -92,12 +92,12 @@
         </span><span class="attr">#[cfg(test)]
         #[allow(unused_must_use)]
         </span>{
-            <span class="comment">// TODO: check also the types.
-            </span>df.as_ref().map(|df| {
+            <span class="comment">// TODO: also check the types.
+            </span><span class="kw">if let </span><span class="prelude-val">Ok</span>(df) = df.as_ref() {
                 <span class="kw">for </span>(l, r) <span class="kw">in </span>df.iter().zip(<span class="self">self</span>.schema.iter_names()) {
                     <span class="macro">assert_eq!</span>(l.name(), r);
                 }
-            });
+            }
         }
 
         df

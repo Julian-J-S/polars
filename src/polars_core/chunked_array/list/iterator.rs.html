@@ -460,9 +460,9 @@
     <span class="attr">#[test]
     </span><span class="kw">fn </span>test_iter_list() {
         <span class="kw">let </span><span class="kw-2">mut </span>builder = get_list_builder(<span class="kw-2">&amp;</span>DataType::Int32, <span class="number">10</span>, <span class="number">10</span>, <span class="string">&quot;&quot;</span>).unwrap();
-        builder.append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]));
-        builder.append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>]));
-        builder.append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">1</span>]));
+        builder.append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>])).unwrap();
+        builder.append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>])).unwrap();
+        builder.append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">1</span>])).unwrap();
         <span class="kw">let </span>ca = builder.finish();
 
         ca.amortized_iter()

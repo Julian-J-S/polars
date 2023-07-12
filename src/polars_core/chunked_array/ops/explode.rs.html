@@ -567,6 +567,29 @@
 <a href="#567" id="567">567</a>
 <a href="#568" id="568">568</a>
 <a href="#569" id="569">569</a>
+<a href="#570" id="570">570</a>
+<a href="#571" id="571">571</a>
+<a href="#572" id="572">572</a>
+<a href="#573" id="573">573</a>
+<a href="#574" id="574">574</a>
+<a href="#575" id="575">575</a>
+<a href="#576" id="576">576</a>
+<a href="#577" id="577">577</a>
+<a href="#578" id="578">578</a>
+<a href="#579" id="579">579</a>
+<a href="#580" id="580">580</a>
+<a href="#581" id="581">581</a>
+<a href="#582" id="582">582</a>
+<a href="#583" id="583">583</a>
+<a href="#584" id="584">584</a>
+<a href="#585" id="585">585</a>
+<a href="#586" id="586">586</a>
+<a href="#587" id="587">587</a>
+<a href="#588" id="588">588</a>
+<a href="#589" id="589">589</a>
+<a href="#590" id="590">590</a>
+<a href="#591" id="591">591</a>
+<a href="#592" id="592">592</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::convert::TryFrom;
 
 <span class="kw">use </span>arrow::array::<span class="kw-2">*</span>;
@@ -991,9 +1014,11 @@
     </span><span class="kw">fn </span>test_explode_list() -&gt; PolarsResult&lt;()&gt; {
         <span class="kw">let </span><span class="kw-2">mut </span>builder = get_list_builder(<span class="kw-2">&amp;</span>DataType::Int32, <span class="number">5</span>, <span class="number">5</span>, <span class="string">&quot;a&quot;</span>)<span class="question-mark">?</span>;
 
-        builder.append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">3</span>]));
-        builder.append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">1</span>]));
-        builder.append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">2</span>]));
+        builder
+            .append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">3</span>]))
+            .unwrap();
+        builder.append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">1</span>])).unwrap();
+        builder.append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">2</span>])).unwrap();
 
         <span class="kw">let </span>ca = builder.finish();
         <span class="macro">assert!</span>(ca._can_fast_explode());
@@ -1041,9 +1066,11 @@
     </span><span class="kw">fn </span>test_explode_empty_list_slot() -&gt; PolarsResult&lt;()&gt; {
         <span class="comment">// primitive
         </span><span class="kw">let </span><span class="kw-2">mut </span>builder = get_list_builder(<span class="kw-2">&amp;</span>DataType::Int32, <span class="number">5</span>, <span class="number">5</span>, <span class="string">&quot;a&quot;</span>)<span class="question-mark">?</span>;
-        builder.append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">1i32</span>, <span class="number">2</span>]));
-        builder.append_series(<span class="kw-2">&amp;</span>Int32Chunked::from_slice(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[]).into_series());
-        builder.append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">3i32</span>]));
+        builder.append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">1i32</span>, <span class="number">2</span>])).unwrap();
+        builder
+            .append_series(<span class="kw-2">&amp;</span>Int32Chunked::from_slice(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[]).into_series())
+            .unwrap();
+        builder.append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">3i32</span>])).unwrap();
 
         <span class="kw">let </span>ca = builder.finish();
         <span class="kw">let </span>exploded = ca.explode()<span class="question-mark">?</span>;
@@ -1054,11 +1081,15 @@
 
         <span class="comment">// more primitive
         </span><span class="kw">let </span><span class="kw-2">mut </span>builder = get_list_builder(<span class="kw-2">&amp;</span>DataType::Int32, <span class="number">5</span>, <span class="number">5</span>, <span class="string">&quot;a&quot;</span>)<span class="question-mark">?</span>;
-        builder.append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">1i32</span>]));
-        builder.append_series(<span class="kw-2">&amp;</span>Int32Chunked::from_slice(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[]).into_series());
-        builder.append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">2i32</span>]));
-        builder.append_series(<span class="kw-2">&amp;</span>Int32Chunked::from_slice(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[]).into_series());
-        builder.append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">3</span>, <span class="number">4i32</span>]));
+        builder.append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">1i32</span>])).unwrap();
+        builder
+            .append_series(<span class="kw-2">&amp;</span>Int32Chunked::from_slice(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[]).into_series())
+            .unwrap();
+        builder.append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">2i32</span>])).unwrap();
+        builder
+            .append_series(<span class="kw-2">&amp;</span>Int32Chunked::from_slice(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[]).into_series())
+            .unwrap();
+        builder.append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="number">3</span>, <span class="number">4i32</span>])).unwrap();
 
         <span class="kw">let </span>ca = builder.finish();
         <span class="kw">let </span>exploded = ca.explode()<span class="question-mark">?</span>;
@@ -1069,18 +1100,27 @@
 
         <span class="comment">// utf8
         </span><span class="kw">let </span><span class="kw-2">mut </span>builder = get_list_builder(<span class="kw-2">&amp;</span>DataType::Utf8, <span class="number">5</span>, <span class="number">5</span>, <span class="string">&quot;a&quot;</span>)<span class="question-mark">?</span>;
-        builder.append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;abc&quot;</span>]));
-        builder.append_series(
-            <span class="kw-2">&amp;</span>&lt;Utf8Chunked <span class="kw">as </span>NewChunkedArray&lt;Utf8Type, <span class="kw-2">&amp;</span>str&gt;&gt;::from_slice(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[]).into_series(),
-        );
-        builder.append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;de&quot;</span>]));
-        builder.append_series(
-            <span class="kw-2">&amp;</span>&lt;Utf8Chunked <span class="kw">as </span>NewChunkedArray&lt;Utf8Type, <span class="kw-2">&amp;</span>str&gt;&gt;::from_slice(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[]).into_series(),
-        );
-        builder.append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;fg&quot;</span>]));
-        builder.append_series(
-            <span class="kw-2">&amp;</span>&lt;Utf8Chunked <span class="kw">as </span>NewChunkedArray&lt;Utf8Type, <span class="kw-2">&amp;</span>str&gt;&gt;::from_slice(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[]).into_series(),
-        );
+        builder.append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;abc&quot;</span>])).unwrap();
+        builder
+            .append_series(
+                <span class="kw-2">&amp;</span>&lt;Utf8Chunked <span class="kw">as </span>NewChunkedArray&lt;Utf8Type, <span class="kw-2">&amp;</span>str&gt;&gt;::from_slice(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[])
+                    .into_series(),
+            )
+            .unwrap();
+        builder.append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;de&quot;</span>])).unwrap();
+        builder
+            .append_series(
+                <span class="kw-2">&amp;</span>&lt;Utf8Chunked <span class="kw">as </span>NewChunkedArray&lt;Utf8Type, <span class="kw-2">&amp;</span>str&gt;&gt;::from_slice(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[])
+                    .into_series(),
+            )
+            .unwrap();
+        builder.append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="string">&quot;fg&quot;</span>])).unwrap();
+        builder
+            .append_series(
+                <span class="kw-2">&amp;</span>&lt;Utf8Chunked <span class="kw">as </span>NewChunkedArray&lt;Utf8Type, <span class="kw-2">&amp;</span>str&gt;&gt;::from_slice(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[])
+                    .into_series(),
+            )
+            .unwrap();
 
         <span class="kw">let </span>ca = builder.finish();
         <span class="kw">let </span>exploded = ca.explode()<span class="question-mark">?</span>;
@@ -1091,11 +1131,17 @@
 
         <span class="comment">// boolean
         </span><span class="kw">let </span><span class="kw-2">mut </span>builder = get_list_builder(<span class="kw-2">&amp;</span>DataType::Boolean, <span class="number">5</span>, <span class="number">5</span>, <span class="string">&quot;a&quot;</span>)<span class="question-mark">?</span>;
-        builder.append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="bool-val">true</span>]));
-        builder.append_series(<span class="kw-2">&amp;</span>BooleanChunked::from_slice(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[]).into_series());
-        builder.append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="bool-val">false</span>]));
-        builder.append_series(<span class="kw-2">&amp;</span>BooleanChunked::from_slice(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[]).into_series());
-        builder.append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="bool-val">true</span>, <span class="bool-val">true</span>]));
+        builder.append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="bool-val">true</span>])).unwrap();
+        builder
+            .append_series(<span class="kw-2">&amp;</span>BooleanChunked::from_slice(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[]).into_series())
+            .unwrap();
+        builder.append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="bool-val">false</span>])).unwrap();
+        builder
+            .append_series(<span class="kw-2">&amp;</span>BooleanChunked::from_slice(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[]).into_series())
+            .unwrap();
+        builder
+            .append_series(<span class="kw-2">&amp;</span>Series::new(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>[<span class="bool-val">true</span>, <span class="bool-val">true</span>]))
+            .unwrap();
 
         <span class="kw">let </span>ca = builder.finish();
         <span class="kw">let </span>exploded = ca.explode()<span class="question-mark">?</span>;
