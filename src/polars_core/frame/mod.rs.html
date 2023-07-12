@@ -3732,6 +3732,22 @@
 <a href="#3732" id="3732">3732</a>
 <a href="#3733" id="3733">3733</a>
 <a href="#3734" id="3734">3734</a>
+<a href="#3735" id="3735">3735</a>
+<a href="#3736" id="3736">3736</a>
+<a href="#3737" id="3737">3737</a>
+<a href="#3738" id="3738">3738</a>
+<a href="#3739" id="3739">3739</a>
+<a href="#3740" id="3740">3740</a>
+<a href="#3741" id="3741">3741</a>
+<a href="#3742" id="3742">3742</a>
+<a href="#3743" id="3743">3743</a>
+<a href="#3744" id="3744">3744</a>
+<a href="#3745" id="3745">3745</a>
+<a href="#3746" id="3746">3746</a>
+<a href="#3747" id="3747">3747</a>
+<a href="#3748" id="3748">3748</a>
+<a href="#3749" id="3749">3749</a>
+<a href="#3750" id="3750">3750</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! DataFrame module.
 </span><span class="kw">use </span>std::borrow::Cow;
 <span class="kw">use </span>std::iter::{FromIterator, Iterator};
@@ -7072,11 +7088,19 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         cols: <span class="kw-2">&amp;</span>[String],
         stable: bool,
+        include_key: bool,
     ) -&gt; PolarsResult&lt;Vec&lt;DataFrame&gt;&gt; {
         <span class="kw">let </span>groups = <span class="kw">if </span>stable {
             <span class="self">self</span>.groupby_stable(cols)<span class="question-mark">?</span>.take_groups()
         } <span class="kw">else </span>{
             <span class="self">self</span>.groupby(cols)<span class="question-mark">?</span>.take_groups()
+        };
+
+        <span class="comment">// drop key columns prior to calculation if requested
+        </span><span class="kw">let </span>df = <span class="kw">if </span>include_key {
+            <span class="self">self</span>.clone()
+        } <span class="kw">else </span>{
+            <span class="self">self</span>.drop_many(cols)
         };
 
         <span class="comment">// don&#39;t parallelize this
@@ -7088,13 +7112,13 @@
                         .into_par_iter()
                         .map(|(<span class="kw">_</span>, group)| {
                             <span class="comment">// groups are in bounds
-                            </span><span class="kw">unsafe </span>{ <span class="self">self</span>._take_unchecked_slice(<span class="kw-2">&amp;</span>group, <span class="bool-val">false</span>) }
+                            </span><span class="kw">unsafe </span>{ df._take_unchecked_slice(<span class="kw-2">&amp;</span>group, <span class="bool-val">false</span>) }
                         })
                         .collect())
                 }
                 GroupsProxy::Slice { groups, .. } =&gt; <span class="prelude-val">Ok</span>(groups
                     .into_par_iter()
-                    .map(|[first, len]| <span class="self">self</span>.slice(first <span class="kw">as </span>i64, len <span class="kw">as </span>usize))
+                    .map(|[first, len]| df.slice(first <span class="kw">as </span>i64, len <span class="kw">as </span>usize))
                     .collect()),
             }
         })
@@ -7102,17 +7126,25 @@
 
     <span class="doccomment">/// Split into multiple DataFrames partitioned by groups
     </span><span class="attr">#[cfg(feature = <span class="string">&quot;partition_by&quot;</span>)]
-    </span><span class="kw">pub fn </span>partition_by(<span class="kw-2">&amp;</span><span class="self">self</span>, cols: <span class="kw">impl </span>IntoVec&lt;String&gt;) -&gt; PolarsResult&lt;Vec&lt;DataFrame&gt;&gt; {
+    </span><span class="kw">pub fn </span>partition_by(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        cols: <span class="kw">impl </span>IntoVec&lt;String&gt;,
+        include_key: bool,
+    ) -&gt; PolarsResult&lt;Vec&lt;DataFrame&gt;&gt; {
         <span class="kw">let </span>cols = cols.into_vec();
-        <span class="self">self</span>._partition_by_impl(<span class="kw-2">&amp;</span>cols, <span class="bool-val">false</span>)
+        <span class="self">self</span>._partition_by_impl(<span class="kw-2">&amp;</span>cols, <span class="bool-val">false</span>, include_key)
     }
 
     <span class="doccomment">/// Split into multiple DataFrames partitioned by groups
     /// Order of the groups are maintained.
     </span><span class="attr">#[cfg(feature = <span class="string">&quot;partition_by&quot;</span>)]
-    </span><span class="kw">pub fn </span>partition_by_stable(<span class="kw-2">&amp;</span><span class="self">self</span>, cols: <span class="kw">impl </span>IntoVec&lt;String&gt;) -&gt; PolarsResult&lt;Vec&lt;DataFrame&gt;&gt; {
+    </span><span class="kw">pub fn </span>partition_by_stable(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        cols: <span class="kw">impl </span>IntoVec&lt;String&gt;,
+        include_key: bool,
+    ) -&gt; PolarsResult&lt;Vec&lt;DataFrame&gt;&gt; {
         <span class="kw">let </span>cols = cols.into_vec();
-        <span class="self">self</span>._partition_by_impl(<span class="kw-2">&amp;</span>cols, <span class="bool-val">true</span>)
+        <span class="self">self</span>._partition_by_impl(<span class="kw-2">&amp;</span>cols, <span class="bool-val">true</span>, include_key)
     }
 
     <span class="doccomment">/// Unnest the given `Struct` columns. This means that the fields of the `Struct` type will be
