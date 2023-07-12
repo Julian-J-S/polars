@@ -4815,7 +4815,7 @@
 
     <span class="doccomment">/// Drop columns that are in `names` without allocating a `HashSet`.
     </span><span class="kw">pub fn </span>drop_many_amortized(<span class="kw-2">&amp;</span><span class="self">self</span>, names: <span class="kw-2">&amp;</span>PlHashSet&lt;<span class="kw-2">&amp;</span>str&gt;) -&gt; DataFrame {
-        <span class="kw">let </span><span class="kw-2">mut </span>new_cols = Vec::with_capacity(<span class="self">self</span>.columns.len() - names.len());
+        <span class="kw">let </span><span class="kw-2">mut </span>new_cols = Vec::with_capacity(<span class="self">self</span>.columns.len().saturating_sub(names.len()));
         <span class="self">self</span>.columns.iter().for_each(|s| {
             <span class="kw">if </span>!names.contains(<span class="kw-2">&amp;</span>s.name()) {
                 new_cols.push(s.clone())
