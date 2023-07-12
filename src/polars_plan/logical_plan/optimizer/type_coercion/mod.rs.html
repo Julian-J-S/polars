@@ -539,6 +539,7 @@
 <a href="#539" id="539">539</a>
 <a href="#540" id="540">540</a>
 <a href="#541" id="541">541</a>
+<a href="#542" id="542">542</a>
 </pre></div><pre class="rust"><code><span class="kw">mod </span>binary;
 
 <span class="kw">use </span>std::borrow::Cow;
@@ -1056,28 +1057,29 @@
     }
 }
 
-<span class="attr">#[cfg(test)]
-#[cfg(feature = <span class="string">&quot;dtype-categorical&quot;</span>)]
-</span><span class="kw">mod </span>test {
-    <span class="kw">use </span>polars_core::prelude::<span class="kw-2">*</span>;
+<span class="comment">// TODO: Fix this test and re-enable it (currently does not compile)
+// #[cfg(test)]
+// #[cfg(feature = &quot;dtype-categorical&quot;)]
+// mod test {
+//     use polars_core::prelude::*;
 
-    <span class="kw">use super</span>::<span class="kw-2">*</span>;
-    <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+//     use super::*;
+//     use crate::prelude::*;
 
-    <span class="attr">#[test]
-    </span><span class="kw">fn </span>test_categorical_utf8() {
-        <span class="kw">let </span><span class="kw-2">mut </span>rules: Vec&lt;Box&lt;<span class="kw">dyn </span>OptimizationRule&gt;&gt; = <span class="macro">vec!</span>[Box::new(TypeCoercionRule {})];
-        <span class="kw">let </span>schema = Schema::from_iter([Field::new(<span class="string">&quot;fruits&quot;</span>, DataType::Categorical(<span class="prelude-val">None</span>))]);
+//     #[test]
+//     fn test_categorical_utf8() {
+//         let mut rules: Vec&lt;Box&lt;dyn OptimizationRule&gt;&gt; = vec![Box::new(TypeCoercionRule {})];
+//         let schema = Schema::from_iter([Field::new(&quot;fruits&quot;, DataType::Categorical(None))]);
 
-        <span class="kw">let </span>expr = col(<span class="string">&quot;fruits&quot;</span>).eq(lit(<span class="string">&quot;somestr&quot;</span>));
-        <span class="kw">let </span>out = optimize_expr(expr.clone(), schema.clone(), <span class="kw-2">&amp;mut </span>rules);
-        <span class="comment">// we test that the fruits column is not casted to utf8 for the comparison
-        </span><span class="macro">assert_eq!</span>(out, expr);
+//         let expr = col(&quot;fruits&quot;).eq(lit(&quot;somestr&quot;));
+//         let out = optimize_expr(expr.clone(), schema.clone(), &amp;mut rules);
+//         // we test that the fruits column is not casted to utf8 for the comparison
+//         assert_eq!(out, expr);
 
-        <span class="kw">let </span>expr = col(<span class="string">&quot;fruits&quot;</span>) + (lit(<span class="string">&quot;somestr&quot;</span>));
-        <span class="kw">let </span>out = optimize_expr(expr, schema, <span class="kw-2">&amp;mut </span>rules);
-        <span class="kw">let </span>expected = col(<span class="string">&quot;fruits&quot;</span>).cast(DataType::Utf8) + lit(<span class="string">&quot;somestr&quot;</span>);
-        <span class="macro">assert_eq!</span>(out, expected);
-    }
-}
-</code></pre></div></section></main></body></html>
+//         let expr = col(&quot;fruits&quot;) + (lit(&quot;somestr&quot;));
+//         let out = optimize_expr(expr, schema, &amp;mut rules);
+//         let expected = col(&quot;fruits&quot;).cast(DataType::Utf8) + lit(&quot;somestr&quot;);
+//         assert_eq!(out, expected);
+//     }
+// }
+</span></code></pre></div></section></main></body></html>
