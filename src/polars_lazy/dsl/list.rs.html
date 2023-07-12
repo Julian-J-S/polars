@@ -368,14 +368,14 @@
                         ..
                     } =&gt; {
                         <span class="macro">polars_bail!</span>(
-                            ComputeError: <span class="string">&quot;casting to categorical not allowed in `arr.eval`&quot;
+                            ComputeError: <span class="string">&quot;casting to categorical not allowed in `list.eval`&quot;
                         </span>)
                     }
                     Expr::Column(name) =&gt; {
                         <span class="macro">polars_ensure!</span>(
                             name.is_empty(),
                             ComputeError:
-                            <span class="string">&quot;named columns are not allowed in `arr.eval`; consider using `element` or `col(\&quot;\&quot;)`&quot;
+                            <span class="string">&quot;named columns are not allowed in `list.eval`; consider using `element` or `col(\&quot;\&quot;)`&quot;
                         </span>);
                     }
                     <span class="kw">_ </span>=&gt; {}
