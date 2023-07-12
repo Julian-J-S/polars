@@ -613,6 +613,8 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="../../series/api/polars.Series.rename.html">polars.Series.rename</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../series/api/polars.Series.reshape.html">polars.Series.reshape</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../series/api/polars.Series.reverse.html">polars.Series.reverse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../series/api/polars.Series.rle.html">polars.Series.rle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../series/api/polars.Series.rle_id.html">polars.Series.rle_id</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../series/api/polars.Series.round.html">polars.Series.round</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../series/api/polars.Series.sample.html">polars.Series.sample</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../series/api/polars.Series.set.html">polars.Series.set</a></li>
@@ -1269,6 +1271,8 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="polars.Expr.repeat_by.html">polars.Expr.repeat_by</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.Expr.reshape.html">polars.Expr.reshape</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.Expr.reverse.html">polars.Expr.reverse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polars.Expr.rle.html">polars.Expr.rle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polars.Expr.rle_id.html">polars.Expr.rle_id</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.Expr.round.html">polars.Expr.round</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.Expr.sample.html">polars.Expr.sample</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.Expr.shift.html">polars.Expr.shift</a></li>
@@ -1612,7 +1616,7 @@ document.write(`
 <h1>polars.Expr.implode<a class="headerlink" href="#polars-expr-implode" title="Permalink to this heading">#</a></h1>
 <dl class="py method">
 <dt class="sig sig-object py" id="polars.Expr.implode">
-<span class="sig-prename descclassname"><span class="pre">Expr.</span></span><span class="sig-name descname"><span class="pre">implode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference external" href="https://github.com/pola-rs/polars/blob/main/py-polars/polars/expr/expr.py#L3789-L3812"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polars.Expr.implode" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">Expr.</span></span><span class="sig-name descname"><span class="pre">implode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference external" href="https://github.com/pola-rs/polars/blob/main/py-polars/polars/expr/expr.py#L3846-L3869"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polars.Expr.implode" title="Permalink to this definition">#</a></dt>
 <dd><p>Aggregate values into a list.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
