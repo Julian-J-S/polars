@@ -203,6 +203,7 @@
 <a href="#203" id="203">203</a>
 <a href="#204" id="204">204</a>
 <a href="#205" id="205">205</a>
+<a href="#206" id="206">206</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>std::borrow::Cow;
 
@@ -276,7 +277,8 @@
 
     <span class="kw">fn </span>append(<span class="kw-2">&amp;mut </span><span class="self">self</span>, other: <span class="kw-2">&amp;</span>Series) -&gt; PolarsResult&lt;()&gt; {
         <span class="macro">polars_ensure!</span>(<span class="self">self</span>.<span class="number">0</span>.dtype() == other.dtype(), append);
-        <span class="self">self</span>.<span class="number">0</span>.append(other.as_ref().as_ref())
+        <span class="kw">let </span>other = other.array()<span class="question-mark">?</span>;
+        <span class="self">self</span>.<span class="number">0</span>.append(other)
     }
 
     <span class="kw">fn </span>extend(<span class="kw-2">&amp;mut </span><span class="self">self</span>, other: <span class="kw-2">&amp;</span>Series) -&gt; PolarsResult&lt;()&gt; {
