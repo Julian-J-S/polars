@@ -695,7 +695,7 @@
             </span>DataType::Categorical(<span class="kw">_</span>) =&gt; <span class="string">&quot;cat&quot;</span>,
             <span class="attr">#[cfg(feature = <span class="string">&quot;dtype-struct&quot;</span>)]
             </span>DataType::Struct(fields) =&gt; <span class="kw">return </span><span class="macro">write!</span>(f, <span class="string">&quot;struct[{}]&quot;</span>, fields.len()),
-            DataType::Unknown =&gt; <span class="macro">unreachable!</span>(),
+            DataType::Unknown =&gt; <span class="string">&quot;unknown&quot;</span>,
         };
         f.write_str(s)
     }
