@@ -1921,12 +1921,6 @@
 <a href="#1921" id="1921">1921</a>
 <a href="#1922" id="1922">1922</a>
 <a href="#1923" id="1923">1923</a>
-<a href="#1924" id="1924">1924</a>
-<a href="#1925" id="1925">1925</a>
-<a href="#1926" id="1926">1926</a>
-<a href="#1927" id="1927">1927</a>
-<a href="#1928" id="1928">1928</a>
-<a href="#1929" id="1929">1929</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(ambiguous_glob_reexports)]
 </span><span class="doccomment">//! Domain specific language for the Lazy API.
 </span><span class="attr">#[cfg(feature = <span class="string">&quot;dtype-categorical&quot;</span>)]
@@ -3675,13 +3669,7 @@
     /// This can lead to incorrect results if this `Series` is not sorted!!
     /// Use with care!
     </span><span class="kw">pub fn </span>set_sorted_flag(<span class="self">self</span>, sorted: IsSorted) -&gt; Expr {
-        <span class="self">self</span>.apply(
-            <span class="kw">move </span>|<span class="kw-2">mut </span>s| {
-                s.set_sorted_flag(sorted);
-                <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(s))
-            },
-            GetOutput::same_type(),
-        )
+        <span class="self">self</span>.apply_private(FunctionExpr::SetSortedFlag(sorted))
     }
 
     <span class="doccomment">/// Cache this expression, so that it is executed only once per context.

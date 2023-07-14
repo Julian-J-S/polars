@@ -26,6 +26,12 @@
 <a href="#26" id="26">26</a>
 <a href="#27" id="27">27</a>
 <a href="#28" id="28">28</a>
+<a href="#29" id="29">29</a>
+<a href="#30" id="30">30</a>
+<a href="#31" id="31">31</a>
+<a href="#32" id="32">32</a>
+<a href="#33" id="33">33</a>
+<a href="#34" id="34">34</a>
 </pre></div><pre class="rust"><code><span class="kw">use super</span>::<span class="kw-2">*</span>;
 
 <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>shift(s: <span class="kw-2">&amp;</span>Series, periods: i64) -&gt; PolarsResult&lt;Series&gt; {
@@ -53,5 +59,11 @@
 
 <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>to_physical(s: <span class="kw-2">&amp;</span>Series) -&gt; PolarsResult&lt;Series&gt; {
     <span class="prelude-val">Ok</span>(s.to_physical_repr().into_owned())
+}
+
+<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>set_sorted_flag(s: <span class="kw-2">&amp;</span>Series, sorted: IsSorted) -&gt; PolarsResult&lt;Series&gt; {
+    <span class="kw">let </span><span class="kw-2">mut </span>s = s.clone();
+    s.set_sorted_flag(sorted);
+    <span class="prelude-val">Ok</span>(s)
 }
 </code></pre></div></section></main></body></html>

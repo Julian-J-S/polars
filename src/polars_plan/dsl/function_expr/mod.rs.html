@@ -780,6 +780,9 @@
 <a href="#780" id="780">780</a>
 <a href="#781" id="781">781</a>
 <a href="#782" id="782">782</a>
+<a href="#783" id="783">783</a>
+<a href="#784" id="784">784</a>
+<a href="#785" id="785">785</a>
 </pre></div><pre class="rust"><code><span class="attr">#[cfg(feature = <span class="string">&quot;abs&quot;</span>)]
 </span><span class="kw">mod </span>abs;
 <span class="attr">#[cfg(feature = <span class="string">&quot;arg_where&quot;</span>)]
@@ -1012,6 +1015,7 @@
         seed: <span class="prelude-ty">Option</span>&lt;u64&gt;,
         fixed_seed: bool,
     },
+    SetSortedFlag(IsSorted),
 }
 
 <span class="kw">impl </span>Display <span class="kw">for </span>FunctionExpr {
@@ -1117,6 +1121,7 @@
             ToPhysical =&gt; <span class="string">&quot;to_physical&quot;</span>,
             <span class="attr">#[cfg(feature = <span class="string">&quot;random&quot;</span>)]
             </span>Random { method, .. } =&gt; method.into(),
+            SetSortedFlag(<span class="kw">_</span>) =&gt; <span class="string">&quot;set_sorted&quot;</span>,
         };
         <span class="macro">write!</span>(f, <span class="string">&quot;{s}&quot;</span>)
     }
@@ -1389,6 +1394,7 @@
                 seed,
                 fixed_seed
             ),
+            SetSortedFlag(sorted) =&gt; <span class="macro">map!</span>(dispatch::set_sorted_flag, sorted),
         }
     }
 }

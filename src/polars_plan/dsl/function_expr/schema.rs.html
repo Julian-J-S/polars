@@ -452,6 +452,7 @@
 <a href="#452" id="452">452</a>
 <a href="#453" id="453">453</a>
 <a href="#454" id="454">454</a>
+<a href="#455" id="455">455</a>
 </pre></div><pre class="rust"><code><span class="kw">use super</span>::<span class="kw-2">*</span>;
 
 <span class="kw">impl </span>FunctionExpr {
@@ -704,6 +705,7 @@
             ToPhysical =&gt; mapper.to_physical_type(),
             <span class="attr">#[cfg(feature = <span class="string">&quot;random&quot;</span>)]
             </span>Random { .. } =&gt; mapper.with_same_dtype(),
+            SetSortedFlag(<span class="kw">_</span>) =&gt; mapper.with_same_dtype(),
         }
     }
 }
