@@ -1501,6 +1501,11 @@
 <a href="#1501" id="1501">1501</a>
 <a href="#1502" id="1502">1502</a>
 <a href="#1503" id="1503">1503</a>
+<a href="#1504" id="1504">1504</a>
+<a href="#1505" id="1505">1505</a>
+<a href="#1506" id="1506">1506</a>
+<a href="#1507" id="1507">1507</a>
+<a href="#1508" id="1508">1508</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Lazy variant of a [DataFrame](polars_core::frame::DataFrame).
 </span><span class="attr">#[cfg(feature = <span class="string">&quot;csv&quot;</span>)]
 </span><span class="kw">mod </span>csv;
@@ -1611,6 +1616,11 @@
             logical_plan,
             opt_state,
         }
+    }
+
+    <span class="doccomment">/// Get current optimizations
+    </span><span class="kw">pub fn </span>get_current_optimizations(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; OptState {
+        <span class="self">self</span>.opt_state
     }
 
     <span class="doccomment">/// Set allowed optimizations
