@@ -882,6 +882,7 @@
 <a href="#882" id="882">882</a>
 <a href="#883" id="883">883</a>
 <a href="#884" id="884">884</a>
+<a href="#885" id="885">885</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>polars_core::prelude::{polars_bail, polars_err, PolarsError, PolarsResult};
 <span class="kw">use </span>polars_lazy::dsl::Expr;
 <span class="kw">use </span>polars_plan::dsl::count;
@@ -1264,6 +1265,7 @@
             <span class="string">&quot;min&quot;</span>,
             <span class="string">&quot;octet_length&quot;</span>,
             <span class="string">&quot;pow&quot;</span>,
+            <span class="string">&quot;power&quot;</span>,
             <span class="string">&quot;radians&quot;</span>,
             <span class="string">&quot;round&quot;</span>,
             <span class="string">&quot;rtrim&quot;</span>,
@@ -1316,7 +1318,7 @@
             <span class="string">&quot;log10&quot; </span>=&gt; <span class="self">Self</span>::Log10,
             <span class="string">&quot;log1p&quot; </span>=&gt; <span class="self">Self</span>::Log1p,
             <span class="string">&quot;log2&quot; </span>=&gt; <span class="self">Self</span>::Log2,
-            <span class="string">&quot;pow&quot; </span>=&gt; <span class="self">Self</span>::Pow,
+            <span class="string">&quot;pow&quot; </span>| <span class="string">&quot;power&quot; </span>=&gt; <span class="self">Self</span>::Pow,
             <span class="string">&quot;round&quot; </span>=&gt; <span class="self">Self</span>::Round,
 
             <span class="comment">// ----

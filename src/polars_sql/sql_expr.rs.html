@@ -537,6 +537,12 @@
 <a href="#537" id="537">537</a>
 <a href="#538" id="538">538</a>
 <a href="#539" id="539">539</a>
+<a href="#540" id="540">540</a>
+<a href="#541" id="541">541</a>
+<a href="#542" id="542">542</a>
+<a href="#543" id="543">543</a>
+<a href="#544" id="544">544</a>
+<a href="#545" id="545">545</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>polars_arrow::error::to_compute_err;
 <span class="kw">use </span>polars_core::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span>polars_lazy::dsl::Expr;
@@ -544,8 +550,8 @@
 <span class="kw">use </span>polars_plan::prelude::{col, lit, when};
 <span class="kw">use </span>sqlparser::ast::{
     ArrayAgg, BinaryOperator <span class="kw">as </span>SQLBinaryOperator, BinaryOperator, DataType <span class="kw">as </span>SQLDataType,
-    Expr <span class="kw">as </span>SqlExpr, Function <span class="kw">as </span>SQLFunction, JoinConstraint, OrderByExpr, TrimWhereField,
-    UnaryOperator, Value <span class="kw">as </span>SqlValue,
+    Expr <span class="kw">as </span>SqlExpr, Function <span class="kw">as </span>SQLFunction, JoinConstraint, OrderByExpr, SelectItem,
+    TrimWhereField, UnaryOperator, Value <span class="kw">as </span>SqlValue,
 };
 <span class="kw">use </span>sqlparser::dialect::GenericDialect;
 <span class="kw">use </span>sqlparser::parser::{Parser, ParserOptions};
@@ -1071,9 +1077,15 @@
     });
 
     <span class="kw">let </span><span class="kw-2">mut </span>ast = parser.try_with_sql(s.as_ref()).map_err(to_compute_err)<span class="question-mark">?</span>;
+    <span class="kw">let </span>expr = ast.parse_select_item().map_err(to_compute_err)<span class="question-mark">?</span>;
 
-    <span class="kw">let </span>expr = ast.parse_expr().map_err(to_compute_err)<span class="question-mark">?</span>;
-
-    parse_sql_expr(<span class="kw-2">&amp;</span>expr, <span class="kw-2">&amp;</span>ctx)
+    <span class="prelude-val">Ok</span>(<span class="kw">match </span><span class="kw-2">&amp;</span>expr {
+        SelectItem::ExprWithAlias { expr, alias } =&gt; {
+            <span class="kw">let </span>expr = parse_sql_expr(expr, <span class="kw-2">&amp;</span>ctx)<span class="question-mark">?</span>;
+            expr.alias(<span class="kw-2">&amp;</span>alias.value)
+        }
+        SelectItem::UnnamedExpr(expr) =&gt; parse_sql_expr(expr, <span class="kw-2">&amp;</span>ctx)<span class="question-mark">?</span>,
+        <span class="kw">_ </span>=&gt; <span class="macro">polars_bail!</span>(InvalidOperation: <span class="string">&quot;Unable to parse &#39;{}&#39; as Expr&quot;</span>, s.as_ref()),
+    })
 }
 </code></pre></div></section></main></body></html>
