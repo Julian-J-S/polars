@@ -1065,7 +1065,7 @@
                 <span class="attr">#[cfg(debug_assertions)]
                 </span>{
                     <span class="kw">if </span><span class="self">self</span>.groups.len() &gt; s.len() {
-                        <span class="macro">eprintln!</span>(<span class="string">&quot;groups may be out of bounds; more groups than elements in a series is only possible in dynamic groupby&quot;</span>)
+                        <span class="macro">polars_warn!</span>(<span class="string">&quot;groups may be out of bounds; more groups than elements in a series is only possible in dynamic groupby&quot;</span>)
                     }
                 }
 

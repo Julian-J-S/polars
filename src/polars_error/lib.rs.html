@@ -250,11 +250,19 @@
 <a href="#250" id="250">250</a>
 <a href="#251" id="251">251</a>
 <a href="#252" id="252">252</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span>std::borrow::Cow;
+<a href="#253" id="253">253</a>
+<a href="#254" id="254">254</a>
+<a href="#255" id="255">255</a>
+<a href="#256" id="256">256</a>
+</pre></div><pre class="rust"><code><span class="kw">mod </span>warning;
+
+<span class="kw">use </span>std::borrow::Cow;
 <span class="kw">use </span>std::error::Error;
 <span class="kw">use </span>std::fmt::{<span class="self">self</span>, Display, Formatter};
 <span class="kw">use </span>std::ops::Deref;
 <span class="kw">use </span>std::{env, io};
+
+<span class="kw">pub use </span>warning::<span class="kw-2">*</span>;
 
 <span class="attr">#[derive(Debug)]
 </span><span class="kw">pub struct </span>ErrString(Cow&lt;<span class="lifetime">&#39;static</span>, str&gt;);

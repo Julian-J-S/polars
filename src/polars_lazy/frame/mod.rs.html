@@ -1985,7 +1985,7 @@
         <span class="kw">let </span>streaming = <span class="self">self</span>.opt_state.streaming;
         <span class="attr">#[cfg(feature = <span class="string">&quot;cse&quot;</span>)]
         </span><span class="kw">if </span>streaming &amp;&amp; <span class="self">self</span>.opt_state.common_subplan_elimination {
-            <span class="macro">eprintln!</span>(<span class="string">&quot;Cannot combine &#39;streaming&#39; with &#39;common_subplan_elimination&#39;. CSE will be turned off.&quot;</span>);
+            <span class="macro">polars_warn!</span>(<span class="string">&quot;Cannot combine &#39;streaming&#39; with &#39;common_subplan_elimination&#39;. CSE will be turned off.&quot;</span>);
             opt_state.common_subplan_elimination = <span class="bool-val">false</span>;
         }
         <span class="kw">let </span>lp_top = optimize(<span class="self">self</span>.logical_plan, opt_state, lp_arena, expr_arena, scratch)<span class="question-mark">?</span>;

@@ -52,6 +52,8 @@
 <a href="#52" id="52">52</a>
 <a href="#53" id="53">53</a>
 <a href="#54" id="54">54</a>
+<a href="#55" id="55">55</a>
+<a href="#56" id="56">56</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Everything you need to get started with Polars.
 </span><span class="kw">pub use </span>std::sync::Arc;
 
@@ -86,7 +88,9 @@
 <span class="kw">pub use </span><span class="kw">crate</span>::chunked_array::ChunkedArray;
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use </span><span class="kw">crate</span>::chunked_array::{to_array, ChunkIdIter};
 <span class="kw">pub use </span><span class="kw">crate</span>::datatypes::<span class="kw-2">*</span>;
-<span class="kw">pub use </span><span class="kw">crate</span>::error::{polars_bail, polars_ensure, polars_err, PolarsError, PolarsResult};
+<span class="kw">pub use </span><span class="kw">crate</span>::error::{
+    polars_bail, polars_ensure, polars_err, polars_warn, PolarsError, PolarsResult,
+};
 <span class="attr">#[cfg(feature = <span class="string">&quot;asof_join&quot;</span>)]
 </span><span class="kw">pub use </span><span class="kw">crate</span>::frame::asof_join::<span class="kw-2">*</span>;
 <span class="kw">pub use </span><span class="kw">crate</span>::frame::explode::MeltArgs;
