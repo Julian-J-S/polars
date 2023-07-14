@@ -485,6 +485,18 @@
 <a href="#485" id="485">485</a>
 <a href="#486" id="486">486</a>
 <a href="#487" id="487">487</a>
+<a href="#488" id="488">488</a>
+<a href="#489" id="489">489</a>
+<a href="#490" id="490">490</a>
+<a href="#491" id="491">491</a>
+<a href="#492" id="492">492</a>
+<a href="#493" id="493">493</a>
+<a href="#494" id="494">494</a>
+<a href="#495" id="495">495</a>
+<a href="#496" id="496">496</a>
+<a href="#497" id="497">497</a>
+<a href="#498" id="498">498</a>
+<a href="#499" id="499">499</a>
 </pre></div><pre class="rust"><code><span class="attr">#[cfg(feature = <span class="string">&quot;dtype-struct&quot;</span>)]
 </span><span class="kw">use </span>polars_arrow::export::arrow::array::{MutableArray, MutableUtf8Array};
 <span class="attr">#[cfg(feature = <span class="string">&quot;dtype-struct&quot;</span>)]
@@ -942,12 +954,24 @@
     }
 
     <span class="attr">#[cfg(feature = <span class="string">&quot;string_from_radix&quot;</span>)]
-    </span><span class="doccomment">/// Parse string in base radix into decimal
+    </span><span class="doccomment">/// Parse string in base radix into decimal.
     </span><span class="kw">pub fn </span>from_radix(<span class="self">self</span>, radix: u32, strict: bool) -&gt; Expr {
         <span class="self">self</span>.<span class="number">0
             </span>.map_private(FunctionExpr::StringExpr(StringFunction::FromRadix(
                 radix, strict,
             )))
+    }
+
+    <span class="doccomment">/// Return the number of characters in the string (not bytes).
+    </span><span class="kw">pub fn </span>n_chars(<span class="self">self</span>) -&gt; Expr {
+        <span class="self">self</span>.<span class="number">0
+            </span>.map_private(FunctionExpr::StringExpr(StringFunction::NChars))
+    }
+
+    <span class="doccomment">/// Return the number of bytes in the string (not characters).
+    </span><span class="kw">pub fn </span>lengths(<span class="self">self</span>) -&gt; Expr {
+        <span class="self">self</span>.<span class="number">0
+            </span>.map_private(FunctionExpr::StringExpr(StringFunction::Length))
     }
 
     <span class="doccomment">/// Slice the string values.

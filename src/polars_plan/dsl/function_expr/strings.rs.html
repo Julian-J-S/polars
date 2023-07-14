@@ -694,6 +694,21 @@
 <a href="#694" id="694">694</a>
 <a href="#695" id="695">695</a>
 <a href="#696" id="696">696</a>
+<a href="#697" id="697">697</a>
+<a href="#698" id="698">698</a>
+<a href="#699" id="699">699</a>
+<a href="#700" id="700">700</a>
+<a href="#701" id="701">701</a>
+<a href="#702" id="702">702</a>
+<a href="#703" id="703">703</a>
+<a href="#704" id="704">704</a>
+<a href="#705" id="705">705</a>
+<a href="#706" id="706">706</a>
+<a href="#707" id="707">707</a>
+<a href="#708" id="708">708</a>
+<a href="#709" id="709">709</a>
+<a href="#710" id="710">710</a>
+<a href="#711" id="711">711</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::borrow::Cow;
 
 <span class="attr">#[cfg(feature = <span class="string">&quot;timezones&quot;</span>)]
@@ -713,37 +728,39 @@
 <span class="attr">#[cfg_attr(feature = <span class="string">&quot;serde&quot;</span>, derive(Serialize, Deserialize))]
 #[derive(Clone, PartialEq, Debug, Eq, Hash)]
 </span><span class="kw">pub enum </span>StringFunction {
+    <span class="attr">#[cfg(feature = <span class="string">&quot;concat_str&quot;</span>)]
+    </span>ConcatHorizontal(String),
+    <span class="attr">#[cfg(feature = <span class="string">&quot;concat_str&quot;</span>)]
+    </span>ConcatVertical(String),
     <span class="attr">#[cfg(feature = <span class="string">&quot;regex&quot;</span>)]
     </span>Contains {
         literal: bool,
         strict: bool,
     },
-    StartsWith,
+    CountMatch(String),
     EndsWith,
+    Explode,
     Extract {
         pat: String,
         group_index: usize,
     },
-    <span class="attr">#[cfg(feature = <span class="string">&quot;string_justify&quot;</span>)]
-    </span>Zfill(usize),
+    ExtractAll,
+    <span class="attr">#[cfg(feature = <span class="string">&quot;string_from_radix&quot;</span>)]
+    </span>FromRadix(u32, bool),
+    NChars,
+    Length,
     <span class="attr">#[cfg(feature = <span class="string">&quot;string_justify&quot;</span>)]
     </span>LJust {
         width: usize,
         fillchar: char,
     },
-    <span class="attr">#[cfg(feature = <span class="string">&quot;string_justify&quot;</span>)]
-    </span>RJust {
-        width: usize,
-        fillchar: char,
+    Lowercase,
+    LStrip(<span class="prelude-ty">Option</span>&lt;String&gt;),
+    <span class="attr">#[cfg(feature = <span class="string">&quot;extract_jsonpath&quot;</span>)]
+    </span>JsonExtract {
+        dtype: <span class="prelude-ty">Option</span>&lt;DataType&gt;,
+        infer_schema_len: <span class="prelude-ty">Option</span>&lt;usize&gt;,
     },
-    ExtractAll,
-    CountMatch(String),
-    <span class="attr">#[cfg(feature = <span class="string">&quot;temporal&quot;</span>)]
-    </span>Strptime(DataType, StrptimeOptions),
-    <span class="attr">#[cfg(feature = <span class="string">&quot;concat_str&quot;</span>)]
-    </span>ConcatVertical(String),
-    <span class="attr">#[cfg(feature = <span class="string">&quot;concat_str&quot;</span>)]
-    </span>ConcatHorizontal(String),
     <span class="attr">#[cfg(feature = <span class="string">&quot;regex&quot;</span>)]
     </span>Replace {
         <span class="comment">// negative is replace all
@@ -751,56 +768,58 @@
         </span>n: i64,
         literal: bool,
     },
-    Uppercase,
-    Lowercase,
-    <span class="attr">#[cfg(feature = <span class="string">&quot;nightly&quot;</span>)]
-    </span>Titlecase,
-    Strip(<span class="prelude-ty">Option</span>&lt;String&gt;),
+    <span class="attr">#[cfg(feature = <span class="string">&quot;string_justify&quot;</span>)]
+    </span>RJust {
+        width: usize,
+        fillchar: char,
+    },
     RStrip(<span class="prelude-ty">Option</span>&lt;String&gt;),
-    LStrip(<span class="prelude-ty">Option</span>&lt;String&gt;),
-    <span class="attr">#[cfg(feature = <span class="string">&quot;string_from_radix&quot;</span>)]
-    </span>FromRadix(u32, bool),
     Slice(i64, <span class="prelude-ty">Option</span>&lt;u64&gt;),
-    Explode,
+    StartsWith,
+    Strip(<span class="prelude-ty">Option</span>&lt;String&gt;),
+    <span class="attr">#[cfg(feature = <span class="string">&quot;temporal&quot;</span>)]
+    </span>Strptime(DataType, StrptimeOptions),
     <span class="attr">#[cfg(feature = <span class="string">&quot;dtype-decimal&quot;</span>)]
     </span>ToDecimal(usize),
-    <span class="attr">#[cfg(feature = <span class="string">&quot;extract_jsonpath&quot;</span>)]
-    </span>JsonExtract {
-        dtype: <span class="prelude-ty">Option</span>&lt;DataType&gt;,
-        infer_schema_len: <span class="prelude-ty">Option</span>&lt;usize&gt;,
-    },
+    <span class="attr">#[cfg(feature = <span class="string">&quot;nightly&quot;</span>)]
+    </span>Titlecase,
+    Uppercase,
+    <span class="attr">#[cfg(feature = <span class="string">&quot;string_justify&quot;</span>)]
+    </span>Zfill(usize),
 }
 
 <span class="kw">impl </span>StringFunction {
     <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>get_field(<span class="kw-2">&amp;</span><span class="self">self</span>, mapper: FieldsMapper) -&gt; PolarsResult&lt;Field&gt; {
         <span class="kw">use </span>StringFunction::<span class="kw-2">*</span>;
         <span class="kw">match </span><span class="self">self </span>{
-            <span class="attr">#[cfg(feature = <span class="string">&quot;regex&quot;</span>)]
-            </span>Contains { .. } =&gt; mapper.with_dtype(DataType::Boolean),
-            EndsWith | StartsWith =&gt; mapper.with_dtype(DataType::Boolean),
-            Extract { .. } =&gt; mapper.with_same_dtype(),
-            ExtractAll =&gt; mapper.with_dtype(DataType::List(Box::new(DataType::Utf8))),
-            CountMatch(<span class="kw">_</span>) =&gt; mapper.with_dtype(DataType::UInt32),
-            <span class="attr">#[cfg(feature = <span class="string">&quot;string_justify&quot;</span>)]
-            </span>Zfill { .. } | LJust { .. } | RJust { .. } =&gt; mapper.with_same_dtype(),
-            <span class="attr">#[cfg(feature = <span class="string">&quot;temporal&quot;</span>)]
-            </span>Strptime(dtype, <span class="kw">_</span>) =&gt; mapper.with_dtype(dtype.clone()),
             <span class="attr">#[cfg(feature = <span class="string">&quot;concat_str&quot;</span>)]
             </span>ConcatVertical(<span class="kw">_</span>) | ConcatHorizontal(<span class="kw">_</span>) =&gt; mapper.with_same_dtype(),
             <span class="attr">#[cfg(feature = <span class="string">&quot;regex&quot;</span>)]
+            </span>Contains { .. } =&gt; mapper.with_dtype(DataType::Boolean),
+            CountMatch(<span class="kw">_</span>) =&gt; mapper.with_dtype(DataType::UInt32),
+            EndsWith | StartsWith =&gt; mapper.with_dtype(DataType::Boolean),
+            Explode =&gt; mapper.with_same_dtype(),
+            Extract { .. } =&gt; mapper.with_same_dtype(),
+            ExtractAll =&gt; mapper.with_dtype(DataType::List(Box::new(DataType::Utf8))),
+            <span class="attr">#[cfg(feature = <span class="string">&quot;string_from_radix&quot;</span>)]
+            </span>FromRadix { .. } =&gt; mapper.with_dtype(DataType::Int32),
+            <span class="attr">#[cfg(feature = <span class="string">&quot;extract_jsonpath&quot;</span>)]
+            </span>JsonExtract { dtype, .. } =&gt; mapper.with_opt_dtype(dtype.clone()),
+            Length =&gt; mapper.with_dtype(DataType::UInt32),
+            NChars =&gt; mapper.with_dtype(DataType::UInt32),
+            <span class="attr">#[cfg(feature = <span class="string">&quot;regex&quot;</span>)]
             </span>Replace { .. } =&gt; mapper.with_same_dtype(),
+            <span class="attr">#[cfg(feature = <span class="string">&quot;temporal&quot;</span>)]
+            </span>Strptime(dtype, <span class="kw">_</span>) =&gt; mapper.with_dtype(dtype.clone()),
+            <span class="attr">#[cfg(feature = <span class="string">&quot;nightly&quot;</span>)]
+            </span>Titlecase =&gt; mapper.with_same_dtype(),
+            <span class="attr">#[cfg(feature = <span class="string">&quot;dtype-decimal&quot;</span>)]
+            </span>ToDecimal(<span class="kw">_</span>) =&gt; mapper.with_dtype(DataType::Decimal(<span class="prelude-val">None</span>, <span class="prelude-val">None</span>)),
             Uppercase | Lowercase | Strip(<span class="kw">_</span>) | LStrip(<span class="kw">_</span>) | RStrip(<span class="kw">_</span>) | Slice(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; {
                 mapper.with_same_dtype()
             }
-            <span class="attr">#[cfg(feature = <span class="string">&quot;nightly&quot;</span>)]
-            </span>Titlecase =&gt; mapper.with_same_dtype(),
-            <span class="attr">#[cfg(feature = <span class="string">&quot;string_from_radix&quot;</span>)]
-            </span>FromRadix { .. } =&gt; mapper.with_dtype(DataType::Int32),
-            Explode =&gt; mapper.with_same_dtype(),
-            <span class="attr">#[cfg(feature = <span class="string">&quot;dtype-decimal&quot;</span>)]
-            </span>ToDecimal(<span class="kw">_</span>) =&gt; mapper.with_dtype(DataType::Decimal(<span class="prelude-val">None</span>, <span class="prelude-val">None</span>)),
-            <span class="attr">#[cfg(feature = <span class="string">&quot;extract_jsonpath&quot;</span>)]
-            </span>JsonExtract { dtype, .. } =&gt; mapper.with_opt_dtype(dtype.clone()),
+            <span class="attr">#[cfg(feature = <span class="string">&quot;string_justify&quot;</span>)]
+            </span>Zfill { .. } | LJust { .. } | RJust { .. } =&gt; mapper.with_same_dtype(),
         }
     }
 }
@@ -810,42 +829,43 @@
         <span class="kw">let </span>s = <span class="kw">match </span><span class="self">self </span>{
             <span class="attr">#[cfg(feature = <span class="string">&quot;regex&quot;</span>)]
             </span>StringFunction::Contains { .. } =&gt; <span class="string">&quot;contains&quot;</span>,
-            StringFunction::StartsWith { .. } =&gt; <span class="string">&quot;starts_with&quot;</span>,
+            StringFunction::CountMatch(<span class="kw">_</span>) =&gt; <span class="string">&quot;count_match&quot;</span>,
             StringFunction::EndsWith { .. } =&gt; <span class="string">&quot;ends_with&quot;</span>,
             StringFunction::Extract { .. } =&gt; <span class="string">&quot;extract&quot;</span>,
-            <span class="attr">#[cfg(feature = <span class="string">&quot;string_justify&quot;</span>)]
-            </span>StringFunction::Zfill(<span class="kw">_</span>) =&gt; <span class="string">&quot;zfill&quot;</span>,
-            <span class="attr">#[cfg(feature = <span class="string">&quot;string_justify&quot;</span>)]
-            </span>StringFunction::LJust { .. } =&gt; <span class="string">&quot;str.ljust&quot;</span>,
-            <span class="attr">#[cfg(feature = <span class="string">&quot;string_justify&quot;</span>)]
-            </span>StringFunction::RJust { .. } =&gt; <span class="string">&quot;rjust&quot;</span>,
-            StringFunction::ExtractAll =&gt; <span class="string">&quot;extract_all&quot;</span>,
-            StringFunction::CountMatch(<span class="kw">_</span>) =&gt; <span class="string">&quot;count_match&quot;</span>,
-            <span class="attr">#[cfg(feature = <span class="string">&quot;temporal&quot;</span>)]
-            </span>StringFunction::Strptime(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; <span class="string">&quot;strptime&quot;</span>,
-            <span class="attr">#[cfg(feature = <span class="string">&quot;concat_str&quot;</span>)]
-            </span>StringFunction::ConcatVertical(<span class="kw">_</span>) =&gt; <span class="string">&quot;concat_vertical&quot;</span>,
             <span class="attr">#[cfg(feature = <span class="string">&quot;concat_str&quot;</span>)]
             </span>StringFunction::ConcatHorizontal(<span class="kw">_</span>) =&gt; <span class="string">&quot;concat_horizontal&quot;</span>,
-            <span class="attr">#[cfg(feature = <span class="string">&quot;regex&quot;</span>)]
-            </span>StringFunction::Replace { .. } =&gt; <span class="string">&quot;replace&quot;</span>,
-            StringFunction::Uppercase =&gt; <span class="string">&quot;uppercase&quot;</span>,
-            StringFunction::Lowercase =&gt; <span class="string">&quot;lowercase&quot;</span>,
-            <span class="attr">#[cfg(feature = <span class="string">&quot;nightly&quot;</span>)]
-            </span>StringFunction::Titlecase =&gt; <span class="string">&quot;titlecase&quot;</span>,
-            StringFunction::Strip(<span class="kw">_</span>) =&gt; <span class="string">&quot;strip&quot;</span>,
-            StringFunction::LStrip(<span class="kw">_</span>) =&gt; <span class="string">&quot;lstrip&quot;</span>,
-            StringFunction::RStrip(<span class="kw">_</span>) =&gt; <span class="string">&quot;rstrip&quot;</span>,
+            <span class="attr">#[cfg(feature = <span class="string">&quot;concat_str&quot;</span>)]
+            </span>StringFunction::ConcatVertical(<span class="kw">_</span>) =&gt; <span class="string">&quot;concat_vertical&quot;</span>,
+            StringFunction::Explode =&gt; <span class="string">&quot;explode&quot;</span>,
+            StringFunction::ExtractAll =&gt; <span class="string">&quot;extract_all&quot;</span>,
             <span class="attr">#[cfg(feature = <span class="string">&quot;string_from_radix&quot;</span>)]
             </span>StringFunction::FromRadix { .. } =&gt; <span class="string">&quot;from_radix&quot;</span>,
-            StringFunction::Slice(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; <span class="string">&quot;str_slice&quot;</span>,
-            StringFunction::Explode =&gt; <span class="string">&quot;explode&quot;</span>,
-            <span class="attr">#[cfg(feature = <span class="string">&quot;dtype-decimal&quot;</span>)]
-            </span>StringFunction::ToDecimal(<span class="kw">_</span>) =&gt; <span class="string">&quot;to_decimal&quot;</span>,
             <span class="attr">#[cfg(feature = <span class="string">&quot;extract_jsonpath&quot;</span>)]
             </span>StringFunction::JsonExtract { .. } =&gt; <span class="string">&quot;json_extract&quot;</span>,
+            <span class="attr">#[cfg(feature = <span class="string">&quot;string_justify&quot;</span>)]
+            </span>StringFunction::LJust { .. } =&gt; <span class="string">&quot;str.ljust&quot;</span>,
+            StringFunction::LStrip(<span class="kw">_</span>) =&gt; <span class="string">&quot;lstrip&quot;</span>,
+            StringFunction::Length =&gt; <span class="string">&quot;str_lengths&quot;</span>,
+            StringFunction::Lowercase =&gt; <span class="string">&quot;lowercase&quot;</span>,
+            StringFunction::NChars =&gt; <span class="string">&quot;n_chars&quot;</span>,
+            <span class="attr">#[cfg(feature = <span class="string">&quot;string_justify&quot;</span>)]
+            </span>StringFunction::RJust { .. } =&gt; <span class="string">&quot;rjust&quot;</span>,
+            StringFunction::RStrip(<span class="kw">_</span>) =&gt; <span class="string">&quot;rstrip&quot;</span>,
+            <span class="attr">#[cfg(feature = <span class="string">&quot;regex&quot;</span>)]
+            </span>StringFunction::Replace { .. } =&gt; <span class="string">&quot;replace&quot;</span>,
+            StringFunction::Slice(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; <span class="string">&quot;str_slice&quot;</span>,
+            StringFunction::StartsWith { .. } =&gt; <span class="string">&quot;starts_with&quot;</span>,
+            StringFunction::Strip(<span class="kw">_</span>) =&gt; <span class="string">&quot;strip&quot;</span>,
+            <span class="attr">#[cfg(feature = <span class="string">&quot;temporal&quot;</span>)]
+            </span>StringFunction::Strptime(<span class="kw">_</span>, <span class="kw">_</span>) =&gt; <span class="string">&quot;strptime&quot;</span>,
+            <span class="attr">#[cfg(feature = <span class="string">&quot;nightly&quot;</span>)]
+            </span>StringFunction::Titlecase =&gt; <span class="string">&quot;titlecase&quot;</span>,
+            <span class="attr">#[cfg(feature = <span class="string">&quot;dtype-decimal&quot;</span>)]
+            </span>StringFunction::ToDecimal(<span class="kw">_</span>) =&gt; <span class="string">&quot;to_decimal&quot;</span>,
+            StringFunction::Uppercase =&gt; <span class="string">&quot;uppercase&quot;</span>,
+            <span class="attr">#[cfg(feature = <span class="string">&quot;string_justify&quot;</span>)]
+            </span>StringFunction::Zfill(<span class="kw">_</span>) =&gt; <span class="string">&quot;zfill&quot;</span>,
         };
-
         <span class="macro">write!</span>(f, <span class="string">&quot;str.{s}&quot;</span>)
     }
 }
@@ -864,6 +884,16 @@
 </span><span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>titlecase(s: <span class="kw-2">&amp;</span>Series) -&gt; PolarsResult&lt;Series&gt; {
     <span class="kw">let </span>ca = s.utf8()<span class="question-mark">?</span>;
     <span class="prelude-val">Ok</span>(ca.to_titlecase().into_series())
+}
+
+<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>n_chars(s: <span class="kw-2">&amp;</span>Series) -&gt; PolarsResult&lt;Series&gt; {
+    <span class="kw">let </span>ca = s.utf8()<span class="question-mark">?</span>;
+    <span class="prelude-val">Ok</span>(ca.str_n_chars().into_series())
+}
+
+<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn </span>lengths(s: <span class="kw-2">&amp;</span>Series) -&gt; PolarsResult&lt;Series&gt; {
+    <span class="kw">let </span>ca = s.utf8()<span class="question-mark">?</span>;
+    <span class="prelude-val">Ok</span>(ca.str_lengths().into_series())
 }
 
 <span class="attr">#[cfg(feature = <span class="string">&quot;regex&quot;</span>)]

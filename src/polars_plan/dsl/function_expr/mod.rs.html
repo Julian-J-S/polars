@@ -778,6 +778,8 @@
 <a href="#778" id="778">778</a>
 <a href="#779" id="779">779</a>
 <a href="#780" id="780">780</a>
+<a href="#781" id="781">781</a>
+<a href="#782" id="782">782</a>
 </pre></div><pre class="rust"><code><span class="attr">#[cfg(feature = <span class="string">&quot;abs&quot;</span>)]
 </span><span class="kw">mod </span>abs;
 <span class="attr">#[cfg(feature = <span class="string">&quot;arg_where&quot;</span>)]
@@ -1398,6 +1400,9 @@
         <span class="kw">match </span>func {
             <span class="attr">#[cfg(feature = <span class="string">&quot;regex&quot;</span>)]
             </span>Contains { literal, strict } =&gt; <span class="macro">map_as_slice!</span>(strings::contains, literal, strict),
+            CountMatch(pat) =&gt; {
+                <span class="macro">map!</span>(strings::count_match, <span class="kw-2">&amp;</span>pat)
+            }
             EndsWith { .. } =&gt; <span class="macro">map_as_slice!</span>(strings::ends_with),
             StartsWith { .. } =&gt; <span class="macro">map_as_slice!</span>(strings::starts_with),
             Extract { pat, group_index } =&gt; {
@@ -1406,9 +1411,8 @@
             ExtractAll =&gt; {
                 <span class="macro">map_as_slice!</span>(strings::extract_all)
             }
-            CountMatch(pat) =&gt; {
-                <span class="macro">map!</span>(strings::count_match, <span class="kw-2">&amp;</span>pat)
-            }
+            NChars =&gt; <span class="macro">map!</span>(strings::n_chars),
+            Length =&gt; <span class="macro">map!</span>(strings::lengths),
             <span class="attr">#[cfg(feature = <span class="string">&quot;string_justify&quot;</span>)]
             </span>Zfill(alignment) =&gt; {
                 <span class="macro">map!</span>(strings::zfill, alignment)
