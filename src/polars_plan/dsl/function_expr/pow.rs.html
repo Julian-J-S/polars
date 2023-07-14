@@ -105,13 +105,13 @@
     ChunkedArray&lt;T&gt;: IntoSeries,
 {
     <span class="kw">let </span>dtype = T::get_dtype();
-    <span class="kw">let </span>exponent = exponent.cast(<span class="kw-2">&amp;</span>dtype)<span class="question-mark">?</span>;
+    <span class="kw">let </span>exponent = exponent.strict_cast(<span class="kw-2">&amp;</span>dtype)<span class="question-mark">?</span>;
     <span class="kw">let </span>exponent = base.unpack_series_matching_type(<span class="kw-2">&amp;</span>exponent).unwrap();
 
     <span class="kw">if </span>exponent.len() == <span class="number">1 </span>{
-        <span class="kw">let </span>exponent_value = exponent
-            .get(<span class="number">0</span>)
-            .ok_or_else(|| <span class="macro">polars_err!</span>(ComputeError: <span class="string">&quot;exponent is null&quot;</span>))<span class="question-mark">?</span>;
+        <span class="kw">let </span><span class="prelude-val">Some</span>(exponent_value) = exponent.get(<span class="number">0</span>) <span class="kw">else </span>{
+            <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(Series::full_null(base.name(), base.len(), <span class="kw-2">&amp;</span>dtype)))
+        };
         <span class="kw">let </span>s = <span class="kw">match </span>exponent_value.to_f64().unwrap() {
             a <span class="kw">if </span>a == <span class="number">1.0 </span>=&gt; base.clone().into_series(),
             <span class="comment">// specialized sqrt will ensure (-inf)^0.5 = NaN
