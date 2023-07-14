@@ -306,6 +306,56 @@
 <a href="#306" id="306">306</a>
 <a href="#307" id="307">307</a>
 <a href="#308" id="308">308</a>
+<a href="#309" id="309">309</a>
+<a href="#310" id="310">310</a>
+<a href="#311" id="311">311</a>
+<a href="#312" id="312">312</a>
+<a href="#313" id="313">313</a>
+<a href="#314" id="314">314</a>
+<a href="#315" id="315">315</a>
+<a href="#316" id="316">316</a>
+<a href="#317" id="317">317</a>
+<a href="#318" id="318">318</a>
+<a href="#319" id="319">319</a>
+<a href="#320" id="320">320</a>
+<a href="#321" id="321">321</a>
+<a href="#322" id="322">322</a>
+<a href="#323" id="323">323</a>
+<a href="#324" id="324">324</a>
+<a href="#325" id="325">325</a>
+<a href="#326" id="326">326</a>
+<a href="#327" id="327">327</a>
+<a href="#328" id="328">328</a>
+<a href="#329" id="329">329</a>
+<a href="#330" id="330">330</a>
+<a href="#331" id="331">331</a>
+<a href="#332" id="332">332</a>
+<a href="#333" id="333">333</a>
+<a href="#334" id="334">334</a>
+<a href="#335" id="335">335</a>
+<a href="#336" id="336">336</a>
+<a href="#337" id="337">337</a>
+<a href="#338" id="338">338</a>
+<a href="#339" id="339">339</a>
+<a href="#340" id="340">340</a>
+<a href="#341" id="341">341</a>
+<a href="#342" id="342">342</a>
+<a href="#343" id="343">343</a>
+<a href="#344" id="344">344</a>
+<a href="#345" id="345">345</a>
+<a href="#346" id="346">346</a>
+<a href="#347" id="347">347</a>
+<a href="#348" id="348">348</a>
+<a href="#349" id="349">349</a>
+<a href="#350" id="350">350</a>
+<a href="#351" id="351">351</a>
+<a href="#352" id="352">352</a>
+<a href="#353" id="353">353</a>
+<a href="#354" id="354">354</a>
+<a href="#355" id="355">355</a>
+<a href="#356" id="356">356</a>
+<a href="#357" id="357">357</a>
+<a href="#358" id="358">358</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! # (De)serialize JSON files.
 //!
 //! ## Read JSON to a DataFrame
@@ -465,20 +515,22 @@
 
 <span class="doccomment">/// Reads JSON in one of the formats in [`JsonFormat`] into a DataFrame.
 </span><span class="attr">#[must_use]
-</span><span class="kw">pub struct </span>JsonReader&lt;R&gt;
+</span><span class="kw">pub struct </span>JsonReader&lt;<span class="lifetime">&#39;a</span>, R&gt;
 <span class="kw">where
     </span>R: MmapBytesReader,
 {
     reader: R,
     rechunk: bool,
+    ignore_errors: bool,
     infer_schema_len: <span class="prelude-ty">Option</span>&lt;usize&gt;,
     batch_size: usize,
     projection: <span class="prelude-ty">Option</span>&lt;Vec&lt;String&gt;&gt;,
-    schema: <span class="prelude-ty">Option</span>&lt;ArrowSchema&gt;,
+    schema: <span class="prelude-ty">Option</span>&lt;SchemaRef&gt;,
+    schema_overwrite: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Schema&gt;,
     json_format: JsonFormat,
 }
 
-<span class="kw">impl</span>&lt;R&gt; SerReader&lt;R&gt; <span class="kw">for </span>JsonReader&lt;R&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R&gt; SerReader&lt;R&gt; <span class="kw">for </span>JsonReader&lt;<span class="lifetime">&#39;a</span>, R&gt;
 <span class="kw">where
     </span>R: MmapBytesReader,
 {
@@ -486,10 +538,12 @@
         JsonReader {
             reader,
             rechunk: <span class="bool-val">true</span>,
+            ignore_errors: <span class="bool-val">false</span>,
             infer_schema_len: <span class="prelude-val">Some</span>(<span class="number">100</span>),
             batch_size: <span class="number">8192</span>,
             projection: <span class="prelude-val">None</span>,
             schema: <span class="prelude-val">None</span>,
+            schema_overwrite: <span class="prelude-val">None</span>,
             json_format: JsonFormat::Json,
         }
     }
@@ -509,32 +563,63 @@
 
         <span class="kw">let </span>out = <span class="kw">match </span><span class="self">self</span>.json_format {
             JsonFormat::Json =&gt; {
+                <span class="macro">polars_ensure!</span>(!<span class="self">self</span>.ignore_errors, InvalidOperation: <span class="string">&quot;&#39;ignore_errors&#39; only supported in ndjson&quot;</span>);
                 <span class="kw">let </span><span class="kw-2">mut </span>bytes = rb.deref().to_vec();
                 <span class="kw">let </span>json_value =
                     simd_json::to_borrowed_value(<span class="kw-2">&amp;mut </span>bytes).map_err(to_compute_err)<span class="question-mark">?</span>;
 
-                <span class="comment">// likely struct type
-                </span><span class="kw">let </span>dtype = <span class="kw">if let </span>BorrowedValue::Array(values) = <span class="kw-2">&amp;</span>json_value {
-                    <span class="comment">// struct types may have missing fields so find supertype
-                    </span><span class="kw">let </span>dtype = values
-                        .iter()
-                        .take(<span class="self">self</span>.infer_schema_len.unwrap_or(usize::MAX))
-                        .map(|value| {
-                            infer(value)
-                                .map_err(PolarsError::from)
-                                .map(|dt| DataType::from(<span class="kw-2">&amp;</span>dt))
-                        })
-                        .fold_first_(|l, r| {
-                            <span class="kw">let </span>l = l<span class="question-mark">?</span>;
-                            <span class="kw">let </span>r = r<span class="question-mark">?</span>;
-                            try_get_supertype(<span class="kw-2">&amp;</span>l, <span class="kw-2">&amp;</span>r)
-                        })
-                        .unwrap()<span class="question-mark">?</span>;
-                    <span class="kw">let </span>dtype = DataType::List(Box::new(dtype));
-                    dtype.to_arrow()
+                <span class="comment">// struct type
+                </span><span class="kw">let </span>dtype = <span class="kw">if let </span><span class="prelude-val">Some</span>(<span class="kw-2">mut </span>schema) = <span class="self">self</span>.schema {
+                    <span class="kw">if let </span><span class="prelude-val">Some</span>(overwrite) = <span class="self">self</span>.schema_overwrite {
+                        <span class="kw">let </span>mut_schema = Arc::make_mut(<span class="kw-2">&amp;mut </span>schema);
+                        overwrite_schema(mut_schema, overwrite)<span class="question-mark">?</span>;
+                    }
+                    DataType::Struct(schema.iter_fields().collect()).to_arrow()
                 } <span class="kw">else </span>{
-                    infer(<span class="kw-2">&amp;</span>json_value)<span class="question-mark">?
-                </span>};
+                    <span class="comment">// infer
+                    </span><span class="kw">if let </span>BorrowedValue::Array(values) = <span class="kw-2">&amp;</span>json_value {
+                        <span class="macro">polars_ensure!</span>(<span class="self">self</span>.schema_overwrite.is_none() &amp;&amp; <span class="self">self</span>.schema.is_none(), ComputeError: <span class="string">&quot;schema arguments not yet supported for Array json&quot;</span>);
+
+                        <span class="comment">// struct types may have missing fields so find supertype
+                        </span><span class="kw">let </span>dtype = values
+                            .iter()
+                            .take(<span class="self">self</span>.infer_schema_len.unwrap_or(usize::MAX))
+                            .map(|value| {
+                                infer(value)
+                                    .map_err(PolarsError::from)
+                                    .map(|dt| DataType::from(<span class="kw-2">&amp;</span>dt))
+                            })
+                            .fold_first_(|l, r| {
+                                <span class="kw">let </span>l = l<span class="question-mark">?</span>;
+                                <span class="kw">let </span>r = r<span class="question-mark">?</span>;
+                                try_get_supertype(<span class="kw-2">&amp;</span>l, <span class="kw-2">&amp;</span>r)
+                            })
+                            .unwrap()<span class="question-mark">?</span>;
+                        <span class="kw">let </span>dtype = DataType::List(Box::new(dtype));
+                        dtype.to_arrow()
+                    } <span class="kw">else </span>{
+                        <span class="kw">let </span>dtype = infer(<span class="kw-2">&amp;</span>json_value)<span class="question-mark">?</span>;
+                        <span class="kw">if let </span><span class="prelude-val">Some</span>(overwrite) = <span class="self">self</span>.schema_overwrite {
+                            <span class="kw">let </span>ArrowDataType::Struct(fields) = dtype <span class="kw">else </span>{
+                                    <span class="macro">polars_bail!</span>(ComputeError: <span class="string">&quot;can only deserialize json objects&quot;</span>)
+                                };
+
+                            <span class="kw">let </span><span class="kw-2">mut </span>schema = Schema::from_iter(fields.iter());
+                            overwrite_schema(<span class="kw-2">&amp;mut </span>schema, overwrite)<span class="question-mark">?</span>;
+
+                            DataType::Struct(
+                                schema
+                                    .into_iter()
+                                    .map(|(name, dt)| Field::new(<span class="kw-2">&amp;</span>name, dt))
+                                    .collect(),
+                            )
+                            .to_arrow()
+                        } <span class="kw">else </span>{
+                            dtype
+                        }
+                    }
+                };
+
                 <span class="kw">let </span>arr = polars_json::json::deserialize(<span class="kw-2">&amp;</span>json_value, dtype)<span class="question-mark">?</span>;
                 <span class="kw">let </span>arr = arr.as_any().downcast_ref::&lt;StructArray&gt;().ok_or_else(
                     || <span class="macro">polars_err!</span>(ComputeError: <span class="string">&quot;can only deserialize json objects&quot;</span>),
@@ -545,12 +630,14 @@
                 <span class="kw">let </span><span class="kw-2">mut </span>json_reader = CoreJsonReader::new(
                     rb,
                     <span class="prelude-val">None</span>,
-                    <span class="prelude-val">None</span>,
+                    <span class="self">self</span>.schema,
+                    <span class="self">self</span>.schema_overwrite,
                     <span class="prelude-val">None</span>,
                     <span class="number">1024</span>, <span class="comment">// sample size
                     </span><span class="number">1 </span>&lt;&lt; <span class="number">18</span>,
                     <span class="bool-val">false</span>,
                     <span class="self">self</span>.infer_schema_len,
+                    <span class="self">self</span>.ignore_errors,
                 )<span class="question-mark">?</span>;
                 <span class="kw">let </span><span class="kw-2">mut </span>df: DataFrame = json_reader.as_df()<span class="question-mark">?</span>;
                 <span class="kw">if </span><span class="self">self</span>.rechunk {
@@ -560,7 +647,8 @@
             }
         }<span class="question-mark">?</span>;
 
-        <span class="kw">if let </span><span class="prelude-val">Some</span>(proj) = <span class="kw-2">&amp;</span><span class="self">self</span>.projection {
+        <span class="comment">// TODO! Ensure we don&#39;t materialize the columns we don&#39;t need
+        </span><span class="kw">if let </span><span class="prelude-val">Some</span>(proj) = <span class="kw-2">&amp;</span><span class="self">self</span>.projection {
             out.select(proj)
         } <span class="kw">else </span>{
             <span class="prelude-val">Ok</span>(out)
@@ -568,13 +656,19 @@
     }
 }
 
-<span class="kw">impl</span>&lt;R&gt; JsonReader&lt;R&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R&gt; JsonReader&lt;<span class="lifetime">&#39;a</span>, R&gt;
 <span class="kw">where
     </span>R: MmapBytesReader,
 {
     <span class="doccomment">/// Set the JSON file&#39;s schema
-    </span><span class="kw">pub fn </span>with_schema(<span class="kw-2">mut </span><span class="self">self</span>, schema: <span class="kw-2">&amp;</span>Schema) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.schema = <span class="prelude-val">Some</span>(schema.to_arrow());
+    </span><span class="kw">pub fn </span>with_schema(<span class="kw-2">mut </span><span class="self">self</span>, schema: SchemaRef) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.schema = <span class="prelude-val">Some</span>(schema);
+        <span class="self">self
+    </span>}
+
+    <span class="doccomment">/// Overwrite parts of the inferred schema.
+    </span><span class="kw">pub fn </span>with_schema_overwrite(<span class="kw-2">mut </span><span class="self">self</span>, schema: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Schema) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.schema_overwrite = <span class="prelude-val">Some</span>(schema);
         <span class="self">self
     </span>}
 
@@ -611,6 +705,12 @@
 
     <span class="kw">pub fn </span>with_json_format(<span class="kw-2">mut </span><span class="self">self</span>, format: JsonFormat) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.json_format = format;
+        <span class="self">self
+    </span>}
+
+    <span class="doccomment">/// Return a `null` if an error occurs during parsing.
+    </span><span class="kw">pub fn </span>with_ignore_errors(<span class="kw-2">mut </span><span class="self">self</span>, ignore: bool) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.ignore_errors = ignore;
         <span class="self">self
     </span>}
 }

@@ -381,8 +381,27 @@
 <a href="#381" id="381">381</a>
 <a href="#382" id="382">382</a>
 <a href="#383" id="383">383</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span>std::borrow::Cow;
-<span class="kw">use </span>std::fs::File;
+<a href="#384" id="384">384</a>
+<a href="#385" id="385">385</a>
+<a href="#386" id="386">386</a>
+<a href="#387" id="387">387</a>
+<a href="#388" id="388">388</a>
+<a href="#389" id="389">389</a>
+<a href="#390" id="390">390</a>
+<a href="#391" id="391">391</a>
+<a href="#392" id="392">392</a>
+<a href="#393" id="393">393</a>
+<a href="#394" id="394">394</a>
+<a href="#395" id="395">395</a>
+<a href="#396" id="396">396</a>
+<a href="#397" id="397">397</a>
+<a href="#398" id="398">398</a>
+<a href="#399" id="399">399</a>
+<a href="#400" id="400">400</a>
+<a href="#401" id="401">401</a>
+<a href="#402" id="402">402</a>
+<a href="#403" id="403">403</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span>std::fs::File;
 <span class="kw">use </span>std::io::Cursor;
 <span class="kw">use </span>std::path::PathBuf;
 
@@ -413,9 +432,11 @@
     n_threads: <span class="prelude-ty">Option</span>&lt;usize&gt;,
     infer_schema_len: <span class="prelude-ty">Option</span>&lt;usize&gt;,
     chunk_size: usize,
-    schema: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Schema&gt;,
+    schema: <span class="prelude-ty">Option</span>&lt;SchemaRef&gt;,
+    schema_overwrite: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Schema&gt;,
     path: <span class="prelude-ty">Option</span>&lt;PathBuf&gt;,
     low_memory: bool,
+    ignore_errors: bool,
 }
 
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, R&gt; JsonLineReader&lt;<span class="lifetime">&#39;a</span>, R&gt;
@@ -426,10 +447,16 @@
         <span class="self">self</span>.n_rows = num_rows;
         <span class="self">self
     </span>}
-    <span class="kw">pub fn </span>with_schema(<span class="kw-2">mut </span><span class="self">self</span>, schema: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Schema) -&gt; <span class="self">Self </span>{
+    <span class="kw">pub fn </span>with_schema(<span class="kw-2">mut </span><span class="self">self</span>, schema: SchemaRef) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.schema = <span class="prelude-val">Some</span>(schema);
         <span class="self">self
     </span>}
+
+    <span class="kw">pub fn </span>with_schema_overwrite(<span class="kw-2">mut </span><span class="self">self</span>, schema: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Schema) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.schema_overwrite = <span class="prelude-val">Some</span>(schema);
+        <span class="self">self
+    </span>}
+
     <span class="kw">pub fn </span>with_rechunk(<span class="kw-2">mut </span><span class="self">self</span>, rechunk: bool) -&gt; <span class="self">Self </span>{
         <span class="self">self</span>.rechunk = rechunk;
         <span class="self">self
@@ -485,9 +512,11 @@
             n_threads: <span class="prelude-val">None</span>,
             infer_schema_len: <span class="prelude-val">Some</span>(<span class="number">128</span>),
             schema: <span class="prelude-val">None</span>,
+            schema_overwrite: <span class="prelude-val">None</span>,
             path: <span class="prelude-val">None</span>,
             chunk_size: <span class="number">1 </span>&lt;&lt; <span class="number">18</span>,
             low_memory: <span class="bool-val">false</span>,
+            ignore_errors: <span class="bool-val">false</span>,
         }
     }
     <span class="kw">fn </span>finish(<span class="kw-2">mut </span><span class="self">self</span>) -&gt; PolarsResult&lt;DataFrame&gt; {
@@ -497,11 +526,13 @@
             reader_bytes,
             <span class="self">self</span>.n_rows,
             <span class="self">self</span>.schema,
+            <span class="self">self</span>.schema_overwrite,
             <span class="self">self</span>.n_threads,
             <span class="number">1024</span>, <span class="comment">// sample size
             </span><span class="self">self</span>.chunk_size,
             <span class="self">self</span>.low_memory,
             <span class="self">self</span>.infer_schema_len,
+            <span class="self">self</span>.ignore_errors,
         )<span class="question-mark">?</span>;
 
         <span class="kw">let </span><span class="kw-2">mut </span>df: DataFrame = json_reader.as_df()<span class="question-mark">?</span>;
@@ -515,28 +546,31 @@
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>CoreJsonReader&lt;<span class="lifetime">&#39;a</span>&gt; {
     reader_bytes: <span class="prelude-ty">Option</span>&lt;ReaderBytes&lt;<span class="lifetime">&#39;a</span>&gt;&gt;,
     n_rows: <span class="prelude-ty">Option</span>&lt;usize&gt;,
-    schema: Cow&lt;<span class="lifetime">&#39;a</span>, Schema&gt;,
+    schema: SchemaRef,
     n_threads: <span class="prelude-ty">Option</span>&lt;usize&gt;,
     sample_size: usize,
     chunk_size: usize,
     low_memory: bool,
+    ignore_errors: bool,
 }
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; CoreJsonReader&lt;<span class="lifetime">&#39;a</span>&gt; {
     <span class="attr">#[allow(clippy::too_many_arguments)]
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>new(
         reader_bytes: ReaderBytes&lt;<span class="lifetime">&#39;a</span>&gt;,
         n_rows: <span class="prelude-ty">Option</span>&lt;usize&gt;,
-        schema: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>Schema&gt;,
+        schema: <span class="prelude-ty">Option</span>&lt;SchemaRef&gt;,
+        schema_overwrite: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Schema&gt;,
         n_threads: <span class="prelude-ty">Option</span>&lt;usize&gt;,
         sample_size: usize,
         chunk_size: usize,
         low_memory: bool,
         infer_schema_len: <span class="prelude-ty">Option</span>&lt;usize&gt;,
+        ignore_errors: bool,
     ) -&gt; PolarsResult&lt;CoreJsonReader&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
         <span class="kw">let </span>reader_bytes = reader_bytes;
 
-        <span class="kw">let </span>schema = <span class="kw">match </span>schema {
-            <span class="prelude-val">Some</span>(schema) =&gt; Cow::Borrowed(schema),
+        <span class="kw">let </span><span class="kw-2">mut </span>schema = <span class="kw">match </span>schema {
+            <span class="prelude-val">Some</span>(schema) =&gt; schema,
             <span class="prelude-val">None </span>=&gt; {
                 <span class="kw">let </span>bytes: <span class="kw-2">&amp;</span>[u8] = <span class="kw-2">&amp;</span>reader_bytes;
                 <span class="kw">let </span><span class="kw-2">mut </span>cursor = Cursor::new(bytes);
@@ -544,9 +578,14 @@
                 <span class="kw">let </span>data_type = polars_json::ndjson::infer(<span class="kw-2">&amp;mut </span>cursor, infer_schema_len)<span class="question-mark">?</span>;
                 <span class="kw">let </span>schema = StructArray::get_fields(<span class="kw-2">&amp;</span>data_type).iter().collect();
 
-                Cow::Owned(schema)
+                Arc::new(schema)
             }
         };
+        <span class="kw">if let </span><span class="prelude-val">Some</span>(overwriting_schema) = schema_overwrite {
+            <span class="kw">let </span>schema = Arc::make_mut(<span class="kw-2">&amp;mut </span>schema);
+            overwrite_schema(schema, overwriting_schema)<span class="question-mark">?</span>;
+        }
+
         <span class="prelude-val">Ok</span>(CoreJsonReader {
             reader_bytes: <span class="prelude-val">Some</span>(reader_bytes),
             schema,
@@ -555,6 +594,7 @@
             n_threads,
             chunk_size,
             low_memory,
+            ignore_errors,
         })
     }
     <span class="kw">fn </span>parse_json(<span class="kw-2">&amp;mut </span><span class="self">self</span>, <span class="kw-2">mut </span>n_threads: usize, bytes: <span class="kw-2">&amp;</span>[u8]) -&gt; PolarsResult&lt;DataFrame&gt; {
@@ -595,7 +635,7 @@
             file_chunks
                 .into_par_iter()
                 .map(|(start_pos, stop_at_nbytes)| {
-                    <span class="kw">let </span><span class="kw-2">mut </span>buffers = init_buffers(<span class="kw-2">&amp;</span><span class="self">self</span>.schema, capacity)<span class="question-mark">?</span>;
+                    <span class="kw">let </span><span class="kw-2">mut </span>buffers = init_buffers(<span class="kw-2">&amp;</span><span class="self">self</span>.schema, capacity, <span class="self">self</span>.ignore_errors)<span class="question-mark">?</span>;
                     parse_lines(<span class="kw-2">&amp;</span>bytes[start_pos..stop_at_nbytes], <span class="kw-2">&amp;mut </span>buffers)<span class="question-mark">?</span>;
                     DataFrame::new(
                         buffers

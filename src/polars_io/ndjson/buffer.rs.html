@@ -209,6 +209,28 @@
 <a href="#209" id="209">209</a>
 <a href="#210" id="210">210</a>
 <a href="#211" id="211">211</a>
+<a href="#212" id="212">212</a>
+<a href="#213" id="213">213</a>
+<a href="#214" id="214">214</a>
+<a href="#215" id="215">215</a>
+<a href="#216" id="216">216</a>
+<a href="#217" id="217">217</a>
+<a href="#218" id="218">218</a>
+<a href="#219" id="219">219</a>
+<a href="#220" id="220">220</a>
+<a href="#221" id="221">221</a>
+<a href="#222" id="222">222</a>
+<a href="#223" id="223">223</a>
+<a href="#224" id="224">224</a>
+<a href="#225" id="225">225</a>
+<a href="#226" id="226">226</a>
+<a href="#227" id="227">227</a>
+<a href="#228" id="228">228</a>
+<a href="#229" id="229">229</a>
+<a href="#230" id="230">230</a>
+<a href="#231" id="231">231</a>
+<a href="#232" id="232">232</a>
+<a href="#233" id="233">233</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::hash::{Hash, Hasher};
 
 <span class="kw">use </span>arrow::types::NativeType;
@@ -231,19 +253,23 @@
     }
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>Buffer&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str, AnyValueBuffer&lt;<span class="lifetime">&#39;a</span>&gt;);
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct </span>Buffer&lt;<span class="lifetime">&#39;a</span>&gt; {
+    name: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
+    ignore_errors: bool,
+    buf: AnyValueBuffer&lt;<span class="lifetime">&#39;a</span>&gt;,
+}
 
 <span class="kw">impl </span>Buffer&lt;<span class="lifetime">&#39;_</span>&gt; {
     <span class="kw">pub fn </span>into_series(<span class="self">self</span>) -&gt; Series {
-        <span class="kw">let </span><span class="kw-2">mut </span>s = <span class="self">self</span>.<span class="number">1</span>.into_series();
-        s.rename(<span class="self">self</span>.<span class="number">0</span>);
+        <span class="kw">let </span><span class="kw-2">mut </span>s = <span class="self">self</span>.buf.into_series();
+        s.rename(<span class="self">self</span>.name);
         s
     }
 
     <span class="attr">#[inline]
     </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>add(<span class="kw-2">&amp;mut </span><span class="self">self</span>, value: <span class="kw-2">&amp;</span>Value) -&gt; PolarsResult&lt;()&gt; {
         <span class="kw">use </span>AnyValueBuffer::<span class="kw-2">*</span>;
-        <span class="kw">match </span><span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="number">1 </span>{
+        <span class="kw">match </span><span class="kw-2">&amp;mut </span><span class="self">self</span>.buf {
             Boolean(buf) =&gt; {
                 <span class="kw">match </span>value {
                     Value::Static(StaticNode::Bool(b)) =&gt; buf.append_value(<span class="kw-2">*</span>b),
@@ -320,7 +346,7 @@
                 <span class="prelude-val">Ok</span>(())
             }
             All(dtype, buf) =&gt; {
-                <span class="kw">let </span>av = deserialize_all(value, dtype)<span class="question-mark">?</span>;
+                <span class="kw">let </span>av = deserialize_all(value, dtype, <span class="self">self</span>.ignore_errors)<span class="question-mark">?</span>;
                 buf.push(av);
                 <span class="prelude-val">Ok</span>(())
             }
@@ -328,19 +354,27 @@
         }
     }
     <span class="kw">pub fn </span>add_null(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
-        <span class="self">self</span>.<span class="number">1</span>.add(AnyValue::Null).expect(<span class="string">&quot;should not fail&quot;</span>);
+        <span class="self">self</span>.buf.add(AnyValue::Null).expect(<span class="string">&quot;should not fail&quot;</span>);
     }
 }
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>init_buffers(
     schema: <span class="kw-2">&amp;</span>Schema,
     capacity: usize,
+    ignore_errors: bool,
 ) -&gt; PolarsResult&lt;PlIndexMap&lt;BufferKey, Buffer&gt;&gt; {
     schema
         .iter()
         .map(|(name, dtype)| {
             <span class="kw">let </span>av_buf = (dtype, capacity).into();
             <span class="kw">let </span>key = KnownKey::from(name.as_str());
-            <span class="prelude-val">Ok</span>((BufferKey(key), Buffer(name, av_buf)))
+            <span class="prelude-val">Ok</span>((
+                BufferKey(key),
+                Buffer {
+                    name,
+                    buf: av_buf,
+                    ignore_errors,
+                },
+            ))
         })
         .collect()
 }
@@ -374,7 +408,11 @@
     })
 }
 
-<span class="kw">fn </span>deserialize_all&lt;<span class="lifetime">&#39;a</span>&gt;(json: <span class="kw-2">&amp;</span>Value, dtype: <span class="kw-2">&amp;</span>DataType) -&gt; PolarsResult&lt;AnyValue&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+<span class="kw">fn </span>deserialize_all&lt;<span class="lifetime">&#39;a</span>&gt;(
+    json: <span class="kw-2">&amp;</span>Value,
+    dtype: <span class="kw-2">&amp;</span>DataType,
+    ignore_errors: bool,
+) -&gt; PolarsResult&lt;AnyValue&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
     <span class="kw">let </span>out = <span class="kw">match </span>json {
         Value::Static(StaticNode::Bool(b)) =&gt; AnyValue::Boolean(<span class="kw-2">*</span>b),
         Value::Static(StaticNode::I64(i)) =&gt; AnyValue::Int64(<span class="kw-2">*</span>i),
@@ -384,11 +422,14 @@
         Value::String(s) =&gt; AnyValue::Utf8Owned(s.as_ref().into()),
         Value::Array(arr) =&gt; {
             <span class="kw">let </span><span class="prelude-val">Some</span>(inner_dtype) = dtype.inner_dtype() <span class="kw">else </span>{
+                <span class="kw">if </span>ignore_errors {
+                    <span class="kw">return </span><span class="prelude-val">Ok</span>(AnyValue::Null)
+                }
                 <span class="macro">polars_bail!</span>(ComputeError: <span class="string">&quot;expected list/array in json value, got {}&quot;</span>, dtype);
             };
             <span class="kw">let </span>vals: Vec&lt;AnyValue&gt; = arr
                 .iter()
-                .map(|val| deserialize_all(val, inner_dtype))
+                .map(|val| deserialize_all(val, inner_dtype, ignore_errors))
                 .collect::&lt;PolarsResult&lt;<span class="kw">_</span>&gt;&gt;()<span class="question-mark">?</span>;
             <span class="kw">let </span>s = Series::from_any_values_and_dtype(<span class="string">&quot;&quot;</span>, <span class="kw-2">&amp;</span>vals, inner_dtype, <span class="bool-val">false</span>)<span class="question-mark">?</span>;
             AnyValue::List(s)
@@ -402,7 +443,7 @@
                     .iter()
                     .map(|field| {
                         <span class="kw">if let </span><span class="prelude-val">Some</span>(value) = document.get(field.name.as_str()) {
-                            deserialize_all(value, <span class="kw-2">&amp;</span>field.dtype)
+                            deserialize_all(value, <span class="kw-2">&amp;</span>field.dtype, ignore_errors)
                         } <span class="kw">else </span>{
                             <span class="prelude-val">Ok</span>(AnyValue::Null)
                         }
@@ -410,8 +451,11 @@
                     .collect::&lt;PolarsResult&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;&gt;()<span class="question-mark">?</span>;
                 AnyValue::StructOwned(Box::new((vals, fields.clone())))
             } <span class="kw">else </span>{
+                <span class="kw">if </span>ignore_errors {
+                    <span class="kw">return </span><span class="prelude-val">Ok</span>(AnyValue::Null);
+                }
                 <span class="macro">polars_bail!</span>(
-                    ComputeError: <span class="string">&quot;expected {dtype} in json value, got object&quot;</span>,
+                    ComputeError: <span class="string">&quot;expected {} in json value, got object&quot;</span>, dtype,
                 );
             }
         }

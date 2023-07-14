@@ -45,7 +45,7 @@
     <span class="kw">fn </span>scan(<span class="kw-2">&amp;</span><span class="self">self</span>, scan_opts: AnonymousScanOptions) -&gt; PolarsResult&lt;DataFrame&gt; {
         <span class="kw">let </span>schema = scan_opts.output_schema.unwrap_or(scan_opts.schema);
         JsonLineReader::from_path(<span class="kw-2">&amp;</span><span class="self">self</span>.path)<span class="question-mark">?
-            </span>.with_schema(<span class="kw-2">&amp;</span>schema)
+            </span>.with_schema(schema)
             .with_rechunk(<span class="self">self</span>.rechunk)
             .with_chunk_size(<span class="self">self</span>.batch_size)
             .low_memory(<span class="self">self</span>.low_memory)
