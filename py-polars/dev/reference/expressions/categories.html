@@ -48,7 +48,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'reference/expressions/categories';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="polars.Expr.cat.set_ordering" href="api/polars.Expr.cat.set_ordering.html" />
+    <link rel="next" title="polars.Expr.cat.get_categories" href="api/polars.Expr.cat.get_categories.html" />
     <link rel="prev" title="polars.Expr.is_unique" href="api/polars.Expr.is_unique.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -443,6 +443,7 @@ document.write(`
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../series/categories.html">Categories</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-8"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../series/api/polars.Series.cat.get_categories.html">polars.Series.cat.get_categories</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../series/api/polars.Series.cat.set_ordering.html">polars.Series.cat.set_ordering</a></li>
 </ul>
 </li>
@@ -1038,6 +1039,7 @@ document.write(`
 </ul>
 </li>
 <li class="toctree-l2 current active has-children"><a class="current reference internal" href="#">Categories</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-39" name="toctree-checkbox-39" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-39"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.cat.get_categories.html">polars.Expr.cat.get_categories</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Expr.cat.set_ordering.html">polars.Expr.cat.set_ordering</a></li>
 </ul>
 </li>
@@ -1608,7 +1610,10 @@ document.write(`
 <p>The following methods are available under the <cite>expr.cat</cite> attribute.</p>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Expr.cat.set_ordering.html#polars.Expr.cat.set_ordering" title="polars.Expr.cat.set_ordering"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.cat.set_ordering</span></code></a>(ordering)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Expr.cat.get_categories.html#polars.Expr.cat.get_categories" title="polars.Expr.cat.get_categories"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.cat.get_categories</span></code></a>()</p></td>
+<td><p>Get the categories stored in this data type.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Expr.cat.set_ordering.html#polars.Expr.cat.set_ordering" title="polars.Expr.cat.set_ordering"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expr.cat.set_ordering</span></code></a>(ordering)</p></td>
 <td><p>Determine how this categorical series should be sorted.</p></td>
 </tr>
 </tbody>
@@ -1636,11 +1641,11 @@ document.write(`
       </div>
     </a>
     <a class="right-next"
-       href="api/polars.Expr.cat.set_ordering.html"
+       href="api/polars.Expr.cat.get_categories.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">polars.Expr.cat.set_ordering</p>
+        <p class="prev-next-title">polars.Expr.cat.get_categories</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
