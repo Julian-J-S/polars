@@ -1618,17 +1618,20 @@ document.write(`
 <h1>polars.sql_expr<a class="headerlink" href="#polars-sql-expr" title="Permalink to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="polars.sql_expr">
-<span class="sig-prename descclassname"><span class="pre">polars.</span></span><span class="sig-name descname"><span class="pre">sql_expr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sql</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Expr</span></span></span><a class="reference external" href="https://github.com/pola-rs/polars/blob/main/py-polars/polars/functions/lazy.py#L2096-L2119"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polars.sql_expr" title="Permalink to this definition">#</a></dt>
-<dd><p>Parse a SQL expression to a polars expression.</p>
+<span class="sig-prename descclassname"><span class="pre">polars.</span></span><span class="sig-name descname"><span class="pre">sql_expr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sql</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Expr</span></span></span><a class="reference external" href="https://github.com/pola-rs/polars/blob/main/py-polars/polars/functions/lazy.py#L2106-L2149"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polars.sql_expr" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">polars.</span></span><span class="sig-name descname"><span class="pre">sql_expr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sql</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Sequence" title="(in Python v3.11)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Expr</span><span class="p"><span class="pre">]</span></span></span></span></dt>
+<dd><p>Parse one or more SQL expressions to polars expression(s).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>sql</strong></dt><dd><p>SQL expression</p>
+<dt><strong>sql</strong></dt><dd><p>One or more SQL expressions.</p>
 </dd>
 </dl>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
+<p>Parse a single SQL expression:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">expr</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">sql_expr</span><span class="p">(</span><span class="s2">&quot;MAX(a)&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span>
@@ -1640,6 +1643,21 @@ document.write(`
 <span class="go">╞═════╡</span>
 <span class="go">│ 2   │</span>
 <span class="go">└─────┘</span>
+</pre></div>
+</div>
+<p>Parse multiple SQL expressions:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="o">*</span><span class="n">pl</span><span class="o">.</span><span class="n">sql_expr</span><span class="p">([</span><span class="s2">&quot;POWER(a,a) AS a_a&quot;</span><span class="p">,</span> <span class="s2">&quot;CAST(a AS TEXT) AS a_txt&quot;</span><span class="p">]),</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">shape: (2, 3)</span>
+<span class="go">┌─────┬─────┬───────┐</span>
+<span class="go">│ a   ┆ a_a ┆ a_txt │</span>
+<span class="go">│ --- ┆ --- ┆ ---   │</span>
+<span class="go">│ i64 ┆ f64 ┆ str   │</span>
+<span class="go">╞═════╪═════╪═══════╡</span>
+<span class="go">│ 2   ┆ 4.0 ┆ 2     │</span>
+<span class="go">│ 1   ┆ 1.0 ┆ 1     │</span>
+<span class="go">└─────┴─────┴───────┘</span>
 </pre></div>
 </div>
 </dd></dl>
