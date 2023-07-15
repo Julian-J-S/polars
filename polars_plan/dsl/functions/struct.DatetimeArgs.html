@@ -6,7 +6,7 @@
     pub minute: <a class="enum" href="../enum.Expr.html" title="enum polars_plan::dsl::Expr">Expr</a>,
     pub second: <a class="enum" href="../enum.Expr.html" title="enum polars_plan::dsl::Expr">Expr</a>,
     pub microsecond: <a class="enum" href="../enum.Expr.html" title="enum polars_plan::dsl::Expr">Expr</a>,
-}</code></pre><span class="item-info"><div class="stab portability">Available on <strong>crate feature <code>compile</code></strong> only.</div></span><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Arguments used by <a href="fn.datetime.html" title="fn polars_plan::dsl::functions::datetime"><code>datetime</code></a> in order to produce an <code>Expr</code> of <code>Datetime</code></p>
+}</code></pre><span class="item-info"><div class="stab portability">Available on <strong>crate feature <code>compile</code></strong> only.</div></span><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Arguments used by <code>datetime</code> in order to produce an <code>Expr</code> of <code>Datetime</code></p>
 <p>Construct a <code>DatetimeArgs</code> with <code>DatetimeArgs::new(y, m, d)</code>. This will set the other time units to <code>lit(0)</code>. You
 can then set the other fields with the <code>with_*</code> methods, or use <code>with_hms</code> to set <code>hour</code>, <code>minute</code>, and <code>second</code> all
 at once.</p>

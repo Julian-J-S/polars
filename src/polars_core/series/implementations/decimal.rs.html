@@ -265,6 +265,7 @@
 <a href="#265" id="265">265</a>
 <a href="#266" id="266">266</a>
 <a href="#267" id="267">267</a>
+<a href="#268" id="268">268</a>
 </pre></div><pre class="rust"><code><span class="kw">use super</span>::{private, IntoSeries, SeriesTrait, SeriesWrap, <span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
@@ -319,7 +320,8 @@
         <span class="self">self</span>.<span class="number">0</span>.dtype()
     }
 
-    <span class="kw">fn </span>zip_with_same_type(<span class="kw-2">&amp;</span><span class="self">self</span>, mask: <span class="kw-2">&amp;</span>BooleanChunked, other: <span class="kw-2">&amp;</span>Series) -&gt; PolarsResult&lt;Series&gt; {
+    <span class="attr">#[cfg(feature = <span class="string">&quot;zip_with&quot;</span>)]
+    </span><span class="kw">fn </span>zip_with_same_type(<span class="kw-2">&amp;</span><span class="self">self</span>, mask: <span class="kw-2">&amp;</span>BooleanChunked, other: <span class="kw-2">&amp;</span>Series) -&gt; PolarsResult&lt;Series&gt; {
         <span class="prelude-val">Ok</span>(<span class="self">self
             </span>.<span class="number">0
             </span>.zip_with(mask, other.as_ref().as_ref())<span class="question-mark">?
