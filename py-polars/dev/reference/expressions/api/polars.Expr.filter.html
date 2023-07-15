@@ -1644,14 +1644,14 @@ level, use <cite>LazyFrame.filter</cite>.</p>
 <span class="gp">... </span>    <span class="p">]</span>
 <span class="gp">... </span><span class="p">)</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s2">&quot;group_col&quot;</span><span class="p">)</span>
 <span class="go">shape: (2, 3)</span>
-<span class="go">┌───────────┬──────┬─────┐</span>
-<span class="go">│ group_col ┆ lt   ┆ gte │</span>
-<span class="go">│ ---       ┆ ---  ┆ --- │</span>
-<span class="go">│ str       ┆ i64  ┆ i64 │</span>
-<span class="go">╞═══════════╪══════╪═════╡</span>
-<span class="go">│ g1        ┆ 1    ┆ 2   │</span>
-<span class="go">│ g2        ┆ null ┆ 3   │</span>
-<span class="go">└───────────┴──────┴─────┘</span>
+<span class="go">┌───────────┬─────┬─────┐</span>
+<span class="go">│ group_col ┆ lt  ┆ gte │</span>
+<span class="go">│ ---       ┆ --- ┆ --- │</span>
+<span class="go">│ str       ┆ i64 ┆ i64 │</span>
+<span class="go">╞═══════════╪═════╪═════╡</span>
+<span class="go">│ g1        ┆ 1   ┆ 2   │</span>
+<span class="go">│ g2        ┆ 0   ┆ 3   │</span>
+<span class="go">└───────────┴─────┴─────┘</span>
 </pre></div>
 </div>
 </dd></dl>
