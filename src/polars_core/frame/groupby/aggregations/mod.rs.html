@@ -1030,6 +1030,14 @@
 <a href="#1030" id="1030">1030</a>
 <a href="#1031" id="1031">1031</a>
 <a href="#1032" id="1032">1032</a>
+<a href="#1033" id="1033">1033</a>
+<a href="#1034" id="1034">1034</a>
+<a href="#1035" id="1035">1035</a>
+<a href="#1036" id="1036">1036</a>
+<a href="#1037" id="1037">1037</a>
+<a href="#1038" id="1038">1038</a>
+<a href="#1039" id="1039">1039</a>
+<a href="#1040" id="1040">1040</a>
 </pre></div><pre class="rust"><code><span class="kw">mod </span>agg_list;
 <span class="kw">mod </span>boolean;
 <span class="kw">mod </span>dispatch;
@@ -1044,10 +1052,10 @@
 <span class="kw">use </span>polars_arrow::data_types::IsFloat;
 <span class="kw">use </span>polars_arrow::kernels::rolling;
 <span class="kw">use </span>polars_arrow::kernels::rolling::no_nulls::{
-    MaxWindow, MeanWindow, MinWindow, RollingAggWindowNoNulls, SumWindow, VarWindow,
+    MaxWindow, MeanWindow, MinWindow, QuantileWindow, RollingAggWindowNoNulls, SumWindow, VarWindow,
 };
 <span class="kw">use </span>polars_arrow::kernels::rolling::nulls::RollingAggWindowNulls;
-<span class="kw">use </span>polars_arrow::kernels::rolling::{DynArgs, RollingVarParams};
+<span class="kw">use </span>polars_arrow::kernels::rolling::{DynArgs, RollingQuantileParams, RollingVarParams};
 <span class="kw">use </span>polars_arrow::kernels::take_agg::<span class="kw-2">*</span>;
 <span class="kw">use </span>polars_arrow::prelude::QuantileInterpolOptions;
 <span class="kw">use </span>polars_arrow::trusted_len::TrustedLenPush;
@@ -1303,6 +1311,7 @@
     ChunkedArray&lt;T&gt;: QuantileDispatcher&lt;K::Native&gt;,
     ChunkedArray&lt;K&gt;: IntoSeries,
     K: PolarsNumericType,
+    &lt;K <span class="kw">as </span>datatypes::PolarsNumericType&gt;::Native: num_traits::Float,
 {
     <span class="kw">let </span>invalid_quantile = !(<span class="number">0.0</span>..=<span class="number">1.0</span>).contains(<span class="kw-2">&amp;</span>quantile);
     <span class="kw">if </span>invalid_quantile {
@@ -1330,19 +1339,25 @@
                 <span class="kw">let </span>values = arr.values().as_slice();
                 <span class="kw">let </span>offset_iter = groups.iter().map(|[first, len]| (<span class="kw-2">*</span>first, <span class="kw-2">*</span>len));
                 <span class="kw">let </span>arr = <span class="kw">match </span>arr.validity() {
-                    <span class="prelude-val">None </span>=&gt; rolling::no_nulls::rolling_quantile_by_iter(
+                    <span class="prelude-val">None </span>=&gt; _rolling_apply_agg_window_no_nulls::&lt;QuantileWindow&lt;<span class="kw">_</span>&gt;, <span class="kw">_</span>, <span class="kw">_</span>&gt;(
                         values,
-                        quantile,
-                        interpol,
                         offset_iter,
+                        <span class="prelude-val">Some</span>(Arc::new(RollingQuantileParams {
+                            prob: quantile,
+                            interpol,
+                        })),
                     ),
-                    <span class="prelude-val">Some</span>(validity) =&gt; rolling::nulls::rolling_quantile_by_iter(
-                        values,
-                        validity,
-                        quantile,
-                        interpol,
-                        offset_iter,
-                    ),
+                    <span class="prelude-val">Some</span>(validity) =&gt; {
+                        _rolling_apply_agg_window_nulls::&lt;rolling::nulls::QuantileWindow&lt;<span class="kw">_</span>&gt;, <span class="kw">_</span>, <span class="kw">_</span>&gt;(
+                            values,
+                            validity,
+                            offset_iter,
+                            <span class="prelude-val">Some</span>(Arc::new(RollingQuantileParams {
+                                prob: quantile,
+                                interpol,
+                            })),
+                        )
+                    }
                 };
                 <span class="comment">// the rolling kernels works on the dtype, this is not yet the float
                 // output type we need.
@@ -1374,6 +1389,7 @@
     ChunkedArray&lt;T&gt;: QuantileDispatcher&lt;K::Native&gt;,
     ChunkedArray&lt;K&gt;: IntoSeries,
     K: PolarsNumericType,
+    &lt;K <span class="kw">as </span>datatypes::PolarsNumericType&gt;::Native: num_traits::Float,
 {
     <span class="kw">match </span>groups {
         GroupsProxy::Idx(groups) =&gt; {

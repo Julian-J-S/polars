@@ -149,29 +149,6 @@
 <a href="#149" id="149">149</a>
 <a href="#150" id="150">150</a>
 <a href="#151" id="151">151</a>
-<a href="#152" id="152">152</a>
-<a href="#153" id="153">153</a>
-<a href="#154" id="154">154</a>
-<a href="#155" id="155">155</a>
-<a href="#156" id="156">156</a>
-<a href="#157" id="157">157</a>
-<a href="#158" id="158">158</a>
-<a href="#159" id="159">159</a>
-<a href="#160" id="160">160</a>
-<a href="#161" id="161">161</a>
-<a href="#162" id="162">162</a>
-<a href="#163" id="163">163</a>
-<a href="#164" id="164">164</a>
-<a href="#165" id="165">165</a>
-<a href="#166" id="166">166</a>
-<a href="#167" id="167">167</a>
-<a href="#168" id="168">168</a>
-<a href="#169" id="169">169</a>
-<a href="#170" id="170">170</a>
-<a href="#171" id="171">171</a>
-<a href="#172" id="172">172</a>
-<a href="#173" id="173">173</a>
-<a href="#174" id="174">174</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>num::pow::Pow;
 <span class="kw">use </span>num::Float;
 <span class="kw">use </span>polars_core::export::num;
@@ -254,58 +231,35 @@
     /// A window of length `window_size` will traverse the array. The values that fill this window
     /// will (optionally) be weighted according to the `weights` vector.
     </span><span class="kw">fn </span>rolling_median(<span class="kw-2">&amp;</span><span class="self">self</span>, options: RollingOptionsImpl) -&gt; PolarsResult&lt;Series&gt; {
-        <span class="kw">if </span>options.by.is_some() {
-            <span class="macro">panic!</span>(<span class="string">&quot;&#39;rolling by&#39; not yet supported for &#39;rolling_median&#39;, consider using &#39;groupby_rolling&#39;&quot;</span>)
-        }
+        <span class="comment">// At the last possible second, right before we do computations, make sure we&#39;re using the
+        // right quantile parameters to get a median. This also lets us have the convenience of
+        // calling `rolling_median` from Rust without a bunch of dedicated functions that just call
+        // out to the `rolling_quantile` anyway.
+        </span><span class="kw">let </span><span class="kw-2">mut </span>options = options.clone();
+        options.fn_params = <span class="prelude-val">Some</span>(Arc::new(RollingQuantileParams {
+            prob: <span class="number">0.5</span>,
+            interpol: QuantileInterpolOptions::Linear,
+        }) <span class="kw">as </span>Arc&lt;<span class="kw">dyn </span>std::any::Any + Send + Sync&gt;);
         rolling_agg(
             <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>,
             options,
-            <span class="kw-2">&amp;</span>rolling::no_nulls::rolling_median,
-            <span class="kw-2">&amp;</span>rolling::nulls::rolling_median,
-            <span class="prelude-val">None</span>,
+            <span class="kw-2">&amp;</span>rolling::no_nulls::rolling_quantile,
+            <span class="kw-2">&amp;</span>rolling::nulls::rolling_quantile,
+            <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="kw">super</span>::rolling_kernels::no_nulls::rolling_quantile),
         )
     }
 
     <span class="doccomment">/// Apply a rolling quantile (moving quantile) over the values in this array.
     /// A window of length `window_size` will traverse the array. The values that fill this window
     /// will (optionally) be weighted according to the `weights` vector.
-    </span><span class="kw">fn </span>rolling_quantile(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        quantile: f64,
-        interpolation: QuantileInterpolOptions,
-        options: RollingOptionsImpl,
-    ) -&gt; PolarsResult&lt;Series&gt; {
-        <span class="kw">if </span>options.by.is_some() {
-            <span class="macro">panic!</span>(<span class="string">&quot;&#39;rolling by&#39; not yet supported for &#39;rolling_quantile&#39;, consider using &#39;groupby_rolling&#39;&quot;</span>)
-        }
-
-        <span class="kw">let </span>options: RollingOptionsFixedWindow = options.into();
-        check_input(options.window_size, options.min_periods)<span class="question-mark">?</span>;
-        <span class="kw">let </span>ca = <span class="self">self</span>.<span class="number">0</span>.rechunk();
-
-        <span class="kw">let </span>arr = ca.downcast_iter().next().unwrap();
-        <span class="kw">let </span>arr = <span class="kw">match </span><span class="self">self</span>.<span class="number">0</span>.has_validity() {
-            <span class="bool-val">false </span>=&gt; rolling::no_nulls::rolling_quantile(
-                arr.values(),
-                quantile,
-                interpolation,
-                options.window_size,
-                options.min_periods,
-                options.center,
-                options.weights.as_deref(),
-            )
-            .unwrap(),
-            <span class="kw">_ </span>=&gt; rolling::nulls::rolling_quantile(
-                arr,
-                quantile,
-                interpolation,
-                options.window_size,
-                options.min_periods,
-                options.center,
-                options.weights.as_deref(),
-            ),
-        };
-        Series::try_from((<span class="self">self</span>.<span class="number">0</span>.name(), arr))
+    </span><span class="kw">fn </span>rolling_quantile(<span class="kw-2">&amp;</span><span class="self">self</span>, options: RollingOptionsImpl) -&gt; PolarsResult&lt;Series&gt; {
+        rolling_agg(
+            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>,
+            options,
+            <span class="kw-2">&amp;</span>rolling::no_nulls::rolling_quantile,
+            <span class="kw-2">&amp;</span>rolling::nulls::rolling_quantile,
+            <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="kw">super</span>::rolling_kernels::no_nulls::rolling_quantile),
+        )
     }
 
     <span class="kw">fn </span>rolling_var(<span class="kw-2">&amp;</span><span class="self">self</span>, options: RollingOptionsImpl) -&gt; PolarsResult&lt;Series&gt; {

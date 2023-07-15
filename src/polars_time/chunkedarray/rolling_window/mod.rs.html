@@ -306,13 +306,6 @@
 <a href="#306" id="306">306</a>
 <a href="#307" id="307">307</a>
 <a href="#308" id="308">308</a>
-<a href="#309" id="309">309</a>
-<a href="#310" id="310">310</a>
-<a href="#311" id="311">311</a>
-<a href="#312" id="312">312</a>
-<a href="#313" id="313">313</a>
-<a href="#314" id="314">314</a>
-<a href="#315" id="315">315</a>
 </pre></div><pre class="rust"><code><span class="kw">mod </span>floats;
 <span class="kw">mod </span>ints;
 <span class="attr">#[cfg(feature = <span class="string">&quot;rolling_window&quot;</span>)]
@@ -329,8 +322,6 @@
 </span><span class="kw">use </span>polars_arrow::export::arrow;
 <span class="attr">#[cfg(feature = <span class="string">&quot;rolling_window&quot;</span>)]
 </span><span class="kw">use </span>polars_arrow::kernels::rolling;
-<span class="attr">#[cfg(feature = <span class="string">&quot;rolling_window&quot;</span>)]
-</span><span class="kw">use </span>polars_arrow::prelude::QuantileInterpolOptions;
 <span class="kw">use </span>polars_core::prelude::<span class="kw-2">*</span>;
 
 <span class="attr">#[cfg(feature = <span class="string">&quot;rolling_window&quot;</span>)]
@@ -506,12 +497,7 @@
     <span class="doccomment">/// Apply a rolling quantile (moving quantile) over the values in this array.
     /// A window of length `window_size` will traverse the array. The values that fill this window
     /// will (optionally) be weighted according to the `weights` vector.
-    </span><span class="kw">fn </span>rolling_quantile(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        quantile: f64,
-        interpolation: QuantileInterpolOptions,
-        options: RollingOptionsImpl,
-    ) -&gt; PolarsResult&lt;Series&gt;;
+    </span><span class="kw">fn </span>rolling_quantile(<span class="kw-2">&amp;</span><span class="self">self</span>, options: RollingOptionsImpl) -&gt; PolarsResult&lt;Series&gt;;
 
     <span class="doccomment">/// Apply a rolling var (moving var) over the values in this array.
     /// A window of length `window_size` will traverse the array. The values that fill this window

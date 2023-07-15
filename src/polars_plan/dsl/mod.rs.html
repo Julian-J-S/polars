@@ -1916,11 +1916,6 @@
 <a href="#1916" id="1916">1916</a>
 <a href="#1917" id="1917">1917</a>
 <a href="#1918" id="1918">1918</a>
-<a href="#1919" id="1919">1919</a>
-<a href="#1920" id="1920">1920</a>
-<a href="#1921" id="1921">1921</a>
-<a href="#1922" id="1922">1922</a>
-<a href="#1923" id="1923">1923</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(ambiguous_glob_reexports)]
 </span><span class="doccomment">//! Domain specific language for the Lazy API.
 </span><span class="attr">#[cfg(feature = <span class="string">&quot;dtype-categorical&quot;</span>)]
@@ -3275,17 +3270,12 @@
     ///
     /// See: [`RollingAgg::rolling_quantile`]
     </span><span class="attr">#[cfg(feature = <span class="string">&quot;rolling_window&quot;</span>)]
-    </span><span class="kw">pub fn </span>rolling_quantile(
-        <span class="self">self</span>,
-        quantile: f64,
-        interpolation: QuantileInterpolOptions,
-        options: RollingOptions,
-    ) -&gt; Expr {
+    </span><span class="kw">pub fn </span>rolling_quantile(<span class="self">self</span>, options: RollingOptions) -&gt; Expr {
         <span class="self">self</span>.finish_rolling(
             options,
             <span class="string">&quot;rolling_quantile&quot;</span>,
             <span class="string">&quot;rolling_quantile_by&quot;</span>,
-            Arc::new(<span class="kw">move </span>|s, options| s.rolling_quantile(quantile, interpolation, options)),
+            Arc::new(|s, options| s.rolling_quantile(options)),
             GetOutput::float_type(),
         )
     }
