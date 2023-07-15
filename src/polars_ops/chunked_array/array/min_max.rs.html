@@ -118,7 +118,7 @@
         (<span class="number">0</span>..values.len())
             .step_by(width)
             .map(|start| {
-                <span class="kw">let </span>sliced = values.clone().sliced_unchecked(start, start + width);
+                <span class="kw">let </span>sliced = <span class="kw">unsafe </span>{ values.clone().sliced_unchecked(start, start + width) };
                 arr_agg(sliced)
             })
             .collect()
