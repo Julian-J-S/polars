@@ -1038,6 +1038,29 @@
 <a href="#1038" id="1038">1038</a>
 <a href="#1039" id="1039">1039</a>
 <a href="#1040" id="1040">1040</a>
+<a href="#1041" id="1041">1041</a>
+<a href="#1042" id="1042">1042</a>
+<a href="#1043" id="1043">1043</a>
+<a href="#1044" id="1044">1044</a>
+<a href="#1045" id="1045">1045</a>
+<a href="#1046" id="1046">1046</a>
+<a href="#1047" id="1047">1047</a>
+<a href="#1048" id="1048">1048</a>
+<a href="#1049" id="1049">1049</a>
+<a href="#1050" id="1050">1050</a>
+<a href="#1051" id="1051">1051</a>
+<a href="#1052" id="1052">1052</a>
+<a href="#1053" id="1053">1053</a>
+<a href="#1054" id="1054">1054</a>
+<a href="#1055" id="1055">1055</a>
+<a href="#1056" id="1056">1056</a>
+<a href="#1057" id="1057">1057</a>
+<a href="#1058" id="1058">1058</a>
+<a href="#1059" id="1059">1059</a>
+<a href="#1060" id="1060">1060</a>
+<a href="#1061" id="1061">1061</a>
+<a href="#1062" id="1062">1062</a>
+<a href="#1063" id="1063">1063</a>
 </pre></div><pre class="rust"><code><span class="kw">mod </span>agg_list;
 <span class="kw">mod </span>boolean;
 <span class="kw">mod </span>dispatch;
@@ -1069,6 +1092,7 @@
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::series::implementations::SeriesWrap;
 <span class="kw">use </span><span class="kw">crate</span>::series::IsSorted;
+<span class="kw">use </span><span class="kw">crate</span>::utils::NoNull;
 <span class="kw">use crate</span>::{apply_method_physical_integer, POOL};
 
 <span class="kw">fn </span>idx2usize(idx: <span class="kw-2">&amp;</span>[IdxSize]) -&gt; <span class="kw">impl </span>Iterator&lt;Item = usize&gt; + ExactSizeIterator + <span class="lifetime">&#39;_ </span>{
@@ -1207,6 +1231,17 @@
     ca.into_series()
 }
 
+<span class="comment">// same helper as `_agg_helper_idx` but for aggregations that don&#39;t return an Option
+</span><span class="kw">pub fn </span>_agg_helper_idx_no_null&lt;T, F&gt;(groups: <span class="kw-2">&amp;</span>GroupsIdx, f: F) -&gt; Series
+<span class="kw">where
+    </span>F: Fn((IdxSize, <span class="kw-2">&amp;</span>Vec&lt;IdxSize&gt;)) -&gt; T::Native + Send + Sync,
+    T: PolarsNumericType,
+    ChunkedArray&lt;T&gt;: IntoSeries,
+{
+    <span class="kw">let </span>ca: NoNull&lt;ChunkedArray&lt;T&gt;&gt; = POOL.install(|| groups.into_par_iter().map(f).collect());
+    ca.into_inner().into_series()
+}
+
 <span class="comment">// helper that iterates on the `all: Vec&lt;Vec&lt;u32&gt;` collection
 // this doesn&#39;t have traverse the `first: Vec&lt;u32&gt;` memory and is therefore faster
 </span><span class="kw">fn </span>agg_helper_idx_on_all&lt;T, F&gt;(groups: <span class="kw-2">&amp;</span>GroupsIdx, f: F) -&gt; Series
@@ -1227,6 +1262,16 @@
 {
     <span class="kw">let </span>ca: ChunkedArray&lt;T&gt; = POOL.install(|| groups.par_iter().copied().map(f).collect());
     ca.into_series()
+}
+
+<span class="kw">pub fn </span>_agg_helper_slice_no_null&lt;T, F&gt;(groups: <span class="kw-2">&amp;</span>[[IdxSize; <span class="number">2</span>]], f: F) -&gt; Series
+<span class="kw">where
+    </span>F: Fn([IdxSize; <span class="number">2</span>]) -&gt; T::Native + Send + Sync,
+    T: PolarsNumericType,
+    ChunkedArray&lt;T&gt;: IntoSeries,
+{
+    <span class="kw">let </span>ca: NoNull&lt;ChunkedArray&lt;T&gt;&gt; = POOL.install(|| groups.par_iter().copied().map(f).collect());
+    ca.into_inner().into_series()
 }
 
 <span class="attr">#[inline(always)]
@@ -1588,19 +1633,19 @@
                 <span class="kw">let </span>ca = <span class="self">self</span>.rechunk();
                 <span class="kw">let </span>arr = ca.downcast_iter().next().unwrap();
                 <span class="kw">let </span>no_nulls = arr.null_count() == <span class="number">0</span>;
-                _agg_helper_idx::&lt;T, <span class="kw">_</span>&gt;(groups, |(first, idx)| {
+                _agg_helper_idx_no_null::&lt;T, <span class="kw">_</span>&gt;(groups, |(first, idx)| {
                     <span class="macro">debug_assert!</span>(idx.len() &lt;= <span class="self">self</span>.len());
                     <span class="kw">if </span>idx.is_empty() {
-                        <span class="prelude-val">None
-                    </span>} <span class="kw">else if </span>idx.len() == <span class="number">1 </span>{
-                        arr.get(first <span class="kw">as </span>usize)
+                        T::Native::zero()
+                    } <span class="kw">else if </span>idx.len() == <span class="number">1 </span>{
+                        arr.get(first <span class="kw">as </span>usize).unwrap_or(T::Native::zero())
                     } <span class="kw">else if </span>no_nulls {
-                        <span class="prelude-val">Some</span>(take_agg_no_null_primitive_iter_unchecked(
+                        take_agg_no_null_primitive_iter_unchecked(
                             arr,
                             idx2usize(idx),
                             |a, b| a + b,
                             T::Native::zero(),
-                        ))
+                        )
                     } <span class="kw">else </span>{
                         take_agg_primitive_iter_unchecked::&lt;T::Native, <span class="kw">_</span>, <span class="kw">_</span>&gt;(
                             arr,
@@ -1609,6 +1654,7 @@
                             T::Native::zero(),
                             idx.len() <span class="kw">as </span>IdxSize,
                         )
+                        .unwrap_or(T::Native::zero())
                     }
                 })
             }
@@ -1633,14 +1679,14 @@
                     };
                     <span class="self">Self</span>::from_chunks(<span class="string">&quot;&quot;</span>, <span class="macro">vec!</span>[arr]).into_series()
                 } <span class="kw">else </span>{
-                    _agg_helper_slice::&lt;T, <span class="kw">_</span>&gt;(groups, |[first, len]| {
+                    _agg_helper_slice_no_null::&lt;T, <span class="kw">_</span>&gt;(groups, |[first, len]| {
                         <span class="macro">debug_assert!</span>(len &lt;= <span class="self">self</span>.len() <span class="kw">as </span>IdxSize);
                         <span class="kw">match </span>len {
-                            <span class="number">0 </span>=&gt; <span class="prelude-val">None</span>,
-                            <span class="number">1 </span>=&gt; <span class="self">self</span>.get(first <span class="kw">as </span>usize),
+                            <span class="number">0 </span>=&gt; T::Native::zero(),
+                            <span class="number">1 </span>=&gt; <span class="self">self</span>.get(first <span class="kw">as </span>usize).unwrap_or(T::Native::zero()),
                             <span class="kw">_ </span>=&gt; {
                                 <span class="kw">let </span>arr_group = _slice_from_offsets(<span class="self">self</span>, first, len);
-                                arr_group.sum()
+                                arr_group.sum().unwrap_or(T::Native::zero())
                             }
                         }
                     })
