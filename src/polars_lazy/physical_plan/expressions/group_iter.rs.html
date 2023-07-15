@@ -136,6 +136,21 @@
 <a href="#136" id="136">136</a>
 <a href="#137" id="137">137</a>
 <a href="#138" id="138">138</a>
+<a href="#139" id="139">139</a>
+<a href="#140" id="140">140</a>
+<a href="#141" id="141">141</a>
+<a href="#142" id="142">142</a>
+<a href="#143" id="143">143</a>
+<a href="#144" id="144">144</a>
+<a href="#145" id="145">145</a>
+<a href="#146" id="146">146</a>
+<a href="#147" id="147">147</a>
+<a href="#148" id="148">148</a>
+<a href="#149" id="149">149</a>
+<a href="#150" id="150">150</a>
+<a href="#151" id="151">151</a>
+<a href="#152" id="152">152</a>
+<a href="#153" id="153">153</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::pin::Pin;
 
 <span class="kw">use </span>polars_core::series::unstable::UnstableSeries;
@@ -152,22 +167,29 @@
                 <span class="self">self</span>.groups();
                 <span class="kw">let </span>s = <span class="self">self</span>.series().rechunk();
                 <span class="kw">let </span>name = <span class="kw">if </span>keep_names { s.name() } <span class="kw">else </span>{ <span class="string">&quot;&quot; </span>};
-                Box::new(LitIter::new(
-                    s.array_ref(<span class="number">0</span>).clone(),
-                    <span class="self">self</span>.groups.len(),
-                    name,
-                ))
+                <span class="comment">// safety: dtype is correct
+                </span><span class="kw">unsafe </span>{
+                    Box::new(LitIter::new(
+                        s.array_ref(<span class="number">0</span>).clone(),
+                        <span class="self">self</span>.groups.len(),
+                        s._dtype(),
+                        name,
+                    ))
+                }
             }
             AggState::AggregatedFlat(<span class="kw">_</span>) =&gt; {
                 <span class="self">self</span>.groups();
                 <span class="kw">let </span>s = <span class="self">self</span>.series();
                 <span class="kw">let </span>name = <span class="kw">if </span>keep_names { s.name() } <span class="kw">else </span>{ <span class="string">&quot;&quot; </span>};
-                Box::new(FlatIter::new(
-                    s.array_ref(<span class="number">0</span>).clone(),
-                    <span class="self">self</span>.groups.len(),
-                    s.dtype(),
-                    name,
-                ))
+                <span class="comment">// safety: dtype is correct
+                </span><span class="kw">unsafe </span>{
+                    Box::new(FlatIter::new(
+                        s.array_ref(<span class="number">0</span>).clone(),
+                        <span class="self">self</span>.groups.len(),
+                        s.dtype(),
+                        name,
+                    ))
+                }
             }
             AggState::AggregatedList(<span class="kw">_</span>) =&gt; {
                 <span class="kw">let </span>s = <span class="self">self</span>.series();
@@ -197,8 +219,15 @@
 }
 
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; LitIter&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">fn </span>new(array: ArrayRef, len: usize, name: <span class="kw-2">&amp;</span>str) -&gt; <span class="self">Self </span>{
-        <span class="kw">let </span><span class="kw-2">mut </span>series_container = Box::pin(Series::try_from((name, array.clone())).unwrap());
+    <span class="doccomment">/// # Safety
+    /// Caller must ensure the given `logical` dtype belongs to `array`.
+    </span><span class="kw">unsafe fn </span>new(array: ArrayRef, len: usize, logical: <span class="kw-2">&amp;</span>DataType, name: <span class="kw-2">&amp;</span>str) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span><span class="kw-2">mut </span>series_container = Box::pin(Series::from_chunks_and_dtype_unchecked(
+            name,
+            <span class="macro">vec!</span>[array],
+            logical,
+        ));
+
         <span class="kw">let </span>ref_s = <span class="kw-2">&amp;mut *</span>series_container <span class="kw">as </span><span class="kw-2">*mut </span>Series;
         <span class="self">Self </span>{
             offset: <span class="number">0</span>,
@@ -238,13 +267,14 @@
 }
 
 <span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; FlatIter&lt;<span class="lifetime">&#39;a</span>&gt; {
-    <span class="kw">fn </span>new(array: ArrayRef, len: usize, logical: <span class="kw-2">&amp;</span>DataType, name: <span class="kw-2">&amp;</span>str) -&gt; <span class="self">Self </span>{
-        <span class="kw">let </span><span class="kw-2">mut </span>series_container = Box::pin(
-            Series::try_from((name, array.clone()))
-                .unwrap()
-                .cast(logical)
-                .unwrap(),
-        );
+    <span class="doccomment">/// # Safety
+    /// Caller must ensure the given `logical` dtype belongs to `array`.
+    </span><span class="kw">unsafe fn </span>new(array: ArrayRef, len: usize, logical: <span class="kw-2">&amp;</span>DataType, name: <span class="kw-2">&amp;</span>str) -&gt; <span class="self">Self </span>{
+        <span class="kw">let </span><span class="kw-2">mut </span>series_container = Box::pin(Series::from_chunks_and_dtype_unchecked(
+            name,
+            <span class="macro">vec!</span>[array.clone()],
+            logical,
+        ));
         <span class="kw">let </span>ref_s = <span class="kw-2">&amp;mut *</span>series_container <span class="kw">as </span><span class="kw-2">*mut </span>Series;
         <span class="self">Self </span>{
             array,
