@@ -153,10 +153,6 @@
 <a href="#153" id="153">153</a>
 <a href="#154" id="154">154</a>
 <a href="#155" id="155">155</a>
-<a href="#156" id="156">156</a>
-<a href="#157" id="157">157</a>
-<a href="#158" id="158">158</a>
-<a href="#159" id="159">159</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::ops::Not;
 
 <span class="kw">use super</span>::<span class="kw-2">*</span>;
@@ -167,8 +163,12 @@
 <span class="attr">#[cfg_attr(feature = <span class="string">&quot;serde&quot;</span>, derive(Serialize, Deserialize))]
 #[derive(Clone, PartialEq, Debug, Eq, Hash)]
 </span><span class="kw">pub enum </span>BooleanFunction {
-    All,
-    Any,
+    All {
+        drop_nulls: bool,
+    },
+    Any {
+        drop_nulls: bool,
+    },
     IsNot,
     IsNull,
     IsNotNull,
@@ -196,8 +196,8 @@
     <span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
         <span class="kw">use </span>BooleanFunction::<span class="kw-2">*</span>;
         <span class="kw">let </span>s = <span class="kw">match </span><span class="self">self </span>{
-            All =&gt; <span class="string">&quot;all&quot;</span>,
-            Any =&gt; <span class="string">&quot;any&quot;</span>,
+            All { .. } =&gt; <span class="string">&quot;all&quot;</span>,
+            Any { .. } =&gt; <span class="string">&quot;any&quot;</span>,
             IsNot =&gt; <span class="string">&quot;is_not&quot;</span>,
             IsNull =&gt; <span class="string">&quot;is_null&quot;</span>,
             IsNotNull =&gt; <span class="string">&quot;is_not_null&quot;</span>,
@@ -222,8 +222,8 @@
     <span class="kw">fn </span>from(func: BooleanFunction) -&gt; <span class="self">Self </span>{
         <span class="kw">use </span>BooleanFunction::<span class="kw-2">*</span>;
         <span class="kw">match </span>func {
-            All =&gt; <span class="macro">map!</span>(all),
-            Any =&gt; <span class="macro">map!</span>(any),
+            All { drop_nulls } =&gt; <span class="macro">map!</span>(all, drop_nulls),
+            Any { drop_nulls } =&gt; <span class="macro">map!</span>(any, drop_nulls),
             IsNot =&gt; <span class="macro">map!</span>(is_not),
             IsNull =&gt; <span class="macro">map!</span>(is_null),
             IsNotNull =&gt; <span class="macro">map!</span>(is_not_null),
@@ -249,22 +249,14 @@
     }
 }
 
-<span class="kw">fn </span>all(s: <span class="kw-2">&amp;</span>Series) -&gt; PolarsResult&lt;Series&gt; {
+<span class="kw">fn </span>all(s: <span class="kw-2">&amp;</span>Series, drop_nulls: bool) -&gt; PolarsResult&lt;Series&gt; {
     <span class="kw">let </span>boolean = s.bool()<span class="question-mark">?</span>;
-    <span class="kw">if </span>boolean.all() {
-        <span class="prelude-val">Ok</span>(Series::new(s.name(), [<span class="bool-val">true</span>]))
-    } <span class="kw">else </span>{
-        <span class="prelude-val">Ok</span>(Series::new(s.name(), [<span class="bool-val">false</span>]))
-    }
+    <span class="prelude-val">Ok</span>(Series::new(s.name(), [boolean.all_3val(drop_nulls)]))
 }
 
-<span class="kw">fn </span>any(s: <span class="kw-2">&amp;</span>Series) -&gt; PolarsResult&lt;Series&gt; {
+<span class="kw">fn </span>any(s: <span class="kw-2">&amp;</span>Series, drop_nulls: bool) -&gt; PolarsResult&lt;Series&gt; {
     <span class="kw">let </span>boolean = s.bool()<span class="question-mark">?</span>;
-    <span class="kw">if </span>boolean.any() {
-        <span class="prelude-val">Ok</span>(Series::new(s.name(), [<span class="bool-val">true</span>]))
-    } <span class="kw">else </span>{
-        <span class="prelude-val">Ok</span>(Series::new(s.name(), [<span class="bool-val">false</span>]))
-    }
+    <span class="prelude-val">Ok</span>(Series::new(s.name(), [boolean.any_3val(drop_nulls)]))
 }
 
 <span class="kw">fn </span>is_not(s: <span class="kw-2">&amp;</span>Series) -&gt; PolarsResult&lt;Series&gt; {

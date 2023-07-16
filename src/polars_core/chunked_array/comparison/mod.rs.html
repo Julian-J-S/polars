@@ -1434,6 +1434,23 @@
 <a href="#1434" id="1434">1434</a>
 <a href="#1435" id="1435">1435</a>
 <a href="#1436" id="1436">1436</a>
+<a href="#1437" id="1437">1437</a>
+<a href="#1438" id="1438">1438</a>
+<a href="#1439" id="1439">1439</a>
+<a href="#1440" id="1440">1440</a>
+<a href="#1441" id="1441">1441</a>
+<a href="#1442" id="1442">1442</a>
+<a href="#1443" id="1443">1443</a>
+<a href="#1444" id="1444">1444</a>
+<a href="#1445" id="1445">1445</a>
+<a href="#1446" id="1446">1446</a>
+<a href="#1447" id="1447">1447</a>
+<a href="#1448" id="1448">1448</a>
+<a href="#1449" id="1449">1449</a>
+<a href="#1450" id="1450">1450</a>
+<a href="#1451" id="1451">1451</a>
+<a href="#1452" id="1452">1452</a>
+<a href="#1453" id="1453">1453</a>
 </pre></div><pre class="rust"><code><span class="kw">mod </span>scalar;
 
 <span class="kw">use </span>std::ops::{BitOr, Not};
@@ -2439,6 +2456,23 @@
     <span class="doccomment">/// Check if any value is `true`
     </span><span class="kw">pub fn </span>any(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
         <span class="self">self</span>.downcast_iter().any(compute::boolean::any)
+    }
+
+    <span class="comment">// Three-valued versions which can return None
+    </span><span class="kw">pub fn </span>all_3val(<span class="kw-2">&amp;</span><span class="self">self</span>, drop_nulls: bool) -&gt; <span class="prelude-ty">Option</span>&lt;bool&gt; {
+        <span class="kw">if </span>drop_nulls || <span class="self">self</span>.null_count() == <span class="number">0 </span>{
+            <span class="prelude-val">Some</span>(<span class="self">self</span>.all())
+        } <span class="kw">else </span>{
+            <span class="prelude-val">None
+        </span>}
+    }
+    <span class="kw">pub fn </span>any_3val(<span class="kw-2">&amp;</span><span class="self">self</span>, drop_nulls: bool) -&gt; <span class="prelude-ty">Option</span>&lt;bool&gt; {
+        <span class="kw">let </span>res = <span class="self">self</span>.any();
+        <span class="kw">if </span>drop_nulls || res {
+            <span class="prelude-val">Some</span>(res)
+        } <span class="kw">else </span>{
+            <span class="prelude-val">None
+        </span>}
     }
 }
 

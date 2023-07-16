@@ -3557,8 +3557,8 @@
     }
 
     <span class="doccomment">/// Check if any boolean value is `true`
-    </span><span class="kw">pub fn </span>any(<span class="self">self</span>) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.apply_private(BooleanFunction::Any.into())
+    </span><span class="kw">pub fn </span>any(<span class="self">self</span>, drop_nulls: bool) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.apply_private(BooleanFunction::Any { drop_nulls }.into())
             .with_function_options(|<span class="kw-2">mut </span>opt| {
                 opt.auto_explode = <span class="bool-val">true</span>;
                 opt
@@ -3573,8 +3573,8 @@
     }
 
     <span class="doccomment">/// Check if all boolean values are `true`
-    </span><span class="kw">pub fn </span>all(<span class="self">self</span>) -&gt; <span class="self">Self </span>{
-        <span class="self">self</span>.apply_private(BooleanFunction::All.into())
+    </span><span class="kw">pub fn </span>all(<span class="self">self</span>, drop_nulls: bool) -&gt; <span class="self">Self </span>{
+        <span class="self">self</span>.apply_private(BooleanFunction::All { drop_nulls }.into())
             .with_function_options(|<span class="kw-2">mut </span>opt| {
                 opt.auto_explode = <span class="bool-val">true</span>;
                 opt
