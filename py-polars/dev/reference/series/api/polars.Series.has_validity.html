@@ -598,6 +598,7 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="polars.Series.drop_nans.html">polars.Series.drop_nans</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.Series.drop_nulls.html">polars.Series.drop_nulls</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.Series.explode.html">polars.Series.explode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polars.Series.extend.html">polars.Series.extend</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.Series.extend_constant.html">polars.Series.extend_constant</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.Series.fill_nan.html">polars.Series.fill_nan</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.Series.fill_null.html">polars.Series.fill_null</a></li>
@@ -1618,7 +1619,7 @@ document.write(`
 <h1>polars.Series.has_validity<a class="headerlink" href="#polars-series-has-validity" title="Permalink to this heading">#</a></h1>
 <dl class="py method">
 <dt class="sig sig-object py" id="polars.Series.has_validity">
-<span class="sig-prename descclassname"><span class="pre">Series.</span></span><span class="sig-name descname"><span class="pre">has_validity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span></span><a class="reference external" href="https://github.com/pola-rs/polars/blob/main/py-polars/polars/series/series.py#L2786-L2794"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polars.Series.has_validity" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">Series.</span></span><span class="sig-name descname"><span class="pre">has_validity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span></span><a class="reference external" href="https://github.com/pola-rs/polars/blob/main/py-polars/polars/series/series.py#L2878-L2886"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polars.Series.has_validity" title="Permalink to this definition">#</a></dt>
 <dd><p>Return True if the Series has a validity bitmask.</p>
 <p>If there is none, it means that there are no null values.
 Use this to swiftly assert a Series does not have null values.</p>

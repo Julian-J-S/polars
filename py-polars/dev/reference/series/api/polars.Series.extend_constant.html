@@ -49,7 +49,7 @@
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="polars.Series.fill_nan" href="polars.Series.fill_nan.html" />
-    <link rel="prev" title="polars.Series.explode" href="polars.Series.explode.html" />
+    <link rel="prev" title="polars.Series.extend" href="polars.Series.extend.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -598,6 +598,7 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="polars.Series.drop_nans.html">polars.Series.drop_nans</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.Series.drop_nulls.html">polars.Series.drop_nulls</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.Series.explode.html">polars.Series.explode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polars.Series.extend.html">polars.Series.extend</a></li>
 <li class="toctree-l3 current active"><a class="current reference internal" href="#">polars.Series.extend_constant</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.Series.fill_nan.html">polars.Series.fill_nan</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.Series.fill_null.html">polars.Series.fill_null</a></li>
@@ -1618,7 +1619,7 @@ document.write(`
 <h1>polars.Series.extend_constant<a class="headerlink" href="#polars-series-extend-constant" title="Permalink to this heading">#</a></h1>
 <dl class="py method">
 <dt class="sig sig-object py" id="polars.Series.extend_constant">
-<span class="sig-prename descclassname"><span class="pre">Series.</span></span><span class="sig-name descname"><span class="pre">extend_constant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PythonLiteral</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="reference external" href="https://github.com/pola-rs/polars/blob/main/py-polars/polars/series/series.py#L6045-L6071"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polars.Series.extend_constant" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">Series.</span></span><span class="sig-name descname"><span class="pre">extend_constant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PythonLiteral</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="reference external" href="https://github.com/pola-rs/polars/blob/main/py-polars/polars/series/series.py#L6137-L6163"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polars.Series.extend_constant" title="Permalink to this definition">#</a></dt>
 <dd><p>Extremely fast method for extending the Series with ‘n’ copies of a value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1661,12 +1662,12 @@ the Series; can pass None to extend with nulls.</p>
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="polars.Series.explode.html"
+       href="polars.Series.extend.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">polars.Series.explode</p>
+        <p class="prev-next-title">polars.Series.extend</p>
       </div>
     </a>
     <a class="right-next"

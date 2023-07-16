@@ -594,6 +594,7 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Series.drop_nans.html">polars.Series.drop_nans</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Series.drop_nulls.html">polars.Series.drop_nulls</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Series.explode.html">polars.Series.explode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/polars.Series.extend.html">polars.Series.extend</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Series.extend_constant.html">polars.Series.extend_constant</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Series.fill_nan.html">polars.Series.fill_nan</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/polars.Series.fill_null.html">polars.Series.fill_null</a></li>
@@ -1654,115 +1655,118 @@ document.write(`
 <tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.explode.html#polars.Series.explode" title="polars.Series.explode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.explode</span></code></a>()</p></td>
 <td><p>Explode a list Series.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.extend_constant.html#polars.Series.extend_constant" title="polars.Series.extend_constant"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.extend_constant</span></code></a>(value, n)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.extend.html#polars.Series.extend" title="polars.Series.extend"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.extend</span></code></a>(other)</p></td>
+<td><p>Extend the memory backed by this Series with the values from another.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.extend_constant.html#polars.Series.extend_constant" title="polars.Series.extend_constant"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.extend_constant</span></code></a>(value, n)</p></td>
 <td><p>Extremely fast method for extending the Series with 'n' copies of a value.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.fill_nan.html#polars.Series.fill_nan" title="polars.Series.fill_nan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.fill_nan</span></code></a>(value)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.fill_nan.html#polars.Series.fill_nan" title="polars.Series.fill_nan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.fill_nan</span></code></a>(value)</p></td>
 <td><p>Fill floating point NaN value with a fill value.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.fill_null.html#polars.Series.fill_null" title="polars.Series.fill_null"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.fill_null</span></code></a>([value, strategy, limit])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.fill_null.html#polars.Series.fill_null" title="polars.Series.fill_null"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.fill_null</span></code></a>([value, strategy, limit])</p></td>
 <td><p>Fill null values using the specified value or strategy.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.filter.html#polars.Series.filter" title="polars.Series.filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.filter</span></code></a>(predicate)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.filter.html#polars.Series.filter" title="polars.Series.filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.filter</span></code></a>(predicate)</p></td>
 <td><p>Filter elements by a boolean mask.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.floor.html#polars.Series.floor" title="polars.Series.floor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.floor</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.floor.html#polars.Series.floor" title="polars.Series.floor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.floor</span></code></a>()</p></td>
 <td><p>Rounds down to the nearest integer value.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.head.html#polars.Series.head" title="polars.Series.head"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.head</span></code></a>([n])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.head.html#polars.Series.head" title="polars.Series.head"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.head</span></code></a>([n])</p></td>
 <td><p>Get the first <cite>n</cite> elements.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.hist.html#polars.Series.hist" title="polars.Series.hist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.hist</span></code></a>([bins, bin_count])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.hist.html#polars.Series.hist" title="polars.Series.hist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.hist</span></code></a>([bins, bin_count])</p></td>
 <td><p>Bin values into buckets and count their occurrences.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.interpolate.html#polars.Series.interpolate" title="polars.Series.interpolate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.interpolate</span></code></a>([method])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.interpolate.html#polars.Series.interpolate" title="polars.Series.interpolate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.interpolate</span></code></a>([method])</p></td>
 <td><p>Interpolate intermediate values.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.item.html#polars.Series.item" title="polars.Series.item"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.item</span></code></a>([row])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.item.html#polars.Series.item" title="polars.Series.item"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.item</span></code></a>([row])</p></td>
 <td><p>Return the series as a scalar, or return the element at the given row index.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.limit.html#polars.Series.limit" title="polars.Series.limit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.limit</span></code></a>([n])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.limit.html#polars.Series.limit" title="polars.Series.limit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.limit</span></code></a>([n])</p></td>
 <td><p>Get the first <cite>n</cite> elements.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.new_from_index.html#polars.Series.new_from_index" title="polars.Series.new_from_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.new_from_index</span></code></a>(index, length)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.new_from_index.html#polars.Series.new_from_index" title="polars.Series.new_from_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.new_from_index</span></code></a>(index, length)</p></td>
 <td><p>Create a new Series filled with values from the given index.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.qcut.html#polars.Series.qcut" title="polars.Series.qcut"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.qcut</span></code></a>(quantiles, *[, labels, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.qcut.html#polars.Series.qcut" title="polars.Series.qcut"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.qcut</span></code></a>(quantiles, *[, labels, ...])</p></td>
 <td><p>Bin continuous values into discrete categories based on their quantiles.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.rechunk.html#polars.Series.rechunk" title="polars.Series.rechunk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.rechunk</span></code></a>(*[, in_place])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.rechunk.html#polars.Series.rechunk" title="polars.Series.rechunk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.rechunk</span></code></a>(*[, in_place])</p></td>
 <td><p>Create a single chunk of memory for this Series.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.rename.html#polars.Series.rename" title="polars.Series.rename"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.rename</span></code></a>(name, *[, in_place])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.rename.html#polars.Series.rename" title="polars.Series.rename"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.rename</span></code></a>(name, *[, in_place])</p></td>
 <td><p>Rename this Series.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.reshape.html#polars.Series.reshape" title="polars.Series.reshape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.reshape</span></code></a>(dimensions)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.reshape.html#polars.Series.reshape" title="polars.Series.reshape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.reshape</span></code></a>(dimensions)</p></td>
 <td><p>Reshape this Series to a flat Series or a Series of Lists.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.reverse.html#polars.Series.reverse" title="polars.Series.reverse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.reverse</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.reverse.html#polars.Series.reverse" title="polars.Series.reverse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.reverse</span></code></a>()</p></td>
 <td><p>Return Series in reverse order.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.rle.html#polars.Series.rle" title="polars.Series.rle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.rle</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.rle.html#polars.Series.rle" title="polars.Series.rle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.rle</span></code></a>()</p></td>
 <td><p>Get the lengths of runs of identical values.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.rle_id.html#polars.Series.rle_id" title="polars.Series.rle_id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.rle_id</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.rle_id.html#polars.Series.rle_id" title="polars.Series.rle_id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.rle_id</span></code></a>()</p></td>
 <td><p>Map values to run IDs.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.round.html#polars.Series.round" title="polars.Series.round"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.round</span></code></a>([decimals])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.round.html#polars.Series.round" title="polars.Series.round"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.round</span></code></a>([decimals])</p></td>
 <td><p>Round underlying floating point data by <cite>decimals</cite> digits.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.sample.html#polars.Series.sample" title="polars.Series.sample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.sample</span></code></a>([n, fraction, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.sample.html#polars.Series.sample" title="polars.Series.sample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.sample</span></code></a>([n, fraction, ...])</p></td>
 <td><p>Sample from this Series.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.set.html#polars.Series.set" title="polars.Series.set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.set</span></code></a>(filter, value)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.set.html#polars.Series.set" title="polars.Series.set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.set</span></code></a>(filter, value)</p></td>
 <td><p>Set masked values.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.set_at_idx.html#polars.Series.set_at_idx" title="polars.Series.set_at_idx"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.set_at_idx</span></code></a>(idx, value)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.set_at_idx.html#polars.Series.set_at_idx" title="polars.Series.set_at_idx"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.set_at_idx</span></code></a>(idx, value)</p></td>
 <td><p>Set values at the index locations.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.shift.html#polars.Series.shift" title="polars.Series.shift"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.shift</span></code></a>([periods])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.shift.html#polars.Series.shift" title="polars.Series.shift"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.shift</span></code></a>([periods])</p></td>
 <td><p>Shift the values by a given period.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.shift_and_fill.html#polars.Series.shift_and_fill" title="polars.Series.shift_and_fill"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.shift_and_fill</span></code></a>(fill_value, *[, periods])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.shift_and_fill.html#polars.Series.shift_and_fill" title="polars.Series.shift_and_fill"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.shift_and_fill</span></code></a>(fill_value, *[, periods])</p></td>
 <td><p>Shift the values by a given period and fill the resulting null values.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.shrink_dtype.html#polars.Series.shrink_dtype" title="polars.Series.shrink_dtype"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.shrink_dtype</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.shrink_dtype.html#polars.Series.shrink_dtype" title="polars.Series.shrink_dtype"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.shrink_dtype</span></code></a>()</p></td>
 <td><p>Shrink numeric columns to the minimal required datatype.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.shrink_to_fit.html#polars.Series.shrink_to_fit" title="polars.Series.shrink_to_fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.shrink_to_fit</span></code></a>(*[, in_place])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.shrink_to_fit.html#polars.Series.shrink_to_fit" title="polars.Series.shrink_to_fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.shrink_to_fit</span></code></a>(*[, in_place])</p></td>
 <td><p>Shrink Series memory usage.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.shuffle.html#polars.Series.shuffle" title="polars.Series.shuffle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.shuffle</span></code></a>([seed])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.shuffle.html#polars.Series.shuffle" title="polars.Series.shuffle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.shuffle</span></code></a>([seed])</p></td>
 <td><p>Shuffle the contents of this Series.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.slice.html#polars.Series.slice" title="polars.Series.slice"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.slice</span></code></a>(offset[, length])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.slice.html#polars.Series.slice" title="polars.Series.slice"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.slice</span></code></a>(offset[, length])</p></td>
 <td><p>Get a slice of this Series.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.sort.html#polars.Series.sort" title="polars.Series.sort"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.sort</span></code></a>(*[, descending, in_place])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.sort.html#polars.Series.sort" title="polars.Series.sort"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.sort</span></code></a>(*[, descending, in_place])</p></td>
 <td><p>Sort this Series.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.tail.html#polars.Series.tail" title="polars.Series.tail"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.tail</span></code></a>([n])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.tail.html#polars.Series.tail" title="polars.Series.tail"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.tail</span></code></a>([n])</p></td>
 <td><p>Get the last <cite>n</cite> elements.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.take.html#polars.Series.take" title="polars.Series.take"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.take</span></code></a>(indices)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.take.html#polars.Series.take" title="polars.Series.take"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.take</span></code></a>(indices)</p></td>
 <td><p>Take values by index.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.take_every.html#polars.Series.take_every" title="polars.Series.take_every"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.take_every</span></code></a>(n)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.take_every.html#polars.Series.take_every" title="polars.Series.take_every"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.take_every</span></code></a>(n)</p></td>
 <td><p>Take every nth value in the Series and return as new Series.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.to_dummies.html#polars.Series.to_dummies" title="polars.Series.to_dummies"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.to_dummies</span></code></a>([separator])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.to_dummies.html#polars.Series.to_dummies" title="polars.Series.to_dummies"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.to_dummies</span></code></a>([separator])</p></td>
 <td><p>Get dummy/indicator variables.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.top_k.html#polars.Series.top_k" title="polars.Series.top_k"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.top_k</span></code></a>([k])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.top_k.html#polars.Series.top_k" title="polars.Series.top_k"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.top_k</span></code></a>([k])</p></td>
 <td><p>Return the <cite>k</cite> largest elements.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.unique.html#polars.Series.unique" title="polars.Series.unique"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.unique</span></code></a>(*[, maintain_order])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.unique.html#polars.Series.unique" title="polars.Series.unique"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.unique</span></code></a>(*[, maintain_order])</p></td>
 <td><p>Get unique elements in series.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.view.html#polars.Series.view" title="polars.Series.view"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.view</span></code></a>(*[, ignore_nulls])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.view.html#polars.Series.view" title="polars.Series.view"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.view</span></code></a>(*[, ignore_nulls])</p></td>
 <td><p>Get a view into this Series data with a numpy array.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/polars.Series.zip_with.html#polars.Series.zip_with" title="polars.Series.zip_with"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.zip_with</span></code></a>(mask, other)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/polars.Series.zip_with.html#polars.Series.zip_with" title="polars.Series.zip_with"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Series.zip_with</span></code></a>(mask, other)</p></td>
 <td><p>Take values from self or other based on the given mask.</p></td>
 </tr>
 </tbody>

@@ -598,6 +598,7 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="../../series/api/polars.Series.drop_nans.html">polars.Series.drop_nans</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../series/api/polars.Series.drop_nulls.html">polars.Series.drop_nulls</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../series/api/polars.Series.explode.html">polars.Series.explode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../series/api/polars.Series.extend.html">polars.Series.extend</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../series/api/polars.Series.extend_constant.html">polars.Series.extend_constant</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../series/api/polars.Series.fill_nan.html">polars.Series.fill_nan</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../series/api/polars.Series.fill_null.html">polars.Series.fill_null</a></li>
@@ -1618,13 +1619,19 @@ document.write(`
 <h1>polars.Expr.all<a class="headerlink" href="#polars-expr-all" title="Permalink to this heading">#</a></h1>
 <dl class="py method">
 <dt class="sig sig-object py" id="polars.Expr.all">
-<span class="sig-prename descclassname"><span class="pre">Expr.</span></span><span class="sig-name descname"><span class="pre">all</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference external" href="https://github.com/pola-rs/polars/blob/main/py-polars/polars/expr/expr.py#L338-L365"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polars.Expr.all" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">Expr.</span></span><span class="sig-name descname"><span class="pre">all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">drop_nulls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference external" href="https://github.com/pola-rs/polars/blob/main/py-polars/polars/expr/expr.py#L362-L414"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polars.Expr.all" title="Permalink to this definition">#</a></dt>
 <dd><p>Check if all boolean values in a Boolean column are <cite>True</cite>.</p>
 <p>This method is an expression - not to be confused with
 <a class="reference internal" href="polars.all.html#polars.all" title="polars.all"><code class="xref py py-func docutils literal notranslate"><span class="pre">polars.all()</span></code></a> which is a function to select all columns.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
+<dt><strong>drop_nulls</strong></dt><dd><p>If False, return None if there are any nulls.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
 <dt>Boolean literal</dt><dd></dd>
 </dl>
 </dd>
@@ -1642,6 +1649,25 @@ document.write(`
 <span class="go">╞══════╪═══════╪═══════╡</span>
 <span class="go">│ true ┆ false ┆ false │</span>
 <span class="go">└──────┴───────┴───────┘</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">False</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">True</span><span class="p">]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="kc">True</span><span class="p">),</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="kc">True</span><span class="p">))</span>
+<span class="go">shape: (1, 2)</span>
+<span class="go">┌───────┬───────┐</span>
+<span class="go">│ x     ┆ y     │</span>
+<span class="go">│ ---   ┆ ---   │</span>
+<span class="go">│ bool  ┆ bool  │</span>
+<span class="go">╞═══════╪═══════╡</span>
+<span class="go">│ false ┆ false │</span>
+<span class="go">└───────┴───────┘</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="kc">False</span><span class="p">),</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="kc">False</span><span class="p">))</span>
+<span class="go">shape: (1, 2)</span>
+<span class="go">┌──────┬──────┐</span>
+<span class="go">│ x    ┆ y    │</span>
+<span class="go">│ ---  ┆ ---  │</span>
+<span class="go">│ bool ┆ bool │</span>
+<span class="go">╞══════╪══════╡</span>
+<span class="go">│ null ┆ null │</span>
+<span class="go">└──────┴──────┘</span>
 </pre></div>
 </div>
 </dd></dl>

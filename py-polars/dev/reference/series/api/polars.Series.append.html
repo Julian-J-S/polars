@@ -598,6 +598,7 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="polars.Series.drop_nans.html">polars.Series.drop_nans</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.Series.drop_nulls.html">polars.Series.drop_nulls</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.Series.explode.html">polars.Series.explode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polars.Series.extend.html">polars.Series.extend</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.Series.extend_constant.html">polars.Series.extend_constant</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.Series.fill_nan.html">polars.Series.fill_nan</a></li>
 <li class="toctree-l3"><a class="reference internal" href="polars.Series.fill_null.html">polars.Series.fill_null</a></li>
@@ -1618,14 +1619,19 @@ document.write(`
 <h1>polars.Series.append<a class="headerlink" href="#polars-series-append" title="Permalink to this heading">#</a></h1>
 <dl class="py method">
 <dt class="sig sig-object py" id="polars.Series.append">
-<span class="sig-prename descclassname"><span class="pre">Series.</span></span><span class="sig-name descname"><span class="pre">append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">append_chunks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="reference external" href="https://github.com/pola-rs/polars/blob/main/py-polars/polars/series/series.py#L2306-L2366"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polars.Series.append" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">Series.</span></span><span class="sig-name descname"><span class="pre">append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Series</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">append_chunks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference external" href="https://github.com/pola-rs/polars/blob/main/py-polars/polars/series/series.py#L2306-L2394"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polars.Series.append" title="Permalink to this definition">#</a></dt>
 <dd><p>Append a Series to this one.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
 <dt><strong>other</strong></dt><dd><p>Series to append.</p>
 </dd>
-<dt><strong>append_chunks</strong></dt><dd><p>If set to <cite>True</cite> the append operation will add the chunks from <cite>other</cite> to
+<dt><strong>append_chunks</strong></dt><dd><div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 0.18.8: </span>This argument will be removed and <code class="docutils literal notranslate"><span class="pre">append</span></code> will change to always
+behave like <code class="docutils literal notranslate"><span class="pre">append_chunks=True</span></code> (the previous default). For the
+behavior of <code class="docutils literal notranslate"><span class="pre">append_chunks=False</span></code>, use <code class="docutils literal notranslate"><span class="pre">Series.extend</span></code>.</p>
+</div>
+<p>If set to <cite>True</cite> the append operation will add the chunks from <cite>other</cite> to
 self. This is super cheap.</p>
 <p>If set to <cite>False</cite> the append operation will do the same as
 <cite>DataFrame.extend</cite> which extends the memory backed by this <cite>Series</cite> with
@@ -1646,11 +1652,22 @@ of <cite>append_chunks</cite> operations with a <cite>rechunk</cite>.</p>
 </dl>
 </dd>
 </dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This method modifies the series in-place. The series is returned for
+convenience only.</p>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="polars.Series.extend.html#polars.Series.extend" title="polars.Series.extend"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extend</span></code></a></dt><dd></dd>
+</dl>
+</div>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">s2</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s2</span><span class="p">)</span>
-<span class="go">shape: (6,)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="go">shape: (5,)</span>
 <span class="go">Series: &#39;a&#39; [i64]</span>
 <span class="go">[</span>
 <span class="go">    1</span>
@@ -1658,8 +1675,12 @@ of <cite>append_chunks</cite> operations with a <cite>rechunk</cite>.</p>
 <span class="go">    3</span>
 <span class="go">    4</span>
 <span class="go">    5</span>
-<span class="go">    6</span>
 <span class="go">]</span>
+</pre></div>
+</div>
+<p>The resulting series will consist of multiple chunks.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">n_chunks</span><span class="p">()</span>
+<span class="go">2</span>
 </pre></div>
 </div>
 </dd></dl>
