@@ -1619,19 +1619,20 @@ document.write(`
 <h1>polars.DataFrame.extend<a class="headerlink" href="#polars-dataframe-extend" title="Permalink to this heading">#</a></h1>
 <dl class="py method">
 <dt class="sig sig-object py" id="polars.DataFrame.extend">
-<span class="sig-prename descclassname"><span class="pre">DataFrame.</span></span><span class="sig-name descname"><span class="pre">extend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference external" href="https://github.com/pola-rs/polars/blob/main/py-polars/polars/dataframe/frame.py#L5873-L5918"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polars.DataFrame.extend" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">DataFrame.</span></span><span class="sig-name descname"><span class="pre">extend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference external" href="https://github.com/pola-rs/polars/blob/main/py-polars/polars/dataframe/frame.py#L5877-L5938"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#polars.DataFrame.extend" title="Permalink to this definition">#</a></dt>
 <dd><p>Extend the memory backed by this <cite>DataFrame</cite> with the values from <cite>other</cite>.</p>
-<p>Different from <cite>vstack</cite> which adds the chunks from <cite>other</cite> to the chunks of this
-<cite>DataFrame</cite> <cite>extend</cite> appends the data from <cite>other</cite> to the underlying memory
-locations and thus may cause a reallocation.</p>
+<p>Different from <code class="docutils literal notranslate"><span class="pre">vstack</span></code> which adds the chunks from <code class="docutils literal notranslate"><span class="pre">other</span></code> to the chunks of
+this <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code>, <code class="docutils literal notranslate"><span class="pre">extend</span></code> appends the data from <cite>other</cite> to the underlying
+memory locations and thus may cause a reallocation.</p>
 <p>If this does not cause a reallocation, the resulting data structure will not
 have any extra chunks and thus will yield faster queries.</p>
-<p>Prefer <cite>extend</cite> over <cite>vstack</cite> when you want to do a query after a single append.
-For instance during online operations where you add <cite>n</cite> rows and rerun a query.</p>
-<p>Prefer <cite>vstack</cite> over <cite>extend</cite> when you want to append many times before doing a
-query. For instance when you read in multiple files and when to store them in a
-single <cite>DataFrame</cite>. In the latter case, finish the sequence of <cite>vstack</cite>
-operations with a <cite>rechunk</cite>.</p>
+<p>Prefer <code class="docutils literal notranslate"><span class="pre">extend</span></code> over <code class="docutils literal notranslate"><span class="pre">vstack</span></code> when you want to do a query after a single
+append. For instance, during online operations where you add <cite>n</cite> rows and rerun
+a query.</p>
+<p>Prefer <code class="docutils literal notranslate"><span class="pre">vstack</span></code> over <code class="docutils literal notranslate"><span class="pre">extend</span></code> when you want to append many times before
+doing a query. For instance, when you read in multiple files and want to store
+them in a single <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code>. In the latter case, finish the sequence of
+<code class="docutils literal notranslate"><span class="pre">vstack</span></code> operations with a <code class="docutils literal notranslate"><span class="pre">rechunk</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
@@ -1640,6 +1641,17 @@ operations with a <cite>rechunk</cite>.</p>
 </dl>
 </dd>
 </dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This method modifies the dataframe in-place. The dataframe is returned for
+convenience only.</p>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="polars.DataFrame.vstack.html#polars.DataFrame.vstack" title="polars.DataFrame.vstack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vstack</span></code></a></dt><dd></dd>
+</dl>
+</div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df1</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;foo&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s2">&quot;bar&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df2</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;foo&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span> <span class="s2">&quot;bar&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">60</span><span class="p">]})</span>
